@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalle Propiedad | BROS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- 🟢 AQUÍ CONECTAMOS CON TU PANEL DE CONTROL (ADMIN) -->
+    <script src="propiedades.js"></script>
+</head>
+<body class="bg-gray-50 font-['Inter']">
+
+    <header class="w-full bg-[#0E0D0D] h-24 flex items-center px-6 shadow-md">
+        <div class="max-w-7xl mx-auto w-full flex justify-between items-center">
+            <a href="index.html" class="w-20 h-20"><img src="bros-logo.png" class="w-full h-full object-contain"></a>
+            <a href="index.html" class="text-white hover:text-[#D0AA70] font-semibold flex items-center gap-2 transition-colors"><i class="fa-solid fa-arrow-left"></i> Volver al Catálogo</a>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-6 py-12" id="detalle-container"></main>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const propId = urlParams.get('id'); // El admin de propiedades.js genera IDs como texto alfanumérico
+        
+        if(typeof PROPIEDADES !== 'undefined') {
+            const propiedad = PROPIEDADES.find(p => p.id === propId);
+
+            if(propiedad) {
+                const container = document.getElementById('detalle-container');
+                const fotoPrincipal = (propiedad.fotos && propiedad.fotos.length > 0) ? propiedad.fotos[0] : 'bros-logo.png';
+                const precio = propiedad.precio ? Number(propiedad.precio).toLocaleString('es-CL') : '0';
+
+                // Generar miniaturas si subiste más de una foto en el administrador
+                let galeriaHTML = '';
+                if(propiedad.fotos && propiedad.fotos.length > 1) {
+                    galeriaHTML = '<div class="flex gap-3 mt-4 overflow-x-auto pb-2">';
+                    propiedad.fotos.forEach(img => {
+                        galeriaHTML += `<img src="${img}" class="w-24 h-24 object-cover rounded-xl border-2 border-transparent hover:border-[#D0AA70] cursor-pointer transition-all" onclick="document.getElementById('main-img').src=this.src">`;
+                    });
+                    galeriaHTML += '</div>';
+                }
+
+                // Generar etiquetas (tags) si las pusiste en el administrador
+                let caracteristicasHTML = '';
+                if (propiedad.caracteristicas && propiedad.caracteristicas.length > 0) {
+                    caracteristicasHTML = '<div class="flex flex-wrap gap-2 mt-6">';
+                    propiedad.caracteristicas.forEach(c => {
+                        caracteristicasHTML += `<span class="bg-gray-100 text-gray-600 text-xs font-bold px-3 py-1.5 rounded-full">${c}</span>`;
+                    });
+                    caracteristicasHTML += '</div>';
+                }
+
+                container.innerHTML = `
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
+                        <div class="lg:col-span-2">
+                            <img id="main-img" src="${fotoPrincipal}" class="w-full h-[500px] object-cover rounded-3xl shadow-xl transition-all duration-300">
+                            ${galeriaHTML}
+                            
+                            <div class="bg-white p-10 rounded-3xl shadow-sm border border-gray-100 mt-8">
+                                <span class="text-[#D0AA70] font-bold tracking-widest uppercase text-sm mb-2 block">${propiedad.tipo || 'Propiedad'} en ${propiedad.colonia || propiedad.ciudad || ''}</span>
+                                <h1 class="text-4xl font-extrabold text-[#0E0D0D] mb-6">${propiedad.nombre}</h1>
+                                
+                                <div class="flex gap-6 mb-6 border-y border-gray-100 py-6">
+                                    <div class="flex items-center gap-2 text-gray-600"><i class="fa-solid fa-bed text-[#D0AA70] text-xl"></i> <b>${propiedad.recamaras || 0}</b> Dorm.</div>
+                                    <div class="flex items-center gap-2 text-gray-600"><i class="fa-solid fa-bath text-[#D0AA70] text-xl"></i> <b>${propiedad.banos || 0}</b> Baños</div>
+                                    <div class="flex items-center gap-2 text-gray-600"><i class="fa-solid fa-ruler-combined text-[#D0AA70] text-xl"></i> <b>${propiedad.m2total || 0}</b> m²</div>
+                                    <div class="flex items-center gap-2 text-gray-600"><i class="fa-solid fa-car text-[#D0AA70] text-xl"></i> <b>${propiedad.estacionamientos || 0}</b> Estac.</div>
+                                </div>
+
+                                <h3 class="text-xl font-bold mb-4">Descripción de la Propiedad</h3>
+                                <p class="text-gray-600 font-light leading-relaxed text-lg whitespace-pre-line">${propiedad.descripcion || 'No hay descripción disponible.'}</p>
+                                
+                                ${caracteristicasHTML}
+                            </div>
+                        </div>
+                        
+                        <div class="lg:col-span-1">
+                            <div class="bg-[#0E0D0D] rounded-3xl p-8 shadow-2xl sticky top-32">
+                                <span class="text-gray-400 uppercase tracking-widest text-xs font-bold block mb-2">Valor Inversión</span>
+                                <div class="text-[#D0AA70] text-4xl lg:text-5xl font-extrabold mb-8">${precio} ${propiedad.moneda || 'UF'}</div>
+                                
+                                <h4 class="text-white font-bold mb-4">¿Te interesa esta propiedad?</h4>
+                                <a href="https://wa.me/56952046918?text=Hola,%20me%20interesa%20saber%20más%20sobre%20${encodeURIComponent(propiedad.nombre)}" target="_blank" class="w-full bg-[#D0AA70] text-[#0E0D0D] text-center py-4 rounded-xl font-bold hover:bg-white transition-all flex items-center justify-center gap-2 mt-4">
+                                    <i class="fa-brands fa-whatsapp text-xl"></i> Contactar por WhatsApp
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } else {
+                document.getElementById('detalle-container').innerHTML = "<h1 class='text-3xl text-center mt-20 font-bold'>La propiedad que buscas no existe o fue eliminada.</h1>";
+            }
+        } else {
+            document.getElementById('detalle-container').innerHTML = "<h1 class='text-3xl text-center mt-20 font-bold text-gray-500'>Falta el archivo propiedades.js</h1>";
+        }
+    </script>
+</body>
+</html>
