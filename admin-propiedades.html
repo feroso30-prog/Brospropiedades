@@ -1,1116 +1,247 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Admin · Propiedades</title>
-<style>
-  :root {
-    --accent: #c96442;
-    --accent2: #a04f33;
-    --bg: #f5f4f0;
-    --surface: #ffffff;
-    --border: #e2e0da;
-    --text: #1a1814;
-    --muted: #6b6458;
-    --radius: 10px;
-    --shadow: 0 2px 12px rgba(0,0,0,.08);
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
-
-  /* ── TOP BAR ── */
-  header {
-    background: var(--surface);
-    border-bottom: 1px solid var(--border);
-    padding: 0 24px;
-    height: 56px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-  }
-  .logo { font-weight: 700; font-size: 17px; letter-spacing: -.3px; }
-  .logo span { color: var(--accent); }
-  .header-actions { display: flex; gap: 10px; align-items: center; }
-  .storage-bar {
-    font-size: 11px;
-    color: var(--muted);
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 4px 10px;
-  }
-  .storage-bar b { color: var(--text); }
-
-  /* ── BUTTONS ── */
-  .btn {
-    display: inline-flex; align-items: center; gap: 6px;
-    padding: 8px 16px; border-radius: 8px; border: none;
-    font-size: 13.5px; font-weight: 500; cursor: pointer;
-    transition: background .15s, opacity .15s;
-  }
-  .btn-primary { background: var(--accent); color: #fff; }
-  .btn-primary:hover { background: var(--accent2); }
-  .btn-secondary { background: var(--surface); color: var(--text); border: 1px solid var(--border); }
-  .btn-secondary:hover { background: var(--bg); }
-  .btn-danger { background: #fee2e2; color: #b91c1c; border: 1px solid #fca5a5; }
-  .btn-danger:hover { background: #fecaca; }
-  .btn-sm { padding: 5px 12px; font-size: 12px; }
-  .btn-icon { padding: 7px; border-radius: 8px; }
-
-  /* ── STATS BAR ── */
-  .stats {
-    display: flex;
-    gap: 16px;
-    padding: 16px 24px;
-    flex-wrap: wrap;
-  }
-  .stat-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 14px 20px;
-    min-width: 130px;
-    flex: 1;
-  }
-  .stat-card .label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; }
-  .stat-card .value { font-size: 26px; font-weight: 700; line-height: 1.2; margin-top: 2px; }
-
-  /* ── FILTER BAR ── */
-  .filter-bar {
-    display: flex; gap: 8px; padding: 0 24px 16px; flex-wrap: wrap; align-items: center;
-  }
-  .filter-btn {
-    padding: 6px 14px; border-radius: 20px; border: 1px solid var(--border);
-    background: var(--surface); color: var(--muted);
-    font-size: 12.5px; cursor: pointer; font-weight: 500; transition: all .15s;
-  }
-  .filter-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
-  .search-box {
-    margin-left: auto;
-    padding: 7px 14px;
-    border-radius: 20px;
-    border: 1px solid var(--border);
-    background: var(--surface);
-    font-size: 13px;
-    outline: none;
-    width: 220px;
-  }
-  .search-box:focus { border-color: var(--accent); }
-
-  /* ── GRID ── */
-  .grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 16px;
-    padding: 0 24px 32px;
-  }
-  .prop-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    overflow: hidden;
-    box-shadow: var(--shadow);
-    transition: transform .15s, box-shadow .15s;
-    cursor: pointer;
-  }
-  .prop-card:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(0,0,0,.12); }
-  .card-img {
-    width: 100%; height: 190px; object-fit: cover; display: block;
-    background: var(--bg);
-  }
-  .card-img-placeholder {
-    width: 100%; height: 190px; background: linear-gradient(135deg, #ede9df, #d6cfc2);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 36px; color: var(--muted);
-  }
-  .card-body { padding: 14px 16px; }
-  .card-title { font-weight: 600; font-size: 15px; line-height: 1.3; margin-bottom: 4px; }
-  .card-sub { font-size: 12.5px; color: var(--muted); margin-bottom: 10px; }
-  .card-price { font-size: 17px; font-weight: 700; color: var(--accent); margin-bottom: 8px; }
-  .card-meta { display: flex; gap: 12px; flex-wrap: wrap; font-size: 12px; color: var(--muted); }
-  .card-meta span { display: flex; align-items: center; gap: 3px; }
-  .card-footer {
-    display: flex; justify-content: space-between; align-items: center;
-    padding: 10px 16px;
-    border-top: 1px solid var(--border);
-    gap: 8px;
-    flex-wrap: wrap;
-  }
-  .badge {
-    display: inline-block; padding: 2px 10px; border-radius: 20px;
-    font-size: 11.5px; font-weight: 600; text-transform: uppercase; letter-spacing: .04em;
-  }
-  .badge-venta     { background: #d1fae5; color: #065f46; }
-  .badge-arriendo  { background: #dbeafe; color: #1e40af; }
-  .badge-disponible { background: #d1fae5; color: #065f46; }
-  .badge-vendida   { background: #fee2e2; color: #991b1b; }
-  .badge-arrendada { background: #dbeafe; color: #1e40af; }
-  .badge-inactiva  { background: #f3f4f6; color: #374151; }
-  .card-badge {
-    display: inline-flex; align-items: center; gap: 3px;
-    padding: 2px 8px; border-radius: 20px;
-    font-size: 11px; font-weight: 600;
-    background: #fef3c7; color: #92400e;
-    border: 1px solid #fde68a;
-  }
-
-  /* ── TOGGLE BUTTONS ── */
-  .toggle-group { display: flex; }
-  .toggle-btn {
-    flex: 1; padding: 9px 0; border: 1px solid var(--border);
-    background: var(--surface); color: var(--muted);
-    font-size: 14px; font-family: inherit; cursor: pointer;
-    transition: all .15s; font-weight: 500;
-  }
-  .toggle-btn:first-child { border-radius: 8px 0 0 8px; }
-  .toggle-btn:last-child  { border-radius: 0 8px 8px 0; border-left: none; }
-  .toggle-btn.selected    { background: var(--accent); color: #fff; border-color: var(--accent); }
-
-  /* ── EMPTY STATE ── */
-  .empty {
-    grid-column: 1/-1;
-    text-align: center; padding: 64px 24px;
-    color: var(--muted);
-  }
-  .empty .icon { font-size: 48px; margin-bottom: 12px; }
-  .empty h3 { font-size: 18px; color: var(--text); margin-bottom: 6px; }
-
-  /* ── MODAL ── */
-  .overlay {
-    position: fixed; inset: 0; background: rgba(0,0,0,.45);
-    display: none; align-items: center; justify-content: center;
-    z-index: 500; padding: 20px;
-  }
-  .overlay.open { display: flex; }
-  .modal {
-    background: var(--surface);
-    border-radius: 14px;
-    width: 100%; max-width: 760px;
-    max-height: 90vh;
-    overflow-y: auto;
-    box-shadow: 0 20px 60px rgba(0,0,0,.25);
-    display: flex; flex-direction: column;
-  }
-  .modal-header {
-    padding: 20px 24px 16px;
-    border-bottom: 1px solid var(--border);
-    display: flex; align-items: center; justify-content: space-between;
-    position: sticky; top: 0; background: var(--surface); z-index: 10;
-    border-radius: 14px 14px 0 0;
-  }
-  .modal-header h2 { font-size: 18px; }
-  .modal-close {
-    width: 32px; height: 32px; border-radius: 8px; border: none;
-    background: var(--bg); color: var(--text); font-size: 18px;
-    cursor: pointer; display: flex; align-items: center; justify-content: center;
-  }
-  .modal-close:hover { background: var(--border); }
-  .modal-body { padding: 24px; flex: 1; }
-  .modal-footer {
-    padding: 16px 24px;
-    border-top: 1px solid var(--border);
-    display: flex; justify-content: flex-end; gap: 10px;
-    position: sticky; bottom: 0; background: var(--surface);
-    border-radius: 0 0 14px 14px;
-  }
-
-  /* ── FORM ── */
-  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-  .form-group { display: flex; flex-direction: column; gap: 6px; }
-  .form-group.span2 { grid-column: span 2; }
-  label { font-size: 12.5px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; }
-  input[type=text], input[type=number], input[type=url], select, textarea {
-    border: 1px solid var(--border);
-    border-radius: 8px; padding: 9px 12px;
-    font-size: 14px; font-family: inherit; color: var(--text);
-    background: var(--surface); outline: none; width: 100%;
-    transition: border-color .15s;
-  }
-  input[type=text]:focus, input[type=number]:focus, input[type=url]:focus, select:focus, textarea:focus {
-    border-color: var(--accent);
-  }
-  textarea { resize: vertical; min-height: 90px; }
-  select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236b6458' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 32px; }
-
-  /* ── SECTION TITLE ── */
-  .section-title {
-    font-size: 11.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .07em;
-    color: var(--muted); border-bottom: 1px solid var(--border);
-    padding-bottom: 6px; margin: 20px 0 14px; grid-column: span 2;
-  }
-
-  /* ── PHOTO ZONE ── */
-  .photo-zone {
-    border: 2px dashed var(--border); border-radius: 10px;
-    padding: 24px; text-align: center; cursor: pointer;
-    transition: border-color .15s, background .15s;
-  }
-  .photo-zone:hover, .photo-zone.dragging { border-color: var(--accent); background: #fdf2ee; }
-  .photo-zone .icon { font-size: 28px; margin-bottom: 6px; }
-  .photo-zone p { font-size: 13px; color: var(--muted); }
-  .photo-zone p b { color: var(--accent); }
-  .photo-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 8px; margin-top: 12px; }
-  .photo-thumb {
-    position: relative; border-radius: 8px; overflow: hidden;
-    aspect-ratio: 4/3; background: var(--bg);
-  }
-  .photo-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
-  .photo-thumb .del-photo {
-    position: absolute; top: 4px; right: 4px;
-    width: 22px; height: 22px; border-radius: 50%; border: none;
-    background: rgba(0,0,0,.55); color: #fff; font-size: 13px;
-    cursor: pointer; display: flex; align-items: center; justify-content: center;
-    opacity: 0; transition: opacity .15s;
-  }
-  .photo-thumb:hover .del-photo { opacity: 1; }
-
-  /* ── TAGS ── */
-  .tags-input { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
-  .tag {
-    display: inline-flex; align-items: center; gap: 4px;
-    padding: 4px 10px; border-radius: 20px;
-    background: #fdf2ee; color: var(--accent);
-    font-size: 12px; font-weight: 500; border: 1px solid #f3cfc2;
-  }
-  .tag button { border: none; background: none; color: inherit; cursor: pointer; font-size: 14px; line-height: 1; padding: 0; }
-  .tag-field {
-    border: none; outline: none; font-size: 13px; min-width: 120px;
-    font-family: inherit; background: transparent;
-  }
-
-  /* ── DETAIL MODAL ── */
-  .detail-photos { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; margin-bottom: 20px; }
-  .detail-photos img { height: 180px; border-radius: 8px; object-fit: cover; flex-shrink: 0; }
-  .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 24px; margin-bottom: 16px; }
-  .detail-item label { font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); display: block; margin-bottom: 2px; }
-  .detail-item span { font-size: 14.5px; font-weight: 500; }
-  .detail-desc { font-size: 14px; color: var(--muted); line-height: 1.6; }
-  .detail-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
-  .detail-section { margin-top: 20px; }
-  .detail-section h4 { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); margin-bottom: 10px; }
-
-  /* ── TOAST ── */
-  .toast {
-    position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px);
-    background: #1a1814; color: #fff; padding: 11px 20px;
-    border-radius: 10px; font-size: 14px; font-weight: 500;
-    box-shadow: 0 4px 20px rgba(0,0,0,.3); z-index: 9999;
-    transition: transform .3s cubic-bezier(.3,.7,.4,1);
-    white-space: nowrap;
-  }
-  .toast.show { transform: translateX(-50%) translateY(0); }
-
-  /* ── EXPORT MODAL ── */
-  .export-code {
-    background: #1a1814; color: #a8ff90; font-family: ui-monospace, monospace;
-    font-size: 12px; padding: 16px; border-radius: 8px; overflow-x: auto;
-    white-space: pre; max-height: 200px; overflow-y: auto;
-  }
-  .export-steps { margin: 16px 0; }
-  .export-steps li { padding: 6px 0; font-size: 14px; color: var(--muted); }
-  .export-steps li b { color: var(--text); }
-
-  @media (max-width: 600px) {
-    .form-grid { grid-template-columns: 1fr; }
-    .form-group.span2 { grid-column: span 1; }
-    .section-title { grid-column: span 1; }
-    .stats { padding: 12px 16px; }
-    .grid { padding: 0 12px 24px; gap: 12px; }
-    .filter-bar { padding: 0 12px 12px; }
-    header { padding: 0 16px; }
-  }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Administración | BROS Propiedades</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>body { font-family: 'Inter', sans-serif; background-color: #f3f4f6; }</style>
 </head>
-<body>
+<body class="text-gray-800">
 
-<!-- ── HEADER ── -->
-<header>
-  <div class="logo">🏠 Admin<span>Propiedades</span></div>
-  <div class="header-actions">
-    <div class="storage-bar">Almacenamiento: <b id="storageUsed">0 KB</b></div>
-    <button class="btn btn-secondary btn-sm" onclick="openExport()">⬇ Exportar JS</button>
-    <button class="btn btn-primary" onclick="openNew()">+ Nueva propiedad</button>
-  </div>
-</header>
-
-<!-- ── STATS ── -->
-<div class="stats" id="statsBar">
-  <div class="stat-card"><div class="label">Total</div><div class="value" id="stTotal">0</div></div>
-  <div class="stat-card"><div class="label">En Venta</div><div class="value" id="stVenta">0</div></div>
-  <div class="stat-card"><div class="label">Arriendo</div><div class="value" id="stArriendo">0</div></div>
-  <div class="stat-card"><div class="label">Disponibles</div><div class="value" id="stDisponible">0</div></div>
-</div>
-
-<!-- ── FILTER BAR ── -->
-<div class="filter-bar">
-  <button class="filter-btn active" data-filter="todos">Todos</button>
-  <button class="filter-btn" data-filter="Venta">Venta</button>
-  <button class="filter-btn" data-filter="Arriendo">Arriendo</button>
-  <button class="filter-btn" data-filter="disponible">Disponible</button>
-  <button class="filter-btn" data-filter="vendida">Vendida</button>
-  <button class="filter-btn" data-filter="arrendada">Arrendada</button>
-  <button class="filter-btn" data-filter="inactiva">Inactiva</button>
-  <input type="text" class="search-box" id="searchBox" placeholder="🔍  Buscar propiedad...">
-</div>
-
-<!-- ── GRID ── -->
-<div class="grid" id="propGrid"></div>
-
-<!-- ═══════════════════════════════════════════
-     MODAL: CREAR / EDITAR
-════════════════════════════════════════════ -->
-<div class="overlay" id="overlayForm">
-<div class="modal">
-  <div class="modal-header">
-    <h2 id="formTitle">Nueva propiedad</h2>
-    <button class="modal-close" onclick="closeForm()">✕</button>
-  </div>
-  <div class="modal-body">
-    <div class="form-grid">
-
-      <!-- Información básica -->
-      <div class="section-title">Información básica</div>
-
-      <div class="form-group span2">
-        <label>Nombre / Título</label>
-        <input type="text" id="fNombre" placeholder="Casa en Las Condes con jardín y piscina">
-      </div>
-
-      <div class="form-group">
-        <label>Tipo de propiedad</label>
-        <select id="fTipo">
-          <option>Casa</option>
-          <option>Departamento</option>
-          <option>Local</option>
-          <option>Terreno</option>
-          <option>Oficina</option>
-          <option>Bodega</option>
-          <option>Otro</option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label>Operación</label>
-        <select id="fOperacion">
-          <option>Venta</option>
-          <option>Arriendo</option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label>Precio</label>
-        <input type="number" id="fPrecio" placeholder="120000000">
-      </div>
-
-      <div class="form-group">
-        <label>Moneda</label>
-        <select id="fMoneda">
-          <option value="CLP">CLP – Peso Chileno</option>
-          <option value="UF">UF – Unidad de Fomento</option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label>Estado</label>
-        <select id="fEstado">
-          <option value="disponible">Disponible</option>
-          <option value="vendida">Vendida</option>
-          <option value="arrendada">Arrendada</option>
-          <option value="inactiva">Inactiva</option>
-        </select>
-      </div>
-
-      <!-- Superficie -->
-      <div class="section-title">Superficie</div>
-
-      <div class="form-group">
-        <label>M² Totales (terreno)</label>
-        <input type="number" id="fM2total" placeholder="350">
-      </div>
-
-      <div class="form-group">
-        <label>M² Construidos</label>
-        <input type="number" id="fM2const" placeholder="280">
-      </div>
-
-      <!-- Habitaciones -->
-      <div class="section-title">Habitaciones</div>
-
-      <div class="form-group">
-        <label>Dormitorios</label>
-        <input type="number" id="fRecamaras" placeholder="4" min="0">
-      </div>
-
-      <div class="form-group">
-        <label>Baños</label>
-        <input type="number" id="fBanos" placeholder="3" min="0">
-      </div>
-
-      <div class="form-group">
-        <label>Baños de visita</label>
-        <input type="number" id="fMediosbanos" placeholder="1" min="0">
-      </div>
-
-      <div class="form-group">
-        <label>Estacionamientos</label>
-        <input type="number" id="fEstacionamientos" placeholder="2" min="0">
-      </div>
-
-      <div class="form-group">
-        <label>Terraza</label>
-        <div class="toggle-group">
-          <button type="button" class="toggle-btn" id="fTerrazaSi" onclick="setToggle('terraza','si')">Sí</button>
-          <button type="button" class="toggle-btn" id="fTerrazaNo" onclick="setToggle('terraza','no')">No</button>
+    <header class="bg-[#0E0D0D] text-white p-6 shadow-md">
+        <div class="max-w-5xl mx-auto flex justify-between items-center">
+            <h1 class="text-2xl font-bold flex items-center gap-3"><i class="fa-solid fa-lock text-[#D0AA70]"></i> BROS Admin</h1>
+            <span class="bg-[#D0AA70] text-[#0E0D0D] px-3 py-1 rounded-full text-xs font-bold uppercase tracking-widest">Generador HD</span>
         </div>
-      </div>
+    </header>
 
-      <div class="form-group">
-        <label>Bodega</label>
-        <div class="toggle-group">
-          <button type="button" class="toggle-btn" id="fBodegaSi" onclick="setToggle('bodega','si')">Sí</button>
-          <button type="button" class="toggle-btn" id="fBodegaNo" onclick="setToggle('bodega','no')">No</button>
+    <main class="max-w-5xl mx-auto p-6 mt-6">
+        
+        <div class="bg-white rounded-2xl shadow-lg p-8">
+            <h2 class="text-xl font-bold mb-6 border-b pb-4">Cargar Nueva Propiedad</h2>
+            
+            <form id="propiedadForm" class="space-y-6">
+                <!-- SECCIÓN 1: Datos Básicos -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 uppercase mb-2">Título de la Propiedad</label>
+                        <input type="text" id="p_nombre" required placeholder="Ej: Espectacular Casa en Vitacura" class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D0AA70]">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 uppercase mb-2">Comuna / Ciudad</label>
+                        <input type="text" id="p_ciudad" required placeholder="Ej: Las Condes" class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D0AA70]">
+                    </div>
+                </div>
+
+                <!-- SECCIÓN 2: Clasificación y Precio -->
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 uppercase mb-2">Operación</label>
+                        <select id="p_operacion" class="w-full border p-3 rounded-lg focus:outline-none">
+                            <option value="Venta">Venta</option>
+                            <option value="Arriendo">Arriendo</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 uppercase mb-2">Tipo</label>
+                        <select id="p_tipo" class="w-full border p-3 rounded-lg focus:outline-none">
+                            <option value="Casa">Casa</option>
+                            <option value="Departamento">Departamento</option>
+                            <option value="Terreno">Terreno</option>
+                            <option value="Oficina">Oficina</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 uppercase mb-2">Estado Público</label>
+                        <select id="p_estado" class="w-full border p-3 rounded-lg focus:outline-none bg-gray-50 font-semibold">
+                            <option value="disponible">🟢 Disponible</option>
+                            <option value="en_proceso">🟡 En Proceso</option>
+                            <option value="vendida">🔴 Vendida</option>
+                            <option value="rentada">🔴 Arrendada</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 uppercase mb-2">Precio y Moneda</label>
+                        <div class="flex">
+                            <select id="p_moneda" class="border-y border-l p-3 rounded-l-lg focus:outline-none bg-gray-100 font-bold">
+                                <option value="UF">UF</option>
+                                <option value="CLP">CLP</option>
+                            </select>
+                            <input type="number" id="p_precio" required placeholder="Ej: 12000" class="w-full border p-3 rounded-r-lg focus:outline-none">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SECCIÓN 3: Características -->
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-6 bg-gray-50 p-4 rounded-xl border border-gray-100">
+                    <div><label class="block text-xs font-bold text-gray-500 uppercase mb-2">Dormitorios</label><input type="number" id="p_recamaras" value="0" min="0" class="w-full border p-3 rounded-lg"></div>
+                    <div><label class="block text-xs font-bold text-gray-500 uppercase mb-2">Baños</label><input type="number" id="p_banos" value="0" min="0" class="w-full border p-3 rounded-lg"></div>
+                    <div><label class="block text-xs font-bold text-gray-500 uppercase mb-2">Estacionam.</label><input type="number" id="p_estacionamientos" value="0" min="0" class="w-full border p-3 rounded-lg"></div>
+                    <div><label class="block text-xs font-bold text-gray-500 uppercase mb-2">M² Totales</label><input type="number" id="p_m2" value="0" min="0" class="w-full border p-3 rounded-lg"></div>
+                </div>
+
+                <!-- SECCIÓN 4: Contenido Multimedia -->
+                <div class="space-y-6">
+                    <div>
+                        <label class="block text-xs font-bold text-blue-600 uppercase mb-2"><i class="fa-brands fa-youtube"></i> Link de Video YouTube (Opcional)</label>
+                        <input type="url" id="p_video" placeholder="Ej: https://www.youtube.com/watch?v=..." class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 bg-blue-50/30">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 uppercase mb-2">Descripción Detallada</label>
+                        <textarea id="p_descripcion" rows="4" class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D0AA70]"></textarea>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 uppercase mb-2">Fotografías Alta Calidad (Máx 15)</label>
+                        <input type="file" id="p_fotos" multiple accept="image/*" class="w-full border p-3 rounded-lg bg-white font-medium">
+                        <p class="text-xs text-gray-400 mt-1">El sistema ahora conserva la calidad Full HD (1920px) al 90% de detalle.</p>
+                    </div>
+                </div>
+
+                <div class="pt-6 border-t flex justify-end gap-4">
+                    <button type="button" onclick="limpiarFormulario()" class="px-6 py-3 rounded-lg font-bold text-gray-500 hover:bg-gray-100">Limpiar</button>
+                    <button type="submit" class="bg-[#0E0D0D] text-white px-8 py-3 rounded-lg font-bold hover:bg-[#D0AA70] hover:text-[#0E0D0D] transition-colors shadow-lg">Guardar Propiedad</button>
+                </div>
+            </form>
         </div>
-      </div>
 
-      <!-- Ubicación -->
-      <div class="section-title">Ubicación</div>
-
-      <div class="form-group span2">
-        <label>Dirección</label>
-        <input type="text" id="fColonia" placeholder="Av. Los Conquistadores 1234">
-      </div>
-
-      <div class="form-group">
-        <label>Ciudad</label>
-        <input type="text" id="fCiudad" placeholder="Santiago">
-      </div>
-
-      <div class="form-group">
-        <label>Comuna</label>
-        <input type="text" id="fEstadoubi" placeholder="Las Condes">
-      </div>
-
-      <!-- Descripción -->
-      <div class="section-title">Descripción</div>
-
-      <div class="form-group span2">
-        <label>Descripción detallada</label>
-        <textarea id="fDescripcion" placeholder="Hermosa casa con amplio jardín, piscina temperada, quincho y acceso controlado..."></textarea>
-      </div>
-
-      <!-- Características -->
-      <div class="section-title">Características</div>
-
-      <div class="form-group span2">
-        <label>Etiquetas (presiona Enter para agregar)</label>
-        <div style="border:1px solid var(--border); border-radius:8px; padding:8px 10px; background:var(--surface);">
-          <div class="tags-input" id="tagsContainer">
-            <input type="text" class="tag-field" id="tagInput" placeholder="Piscina, Jardín, Estacionamiento...">
-          </div>
+        <!-- LISTA -->
+        <div class="bg-white rounded-2xl shadow-lg p-8 mt-8">
+            <div class="flex justify-between items-center mb-6 border-b pb-4">
+                <h2 class="text-xl font-bold">Propiedades en el Sistema</h2>
+                <button onclick="exportarJS()" class="bg-[#D0AA70] text-[#0E0D0D] px-6 py-2 rounded-lg font-bold shadow-md hover:bg-[#956932] hover:text-white transition-colors flex items-center gap-2">
+                    <i class="fa-solid fa-download"></i> Exportar "propiedades.js"
+                </button>
+            </div>
+            <div id="listaPropiedades" class="space-y-4">
+                <p class="text-gray-400 text-center py-4">No hay propiedades guardadas aún.</p>
+            </div>
         </div>
-      </div>
+    </main>
 
-      <!-- Video -->
-      <div class="section-title">Video</div>
+    <script>
+        let inventario = [];
 
-      <div class="form-group span2">
-        <label>Video YouTube</label>
-        <input type="url" id="fYoutube" placeholder="https://www.youtube.com/watch?v=...">
-      </div>
+        // 🚀 NUEVA FUNCIÓN DE COMPRESIÓN: ALTA CALIDAD FULL HD
+        function procesarImagen(file) {
+            return new Promise((resolve) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = (event) => {
+                    const img = new Image();
+                    img.src = event.target.result;
+                    img.onload = () => {
+                        const canvas = document.createElement('canvas');
+                        // Ampliamos el ancho a 1920 para que no pierda resolución
+                        const MAX_WIDTH = 1920; 
+                        let width = img.width;
+                        let height = img.height;
 
-      <!-- Fotos -->
-      <div class="section-title">Fotografías</div>
+                        if (width > MAX_WIDTH) {
+                            height = Math.round((height * MAX_WIDTH) / width);
+                            width = MAX_WIDTH;
+                        }
+                        canvas.width = width;
+                        canvas.height = height;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, width, height);
+                        // Subimos la calidad JPEG a 0.90 (90%) para nitidez extrema
+                        resolve(canvas.toDataURL('image/jpeg', 0.90)); 
+                    };
+                };
+            });
+        }
 
-      <div class="form-group span2">
-        <div class="photo-zone" id="dropZone">
-          <div class="icon">📷</div>
-          <p><b>Arrastra fotos aquí</b> o haz clic para seleccionar</p>
-          <p style="font-size:11px;margin-top:4px;">JPG/PNG · Máx. 30 fotos · Se comprimirán automáticamente</p>
-          <input type="file" id="fileInput" multiple accept="image/*" hidden>
-        </div>
-        <div class="photo-grid" id="photoGrid"></div>
-      </div>
+        document.getElementById('propiedadForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const btnSubmit = e.target.querySelector('button[type="submit"]');
+            const originalText = btnSubmit.innerText;
+            btnSubmit.innerText = "Procesando fotos en Alta Calidad...";
+            btnSubmit.disabled = true;
 
-    </div><!-- /form-grid -->
-  </div><!-- /modal-body -->
-  <div class="modal-footer">
-    <button class="btn btn-secondary" onclick="closeForm()">Cancelar</button>
-    <button class="btn btn-danger btn-sm" id="btnEliminar" onclick="eliminarPropiedad()" style="margin-right:auto;display:none;">🗑 Eliminar</button>
-    <button class="btn btn-primary" onclick="guardarPropiedad()">💾 Guardar</button>
-  </div>
-</div>
-</div>
+            const fotosInput = document.getElementById('p_fotos').files;
+            let fotosBase64 = [];
+            
+            for (let i = 0; i < Math.min(fotosInput.length, 15); i++) {
+                let imgComprimida = await procesarImagen(fotosInput[i]);
+                fotosBase64.push(imgComprimida);
+            }
 
-<!-- ═══════════════════════════════════════════
-     MODAL: DETALLE
-════════════════════════════════════════════ -->
-<div class="overlay" id="overlayDetail">
-<div class="modal">
-  <div class="modal-header">
-    <h2 id="detailTitle">Detalle</h2>
-    <button class="modal-close" onclick="closeDetail()">✕</button>
-  </div>
-  <div class="modal-body" id="detailBody"></div>
-  <div class="modal-footer">
-    <button class="btn btn-secondary" onclick="closeDetail()">Cerrar</button>
-    <button class="btn btn-primary" id="btnEditarDesdeDetail" onclick="editarDesdeDetail()">✏️ Editar</button>
-  </div>
-</div>
-</div>
+            const nuevaPropiedad = {
+                id: 'bros_' + Date.now().toString(36),
+                nombre: document.getElementById('p_nombre').value,
+                ciudad: document.getElementById('p_ciudad').value,
+                operacion: document.getElementById('p_operacion').value,
+                tipo: document.getElementById('p_tipo').value,
+                estado: document.getElementById('p_estado').value,
+                moneda: document.getElementById('p_moneda').value,
+                precio: document.getElementById('p_precio').value,
+                recamaras: document.getElementById('p_recamaras').value,
+                banos: document.getElementById('p_banos').value,
+                estacionamientos: document.getElementById('p_estacionamientos').value,
+                m2total: document.getElementById('p_m2').value,
+                video: document.getElementById('p_video').value,
+                descripcion: document.getElementById('p_descripcion').value,
+                fotos: fotosBase64
+            };
 
-<!-- ═══════════════════════════════════════════
-     MODAL: EXPORTAR
-════════════════════════════════════════════ -->
-<div class="overlay" id="overlayExport">
-<div class="modal" style="max-width:580px;">
-  <div class="modal-header">
-    <h2>Exportar propiedades.js</h2>
-    <button class="modal-close" onclick="closeExport()">✕</button>
-  </div>
-  <div class="modal-body">
-    <p style="font-size:14px;color:var(--muted);margin-bottom:12px;">
-      Descarga el archivo <b>propiedades.js</b> y súbelo a la raíz de tu sitio web para actualizar las propiedades publicadas.
-    </p>
-    <ol class="export-steps">
-      <li>1. <b>Descarga</b> el archivo con el botón de abajo.</li>
-      <li>2. <b>Sube</b> <code>propiedades.js</code> a la carpeta raíz de tu hosting (reemplaza el anterior).</li>
-      <li>3. <b>Listo</b> — tu sitio web mostrará las propiedades actualizadas.</li>
-    </ol>
-    <div class="export-code" id="exportPreview"></div>
-  </div>
-  <div class="modal-footer">
-    <button class="btn btn-secondary" onclick="closeExport()">Cancelar</button>
-    <button class="btn btn-primary" onclick="descargarJS()">⬇ Descargar propiedades.js</button>
-  </div>
-</div>
-</div>
+            inventario.unshift(nuevaPropiedad);
+            actualizarLista();
+            limpiarFormulario();
+            
+            btnSubmit.innerText = originalText;
+            btnSubmit.disabled = false;
+        });
 
-<!-- ── TOAST ── -->
-<div class="toast" id="toast"></div>
+        function eliminarPropiedad(id) {
+            if(confirm('¿Estás seguro de eliminar esta propiedad?')) {
+                inventario = inventario.filter(p => p.id !== id);
+                actualizarLista();
+            }
+        }
 
-<script>
-// ═══════════════════════════════════════════
-//  ESTADO
-// ═══════════════════════════════════════════
-const LS_KEY = 'propiedades_admin_v1';
-let propiedades = [];
-let editingId = null;
-let currentPhotos = [];
-let currentTags = [];
-let currentFilter = 'todos';
-let detailId = null;
-let toggleState = { terraza: null, bodega: null };
+        function actualizarLista() {
+            const container = document.getElementById('listaPropiedades');
+            container.innerHTML = '';
+            if(inventario.length === 0) {
+                container.innerHTML = '<p class="text-gray-400 text-center py-4">No hay propiedades guardadas aún.</p>';
+                return;
+            }
+            inventario.forEach(p => {
+                const img = (p.fotos && p.fotos.length > 0) ? p.fotos[0] : 'https://via.placeholder.com/150?text=Sin+Foto';
+                container.innerHTML += `
+                    <div class="flex items-center justify-between bg-white border p-4 rounded-xl shadow-sm">
+                        <div class="flex items-center gap-4">
+                            <img src="${img}" class="w-16 h-16 object-cover rounded-lg">
+                            <div>
+                                <h4 class="font-bold text-gray-900">${p.nombre}</h4>
+                                <p class="text-xs text-gray-500">${p.operacion} | ${p.moneda} ${p.precio} | ${p.estado}</p>
+                            </div>
+                        </div>
+                        <button onclick="eliminarPropiedad('${p.id}')" class="text-red-500 hover:text-red-700 bg-red-50 p-3 rounded-lg"><i class="fa-solid fa-trash"></i></button>
+                    </div>
+                `;
+            });
+        }
 
-function genId() {
-  return Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
-}
+        function limpiarFormulario() { document.getElementById('propiedadForm').reset(); }
 
-// ═══════════════════════════════════════════
-//  PERSISTENCIA
-// ═══════════════════════════════════════════
-function cargar() {
-  try {
-    const raw = localStorage.getItem(LS_KEY);
-    propiedades = raw ? JSON.parse(raw) : [];
-  } catch(e) {
-    propiedades = [];
-  }
-}
-
-function guardar() {
-  localStorage.setItem(LS_KEY, JSON.stringify(propiedades));
-  actualizarStorage();
-}
-
-function actualizarStorage() {
-  try {
-    const bytes = new Blob([localStorage.getItem(LS_KEY) || '']).size;
-    const kb = (bytes / 1024).toFixed(0);
-    const mb = (bytes / 1024 / 1024).toFixed(2);
-    document.getElementById('storageUsed').textContent = bytes > 500000 ? mb + ' MB' : kb + ' KB';
-  } catch(e) {}
-}
-
-// ═══════════════════════════════════════════
-//  TOGGLE BUTTONS (Terraza / Bodega)
-// ═══════════════════════════════════════════
-function setToggle(field, val) {
-  toggleState[field] = val;
-  const cap = field.charAt(0).toUpperCase() + field.slice(1);
-  document.getElementById('f' + cap + 'Si').classList.toggle('selected', val === 'si');
-  document.getElementById('f' + cap + 'No').classList.toggle('selected', val === 'no');
-}
-
-function clearToggle(field) {
-  toggleState[field] = null;
-  const cap = field.charAt(0).toUpperCase() + field.slice(1);
-  document.getElementById('f' + cap + 'Si').classList.remove('selected');
-  document.getElementById('f' + cap + 'No').classList.remove('selected');
-}
-
-// ═══════════════════════════════════════════
-//  YOUTUBE
-// ═══════════════════════════════════════════
-function getYouTubeId(url) {
-  if (!url) return null;
-  const patterns = [
-    /[?&]v=([^&#]+)/,
-    /youtu\.be\/([^?&#]+)/,
-    /\/embed\/([^?&#]+)/
-  ];
-  for (const p of patterns) {
-    const m = url.match(p);
-    if (m) return m[1];
-  }
-  return null;
-}
-
-// ═══════════════════════════════════════════
-//  RENDER
-// ═══════════════════════════════════════════
-function render() {
-  const q = (document.getElementById('searchBox').value || '').toLowerCase();
-  const estadoFiltros = ['disponible','vendida','arrendada','inactiva'];
-  const filtered = propiedades.filter(p => {
-    if (currentFilter === 'todos') {}
-    else if (estadoFiltros.includes(currentFilter)) {
-      if (p.estado !== currentFilter) return false;
-    } else {
-      if (p.operacion !== currentFilter) return false;
-    }
-    if (q) {
-      const hay = [p.nombre, p.tipo, p.colonia, p.ciudad, p.estadoubi].join(' ').toLowerCase();
-      if (!hay.includes(q)) return false;
-    }
-    return true;
-  });
-
-  const grid = document.getElementById('propGrid');
-  if (filtered.length === 0) {
-    grid.innerHTML = `<div class="empty"><div class="icon">🏘</div><h3>Sin propiedades</h3><p>Crea tu primera propiedad con el botón "+ Nueva propiedad".</p></div>`;
-  } else {
-    grid.innerHTML = filtered.map(p => cardHTML(p)).join('');
-  }
-
-  // stats
-  document.getElementById('stTotal').textContent = propiedades.length;
-  document.getElementById('stVenta').textContent = propiedades.filter(p => p.operacion === 'Venta').length;
-  document.getElementById('stArriendo').textContent = propiedades.filter(p => p.operacion === 'Arriendo').length;
-  document.getElementById('stDisponible').textContent = propiedades.filter(p => p.estado === 'disponible').length;
-}
-
-function cardHTML(p) {
-  const imgEl = p.fotos && p.fotos.length
-    ? `<img class="card-img" src="${p.fotos[0]}" alt="${escHtml(p.nombre)}" loading="lazy">`
-    : `<div class="card-img-placeholder">🏠</div>`;
-
-  const opBadge = p.operacion === 'Arriendo'
-    ? `<span class="badge badge-arriendo">Arriendo</span>`
-    : `<span class="badge badge-venta">Venta</span>`;
-  const stBadge = `<span class="badge badge-${p.estado}">${estadoLabel(p.estado)}</span>`;
-
-  const precio = p.precio ? Number(p.precio).toLocaleString('es-CL') : '—';
-  const moneda = p.moneda || 'CLP';
-  const ytBadge = p.youtubeUrl ? `<span class="card-badge" title="Video disponible">▶ Video</span>` : '';
-
-  return `
-  <div class="prop-card" onclick="openDetail('${p.id}')">
-    ${imgEl}
-    <div class="card-body">
-      <div class="card-title">${escHtml(p.nombre || 'Sin nombre')}</div>
-      <div class="card-sub">📍 ${escHtml([p.colonia, p.ciudad].filter(Boolean).join(', ') || '—')}</div>
-      <div class="card-price">${moneda} ${precio}</div>
-      <div class="card-meta">
-        ${p.m2const ? `<span>📐 ${p.m2const} m²</span>` : ''}
-        ${p.recamaras ? `<span>🛏 ${p.recamaras}</span>` : ''}
-        ${p.banos ? `<span>🚿 ${p.banos}</span>` : ''}
-        ${p.estacionamientos ? `<span>🚗 ${p.estacionamientos}</span>` : ''}
-        ${p.terraza === 'si' ? `<span>🌿 Terraza</span>` : ''}
-        ${p.bodega === 'si' ? `<span>📦 Bodega</span>` : ''}
-      </div>
-    </div>
-    <div class="card-footer">
-      ${opBadge}
-      ${stBadge}
-      ${ytBadge}
-      <button class="btn btn-secondary btn-sm" onclick="event.stopPropagation();editarPropiedad('${p.id}')">✏️ Editar</button>
-    </div>
-  </div>`;
-}
-
-function estadoLabel(e) {
-  const m = { disponible:'Disponible', vendida:'Vendida', arrendada:'Arrendada', inactiva:'Inactiva' };
-  return m[e] || e;
-}
-
-function escHtml(s) {
-  return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
-
-// ═══════════════════════════════════════════
-//  FILTROS
-// ═══════════════════════════════════════════
-document.querySelectorAll('.filter-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    currentFilter = btn.dataset.filter;
-    render();
-  });
-});
-
-document.getElementById('searchBox').addEventListener('input', render);
-
-// ═══════════════════════════════════════════
-//  MODAL FORM
-// ═══════════════════════════════════════════
-function openNew() {
-  editingId = null;
-  currentPhotos = [];
-  currentTags = [];
-  document.getElementById('formTitle').textContent = 'Nueva propiedad';
-  document.getElementById('btnEliminar').style.display = 'none';
-  clearForm();
-  renderPhotoGrid();
-  renderTags();
-  document.getElementById('overlayForm').classList.add('open');
-}
-
-function editarPropiedad(id) {
-  const p = propiedades.find(x => x.id === id);
-  if (!p) return;
-  editingId = id;
-  currentPhotos = [...(p.fotos || [])];
-  currentTags = [...(p.caracteristicas || [])];
-  document.getElementById('formTitle').textContent = 'Editar propiedad';
-  document.getElementById('btnEliminar').style.display = '';
-  fillForm(p);
-  renderPhotoGrid();
-  renderTags();
-  document.getElementById('overlayForm').classList.add('open');
-  closeDetail();
-}
-
-function editarDesdeDetail() {
-  if (detailId) editarPropiedad(detailId);
-}
-
-function closeForm() {
-  document.getElementById('overlayForm').classList.remove('open');
-}
-
-function clearForm() {
-  ['fNombre','fPrecio','fM2total','fM2const','fRecamaras','fBanos','fMediosbanos',
-   'fEstacionamientos','fColonia','fCiudad','fEstadoubi','fDescripcion','fYoutube'].forEach(id => {
-    document.getElementById(id).value = '';
-  });
-  document.getElementById('fTipo').value = 'Casa';
-  document.getElementById('fOperacion').value = 'Venta';
-  document.getElementById('fMoneda').value = 'CLP';
-  document.getElementById('fEstado').value = 'disponible';
-  clearToggle('terraza');
-  clearToggle('bodega');
-}
-
-function fillForm(p) {
-  document.getElementById('fNombre').value = p.nombre || '';
-  document.getElementById('fTipo').value = p.tipo || 'Casa';
-  document.getElementById('fOperacion').value = p.operacion || 'Venta';
-  document.getElementById('fPrecio').value = p.precio || '';
-  document.getElementById('fMoneda').value = p.moneda || 'CLP';
-  document.getElementById('fEstado').value = p.estado || 'disponible';
-  document.getElementById('fM2total').value = p.m2total || '';
-  document.getElementById('fM2const').value = p.m2const || '';
-  document.getElementById('fRecamaras').value = p.recamaras || '';
-  document.getElementById('fBanos').value = p.banos || '';
-  document.getElementById('fMediosbanos').value = p.mediosbanos || '';
-  document.getElementById('fEstacionamientos').value = p.estacionamientos || '';
-  document.getElementById('fColonia').value = p.colonia || '';
-  document.getElementById('fCiudad').value = p.ciudad || '';
-  document.getElementById('fEstadoubi').value = p.estadoubi || '';
-  document.getElementById('fDescripcion').value = p.descripcion || '';
-  document.getElementById('fYoutube').value = p.youtubeUrl || '';
-  if (p.terraza) setToggle('terraza', p.terraza); else clearToggle('terraza');
-  if (p.bodega) setToggle('bodega', p.bodega); else clearToggle('bodega');
-}
-
-function guardarPropiedad() {
-  const nombre = document.getElementById('fNombre').value.trim();
-  if (!nombre) { showToast('⚠️ El nombre es obligatorio'); return; }
-
-  const datos = {
-    id: editingId || genId(),
-    nombre,
-    tipo: document.getElementById('fTipo').value,
-    operacion: document.getElementById('fOperacion').value,
-    precio: document.getElementById('fPrecio').value,
-    moneda: document.getElementById('fMoneda').value,
-    estado: document.getElementById('fEstado').value,
-    m2total: document.getElementById('fM2total').value,
-    m2const: document.getElementById('fM2const').value,
-    recamaras: document.getElementById('fRecamaras').value,
-    banos: document.getElementById('fBanos').value,
-    mediosbanos: document.getElementById('fMediosbanos').value,
-    estacionamientos: document.getElementById('fEstacionamientos').value,
-    terraza: toggleState.terraza,
-    bodega: toggleState.bodega,
-    youtubeUrl: document.getElementById('fYoutube').value.trim(),
-    colonia: document.getElementById('fColonia').value,
-    ciudad: document.getElementById('fCiudad').value,
-    estadoubi: document.getElementById('fEstadoubi').value,
-    descripcion: document.getElementById('fDescripcion').value,
-    caracteristicas: [...currentTags],
-    fotos: [...currentPhotos],
-    updatedAt: new Date().toISOString()
-  };
-
-  if (editingId) {
-    const idx = propiedades.findIndex(x => x.id === editingId);
-    propiedades[idx] = datos;
-    showToast('✅ Propiedad actualizada');
-  } else {
-    propiedades.unshift(datos);
-    showToast('✅ Propiedad creada');
-  }
-
-  guardar();
-  render();
-  closeForm();
-}
-
-function eliminarPropiedad() {
-  if (!editingId) return;
-  if (!confirm('¿Eliminar esta propiedad? Esta acción no se puede deshacer.')) return;
-  propiedades = propiedades.filter(x => x.id !== editingId);
-  guardar();
-  render();
-  closeForm();
-  showToast('🗑 Propiedad eliminada');
-}
-
-// ═══════════════════════════════════════════
-//  FOTOS
-// ═══════════════════════════════════════════
-const dropZone = document.getElementById('dropZone');
-const fileInput = document.getElementById('fileInput');
-
-dropZone.addEventListener('click', () => fileInput.click());
-dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('dragging'); });
-dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragging'));
-dropZone.addEventListener('drop', e => {
-  e.preventDefault(); dropZone.classList.remove('dragging');
-  procesarArchivos(e.dataTransfer.files);
-});
-fileInput.addEventListener('change', () => procesarArchivos(fileInput.files));
-
-function procesarArchivos(files) {
-  const arr = Array.from(files).filter(f => f.type.startsWith('image/'));
-  const restante = 30 - currentPhotos.length;
-  if (restante <= 0) { showToast('Límite de 30 fotos alcanzado'); return; }
-  arr.slice(0, restante).forEach(f => comprimirFoto(f));
-}
-
-function comprimirFoto(file) {
-  const reader = new FileReader();
-  reader.onload = e => {
-    const img = new Image();
-    img.onload = () => {
-      const MAX = 800;
-      let w = img.width, h = img.height;
-      if (w > MAX || h > MAX) {
-        if (w > h) { h = Math.round(h * MAX / w); w = MAX; }
-        else { w = Math.round(w * MAX / h); h = MAX; }
-      }
-      const canvas = document.createElement('canvas');
-      canvas.width = w; canvas.height = h;
-      canvas.getContext('2d').drawImage(img, 0, 0, w, h);
-      const dataUrl = canvas.toDataURL('image/jpeg', 0.72);
-      currentPhotos.push(dataUrl);
-      renderPhotoGrid();
-    };
-    img.src = e.target.result;
-  };
-  reader.readAsDataURL(file);
-}
-
-function renderPhotoGrid() {
-  const grid = document.getElementById('photoGrid');
-  grid.innerHTML = currentPhotos.map((src, i) => `
-    <div class="photo-thumb">
-      <img src="${src}" alt="foto ${i+1}">
-      <button class="del-photo" onclick="eliminarFoto(${i})" title="Eliminar foto">✕</button>
-    </div>`).join('');
-}
-
-function eliminarFoto(idx) {
-  currentPhotos.splice(idx, 1);
-  renderPhotoGrid();
-}
-
-// ═══════════════════════════════════════════
-//  TAGS
-// ═══════════════════════════════════════════
-const tagInput = document.getElementById('tagInput');
-
-tagInput.addEventListener('keydown', e => {
-  if (e.key === 'Enter' || e.key === ',') {
-    e.preventDefault();
-    const val = tagInput.value.trim().replace(/,$/, '');
-    if (val && !currentTags.includes(val)) {
-      currentTags.push(val);
-      renderTags();
-    }
-    tagInput.value = '';
-  }
-});
-
-function eliminarTag(idx) {
-  currentTags.splice(idx, 1);
-  renderTags();
-}
-
-function renderTags() {
-  const container = document.getElementById('tagsContainer');
-  const chips = currentTags.map((t, i) => `
-    <span class="tag">${escHtml(t)}<button onclick="eliminarTag(${i})">×</button></span>`).join('');
-  container.innerHTML = chips + `<input type="text" class="tag-field" id="tagInput" placeholder="${currentTags.length ? '' : 'Piscina, Jardín, Terraza...'}">`;
-  document.getElementById('tagInput').addEventListener('keydown', e => {
-    if (e.key === 'Enter' || e.key === ',') {
-      e.preventDefault();
-      const val = e.target.value.trim().replace(/,$/, '');
-      if (val && !currentTags.includes(val)) { currentTags.push(val); renderTags(); }
-      else e.target.value = '';
-    }
-  });
-  document.getElementById('tagInput').focus();
-}
-
-// ═══════════════════════════════════════════
-//  DETALLE
-// ═══════════════════════════════════════════
-function openDetail(id) {
-  const p = propiedades.find(x => x.id === id);
-  if (!p) return;
-  detailId = id;
-  document.getElementById('detailTitle').textContent = p.nombre || 'Detalle';
-
-  const precio = p.precio ? Number(p.precio).toLocaleString('es-CL') : '—';
-  const moneda = p.moneda || 'CLP';
-  const fotosHTML = p.fotos && p.fotos.length
-    ? `<div class="detail-photos">${p.fotos.map(s => `<img src="${s}" alt="">`).join('')}</div>`
-    : '';
-  const tagsHTML = p.caracteristicas && p.caracteristicas.length
-    ? `<div class="detail-tags">${p.caracteristicas.map(t => `<span class="tag">${escHtml(t)}</span>`).join('')}</div>`
-    : '';
-
-  const ytId = getYouTubeId(p.youtubeUrl);
-  const ytSection = ytId
-    ? `<div class="detail-section">
-         <h4>Video</h4>
-         <div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:8px;">
-           <iframe src="https://www.youtube.com/embed/${ytId}"
-             style="position:absolute;top:0;left:0;width:100%;height:100%;border:0;"
-             allowfullscreen loading="lazy"></iframe>
-         </div>
-       </div>`
-    : '';
-
-  const terrazaVal = p.terraza === 'si' ? 'Sí' : p.terraza === 'no' ? 'No' : '—';
-  const bodegaVal = p.bodega === 'si' ? 'Sí' : p.bodega === 'no' ? 'No' : '—';
-
-  document.getElementById('detailBody').innerHTML = `
-    ${fotosHTML}
-    <div class="detail-grid">
-      <div class="detail-item"><label>Tipo</label><span>${escHtml(p.tipo || '—')}</span></div>
-      <div class="detail-item"><label>Operación</label><span>${escHtml(p.operacion || '—')}</span></div>
-      <div class="detail-item"><label>Precio</label><span>${moneda} ${precio}</span></div>
-      <div class="detail-item"><label>Estado</label><span>${estadoLabel(p.estado)}</span></div>
-      <div class="detail-item"><label>M² Totales</label><span>${p.m2total || '—'}</span></div>
-      <div class="detail-item"><label>M² Construidos</label><span>${p.m2const || '—'}</span></div>
-      <div class="detail-item"><label>Dormitorios</label><span>${p.recamaras || '—'}</span></div>
-      <div class="detail-item"><label>Baños</label><span>${p.banos || '—'}</span></div>
-      <div class="detail-item"><label>Estacionamientos</label><span>${p.estacionamientos || '—'}</span></div>
-      <div class="detail-item"><label>Terraza</label><span>${terrazaVal}</span></div>
-      <div class="detail-item"><label>Bodega</label><span>${bodegaVal}</span></div>
-      <div class="detail-item"><label>Dirección</label><span>${escHtml(p.colonia || '—')}</span></div>
-      <div class="detail-item"><label>Ciudad</label><span>${escHtml(p.ciudad || '—')}</span></div>
-      <div class="detail-item"><label>Comuna</label><span>${escHtml(p.estadoubi || '—')}</span></div>
-    </div>
-    ${p.descripcion ? `<p class="detail-desc">${escHtml(p.descripcion)}</p>` : ''}
-    ${tagsHTML}
-    ${ytSection}
-    <p style="font-size:11px;color:var(--muted);margin-top:16px;">Actualizado: ${p.updatedAt ? new Date(p.updatedAt).toLocaleString('es-CL') : '—'}</p>
-  `;
-  document.getElementById('overlayDetail').classList.add('open');
-}
-
-function closeDetail() {
-  document.getElementById('overlayDetail').classList.remove('open');
-}
-
-// ═══════════════════════════════════════════
-//  EXPORTAR
-// ═══════════════════════════════════════════
-function openExport() {
-  const preview = propiedades.length
-    ? `const PROPIEDADES = ${JSON.stringify(propiedades.slice(0,2), null, 2)}${propiedades.length > 2 ? '\n// ... ('+propiedades.length+' propiedades en total)' : ''};\n// Generado: ${new Date().toLocaleString('es-CL')}`
-    : '// Sin propiedades aún';
-  document.getElementById('exportPreview').textContent = preview;
-  document.getElementById('overlayExport').classList.add('open');
-}
-
-function closeExport() {
-  document.getElementById('overlayExport').classList.remove('open');
-}
-
-function descargarJS() {
-  const content = `// propiedades.js — generado el ${new Date().toLocaleString('es-CL')}\n// NO editar manualmente. Usa el panel de administración.\nconst PROPIEDADES = ${JSON.stringify(propiedades, null, 2)};\n`;
-  const blob = new Blob([content], { type: 'application/javascript' });
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = 'propiedades.js';
-  a.click();
-  setTimeout(() => URL.revokeObjectURL(a.href), 5000);
-  showToast('⬇ propiedades.js descargado');
-  closeExport();
-}
-
-// ═══════════════════════════════════════════
-//  TOAST
-// ═══════════════════════════════════════════
-let toastTimer;
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => t.classList.remove('show'), 3000);
-}
-
-// ═══════════════════════════════════════════
-//  CERRAR CON ESC / OVERLAY CLICK
-// ═══════════════════════════════════════════
-document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') { closeForm(); closeDetail(); closeExport(); }
-});
-['overlayForm','overlayDetail','overlayExport'].forEach(id => {
-  document.getElementById(id).addEventListener('click', e => {
-    if (e.target === e.currentTarget) {
-      closeForm(); closeDetail(); closeExport();
-    }
-  });
-});
-
-// ═══════════════════════════════════════════
-//  INIT
-// ═══════════════════════════════════════════
-cargar();
-render();
-actualizarStorage();
-</script>
+        function exportarJS() {
+            if(inventario.length === 0) { alert("Debes cargar al menos una propiedad."); return; }
+            const jsContent = "const PROPIEDADES = " + JSON.stringify(inventario, null, 4) + ";";
+            const blob = new Blob([jsContent], { type: "text/javascript" });
+            const a = document.createElement("a");
+            a.href = URL.createObjectURL(blob);
+            a.download = "propiedades.js";
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+    </script>
 </body>
 </html>
