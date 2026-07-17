@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Detalle Propiedad | BROS</title>
     
-    <!-- FAVICON DINÁMICO VECTORIAL (Fondo blanco, Casa/B dorada, BROS negro) -->
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23ffffff'/><path d='M50 10 L20 35 L80 35 Z' fill='%23D0AA70'/><text x='50%' y='65%' dominant-baseline='middle' text-anchor='middle' font-family='Arial, sans-serif' font-size='45' font-weight='900' fill='%23D0AA70'>B</text><text x='50%' y='92%' text-anchor='middle' font-family='Arial, sans-serif' font-size='20' font-weight='900' fill='%23000000'>BROS</text></svg>" type="image/svg+xml">
+    <!-- FAVICON DINÁMICO VECTORIAL (Fondo oscuro, Casa y B doradas) -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23222222'/><path d='M50 15 L20 40 L80 40 Z' fill='%23D0AA70'/><text x='50%' y='75%' dominant-baseline='middle' text-anchor='middle' font-family='Arial, sans-serif' font-size='55' font-weight='900' fill='%23D0AA70'>B</text></svg>" type="image/svg+xml">
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -15,17 +15,53 @@
     <!-- 🟢 AQUÍ CONECTAMOS CON TU PANEL DE CONTROL (ADMIN) -->
     <script src="propiedades.js"></script>
 </head>
-<body class="bg-gray-50 font-['Inter']">
+<body class="bg-gray-50 font-['Inter'] flex flex-col min-h-screen">
 
-    <header class="w-full bg-[#0E0D0D] h-24 flex items-center px-6 shadow-md">
+    <!-- HEADER -->
+    <header class="w-full bg-[#0E0D0D] h-24 flex items-center px-6 shadow-md shrink-0">
         <div class="max-w-7xl mx-auto w-full flex justify-between items-center">
             <a href="index.html" class="w-20 h-20"><img src="bros-logo.png" class="w-full h-full object-contain"></a>
             <a href="index.html" class="text-white hover:text-[#D0AA70] font-semibold flex items-center gap-2 transition-colors"><i class="fa-solid fa-arrow-left"></i> Volver al Catálogo</a>
         </div>
     </header>
 
-    <main class="max-w-6xl mx-auto px-6 py-12" id="detalle-container"></main>
+    <!-- CONTENEDOR PRINCIPAL -->
+    <main class="max-w-6xl mx-auto px-6 py-12 flex-grow w-full" id="detalle-container"></main>
 
+    <!-- FOOTER (Añadido para mantener la elegancia de la marca) -->
+    <footer class="bg-[#0E0D0D] text-[#EFEFEF] pt-16 pb-10 px-6 shrink-0 mt-10">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-12 pb-12 border-b border-white/10">
+            <div class="md:col-span-5">
+                <img src="bros-logo.png" alt="BROS" class="w-24 h-24 mb-6 object-contain">
+                <p class="text-gray-400 font-light mb-6 text-sm">Somos los que concretamos tus proyectos, hacemos que las cosas sucedan. Especialistas en corretaje de alto estándar.</p>
+                <!-- REDES SOCIALES -->
+                <div class="flex gap-4">
+                    <a href="#" target="_blank" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-[#D0AA70] hover:text-[#0E0D0D] transition-colors"><i class="fa-brands fa-facebook-f"></i></a>
+                    <a href="https://www.instagram.com/brospropiedades/" target="_blank" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-[#D0AA70] hover:text-[#0E0D0D] transition-colors"><i class="fa-brands fa-instagram"></i></a>
+                </div>
+            </div>
+            <div class="md:col-span-3">
+                <h4 class="font-bold text-[#D0AA70] uppercase tracking-widest mb-6 text-sm">Navegación</h4>
+                <ul class="space-y-4 text-gray-300 font-light text-sm">
+                    <li><a href="index.html#propiedades" class="hover:text-white transition-colors">Catálogo de Ventas</a></li>
+                    <li><a href="index.html#calculadora" class="hover:text-white transition-colors">Simulador de Crédito</a></li>
+                </ul>
+            </div>
+            <div class="md:col-span-4">
+                <h4 class="font-bold text-[#D0AA70] uppercase tracking-widest mb-6 text-sm">Contacto Directo</h4>
+                <ul class="space-y-4 text-gray-300 font-light text-sm">
+                    <li><i class="fa-solid fa-location-dot text-[#D0AA70] mr-2"></i> Antonio Poupin 841, of. 1801, Antofagasta</li>
+                    <li><i class="fa-brands fa-whatsapp text-green-400 mr-2"></i> <a href="https://wa.me/56952046918" class="hover:text-[#D0AA70]">+56 9 5204 6918</a></li>
+                    <li><i class="fa-regular fa-envelope text-[#D0AA70] mr-2"></i> <a href="mailto:conversemos@brospropiedades.cl" class="hover:text-[#D0AA70]">conversemos@brospropiedades.cl</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="max-w-7xl mx-auto pt-8 flex justify-center items-center text-xs text-gray-500">
+            <p>&copy; 2026 BROS Propiedades. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <!-- SCRIPT DE RENDERIZADO -->
     <script>
         const urlParams = new URLSearchParams(window.location.search);
         const propId = urlParams.get('id'); 
@@ -45,9 +81,9 @@
 
                 let galeriaHTML = '';
                 if(propiedad.fotos && propiedad.fotos.length > 1) {
-                    galeriaHTML = '<div class="flex gap-3 mt-4 overflow-x-auto pb-2">';
+                    galeriaHTML = '<div class="flex gap-3 mt-4 overflow-x-auto pb-2 scrollbar-hide">';
                     propiedad.fotos.forEach(img => {
-                        galeriaHTML += `<img src="${img}" class="w-24 h-24 object-cover rounded-xl border-2 border-transparent hover:border-[#D0AA70] cursor-pointer transition-all" onclick="document.getElementById('main-img').src=this.src">`;
+                        galeriaHTML += `<img src="${img}" class="w-24 h-24 md:w-32 md:h-32 object-cover rounded-xl border-2 border-transparent hover:border-[#D0AA70] cursor-pointer transition-all shrink-0 shadow-sm" onclick="document.getElementById('main-img').src=this.src">`;
                     });
                     galeriaHTML += '</div>';
                 }
@@ -56,7 +92,7 @@
                 if (propiedad.caracteristicas && propiedad.caracteristicas.length > 0) {
                     caracteristicasHTML = '<div class="flex flex-wrap gap-2 mt-6">';
                     propiedad.caracteristicas.forEach(c => {
-                        caracteristicasHTML += `<span class="bg-gray-100 text-gray-600 text-xs font-bold px-3 py-1.5 rounded-full">${c}</span>`;
+                        caracteristicasHTML += `<span class="bg-gray-100 text-gray-600 text-xs font-bold px-3 py-1.5 rounded-full border border-gray-200">${c}</span>`;
                     });
                     caracteristicasHTML += '</div>';
                 }
@@ -64,45 +100,59 @@
                 container.innerHTML = `
                     <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
                         <div class="lg:col-span-2">
-                            <img id="main-img" src="${fotoPrincipal}" class="w-full h-[500px] object-cover rounded-3xl shadow-xl transition-all duration-300">
+                            <div class="bg-white p-2 rounded-3xl shadow-sm border border-gray-100">
+                                <img id="main-img" src="${fotoPrincipal}" class="w-full h-[400px] md:h-[500px] object-cover rounded-2xl shadow-inner transition-all duration-300">
+                            </div>
                             ${galeriaHTML}
                             
-                            <div class="bg-white p-10 rounded-3xl shadow-sm border border-gray-100 mt-8">
+                            <div class="bg-white p-8 md:p-10 rounded-3xl shadow-sm border border-gray-100 mt-8">
                                 <span class="text-[#D0AA70] font-bold tracking-widest uppercase text-sm mb-2 block">${propiedad.tipo || 'Propiedad'} en ${propiedad.colonia || propiedad.ciudad || ''}</span>
-                                <h1 class="text-4xl font-extrabold text-[#0E0D0D] mb-6">${propiedad.nombre}</h1>
+                                <h1 class="text-3xl md:text-4xl font-extrabold text-[#0E0D0D] mb-6">${propiedad.nombre}</h1>
                                 
-                                <div class="flex gap-6 mb-6 border-y border-gray-100 py-6">
+                                <div class="flex flex-wrap gap-4 md:gap-8 mb-6 border-y border-gray-100 py-6">
                                     <div class="flex items-center gap-2 text-gray-600"><i class="fa-solid fa-bed text-[#D0AA70] text-xl"></i> <b>${propiedad.recamaras || 0}</b> Dorm.</div>
                                     <div class="flex items-center gap-2 text-gray-600"><i class="fa-solid fa-bath text-[#D0AA70] text-xl"></i> <b>${propiedad.banos || 0}</b> Baños</div>
-                                    <div class="flex items-center gap-2 text-gray-600"><i class="fa-solid fa-ruler-combined text-[#D0AA70] text-xl"></i> <b>${propiedad.m2total || 0}</b> m²</div>
+                                    <div class="flex items-center gap-2 text-gray-600"><i class="fa-solid fa-vector-square text-[#D0AA70] text-xl"></i> <b>${propiedad.m2total || 0}</b> m²</div>
                                     <div class="flex items-center gap-2 text-gray-600"><i class="fa-solid fa-car text-[#D0AA70] text-xl"></i> <b>${propiedad.estacionamientos || 0}</b> Estac.</div>
                                 </div>
 
-                                <h3 class="text-xl font-bold mb-4">Descripción de la Propiedad</h3>
-                                <p class="text-gray-600 font-light leading-relaxed text-lg whitespace-pre-line">${propiedad.descripcion || 'No hay descripción disponible.'}</p>
+                                <h3 class="text-xl font-bold mb-4 text-gray-900">Descripción de la Propiedad</h3>
+                                <p class="text-gray-600 font-light leading-relaxed text-lg whitespace-pre-line">${propiedad.descripcion || 'No hay descripción detallada disponible en este momento.'}</p>
                                 
                                 ${caracteristicasHTML}
                             </div>
                         </div>
                         
                         <div class="lg:col-span-1">
-                            <div class="bg-[#0E0D0D] rounded-3xl p-8 shadow-2xl sticky top-10">
+                            <div class="bg-[#0E0D0D] rounded-3xl p-8 shadow-2xl sticky top-32 border border-white/5">
                                 <span class="text-gray-400 uppercase tracking-widest text-xs font-bold block mb-2">${tituloValor}</span>
                                 <div class="text-[#D0AA70] text-4xl lg:text-5xl font-extrabold mb-8">${precio} ${propiedad.moneda || 'UF'}</div>
                                 
                                 <h4 class="text-white font-bold mb-4">¿Te interesa esta propiedad?</h4>
-                                <a href="https://wa.me/56952046918?text=Hola,%20me%20interesa%20saber%20más%20sobre%20${encodeURIComponent(propiedad.nombre)}" target="_blank" class="w-full bg-[#D0AA70] text-[#0E0D0D] text-center py-4 rounded-xl font-bold hover:bg-white transition-all flex items-center justify-center gap-2 mt-4">
-                                    <i class="fa-brands fa-whatsapp text-xl"></i> Contactar por WhatsApp
+                                <p class="text-gray-400 text-sm mb-6 font-light">Agenda una visita guiada con nuestros asesores inmobiliarios o solicita más información.</p>
+                                
+                                <a href="https://wa.me/56952046918?text=Hola,%20me%20interesa%20saber%20más%20sobre%20la%20propiedad%20${encodeURIComponent(propiedad.nombre)}" target="_blank" class="w-full bg-[#D0AA70] text-[#0E0D0D] text-center py-4 rounded-xl font-bold hover:bg-white transition-all flex items-center justify-center gap-2 mb-3 shadow-[0_0_15px_rgba(208,170,112,0.3)]">
+                                    <i class="fa-brands fa-whatsapp text-xl"></i> Contactar Asesor
+                                </a>
+                                
+                                <a href="mailto:conversemos@brospropiedades.cl?subject=Consulta sobre propiedad: ${encodeURIComponent(propiedad.nombre)}" class="w-full bg-transparent border border-gray-600 text-white text-center py-4 rounded-xl font-bold hover:border-white transition-all flex items-center justify-center gap-2">
+                                    <i class="fa-regular fa-envelope"></i> Enviar Correo
                                 </a>
                             </div>
                         </div>
                     </div>
                 `;
             } else {
-                document.getElementById('detalle-container').innerHTML = "<h1 class='text-3xl text-center mt-20 font-bold'>La propiedad que buscas no existe o fue eliminada.</h1>";
+                document.getElementById('detalle-container').innerHTML = `
+                    <div class="text-center py-20">
+                        <i class="fa-solid fa-house-circle-exclamation text-6xl text-gray-300 mb-6"></i>
+                        <h1 class="text-3xl font-bold text-gray-900 mb-4">Propiedad no encontrada</h1>
+                        <p class="text-gray-500 mb-8">El inmueble que buscas no existe o ha sido retirado de nuestro catálogo.</p>
+                        <a href="index.html" class="bg-[#0E0D0D] text-white px-8 py-3 rounded-full font-bold hover:bg-[#D0AA70] hover:text-[#0E0D0D] transition-colors">Volver al Inicio</a>
+                    </div>`;
             }
         } else {
-            document.getElementById('detalle-container').innerHTML = "<h1 class='text-3xl text-center mt-20 font-bold text-gray-500'>Falta el archivo propiedades.js</h1>";
+            document.getElementById('detalle-container').innerHTML = "<div class='text-center py-20'><h1 class='text-3xl font-bold text-gray-500'>Falta el archivo propiedades.js</h1></div>";
         }
     </script>
 </body>
