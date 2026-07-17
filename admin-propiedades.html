@@ -138,6 +138,7 @@
     padding: 10px 16px;
     border-top: 1px solid var(--border);
     gap: 8px;
+    flex-wrap: wrap;
   }
   .badge {
     display: inline-block; padding: 2px 10px; border-radius: 20px;
@@ -145,12 +146,19 @@
   }
   .badge-venta     { background: #d1fae5; color: #065f46; }
   .badge-arriendo  { background: #dbeafe; color: #1e40af; }
-  .badge-disponible{ background: #d1fae5; color: #065f46; }
+  .badge-disponible { background: #d1fae5; color: #065f46; }
   .badge-vendida   { background: #fee2e2; color: #991b1b; }
   .badge-arrendada { background: #dbeafe; color: #1e40af; }
   .badge-inactiva  { background: #f3f4f6; color: #374151; }
+  .card-badge {
+    display: inline-flex; align-items: center; gap: 3px;
+    padding: 2px 8px; border-radius: 20px;
+    font-size: 11px; font-weight: 600;
+    background: #fef3c7; color: #92400e;
+    border: 1px solid #fde68a;
+  }
 
-  /* ── TOGGLE SÍ/NO ── */
+  /* ── TOGGLE BUTTONS ── */
   .toggle-group { display: flex; }
   .toggle-btn {
     flex: 1; padding: 9px 0; border: 1px solid var(--border);
@@ -161,7 +169,6 @@
   .toggle-btn:first-child { border-radius: 8px 0 0 8px; }
   .toggle-btn:last-child  { border-radius: 0 8px 8px 0; border-left: none; }
   .toggle-btn.selected    { background: var(--accent); color: #fff; border-color: var(--accent); }
-  .toggle-btn.selected + .toggle-btn { border-left: none; }
 
   /* ── EMPTY STATE ── */
   .empty {
@@ -216,14 +223,14 @@
   .form-group { display: flex; flex-direction: column; gap: 6px; }
   .form-group.span2 { grid-column: span 2; }
   label { font-size: 12.5px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; }
-  input[type=text], input[type=number], select, textarea {
+  input[type=text], input[type=number], input[type=url], select, textarea {
     border: 1px solid var(--border);
     border-radius: 8px; padding: 9px 12px;
     font-size: 14px; font-family: inherit; color: var(--text);
     background: var(--surface); outline: none; width: 100%;
     transition: border-color .15s;
   }
-  input[type=text]:focus, input[type=number]:focus, select:focus, textarea:focus {
+  input[type=text]:focus, input[type=number]:focus, input[type=url]:focus, select:focus, textarea:focus {
     border-color: var(--accent);
   }
   textarea { resize: vertical; min-height: 90px; }
@@ -283,6 +290,8 @@
   .detail-item span { font-size: 14.5px; font-weight: 500; }
   .detail-desc { font-size: 14px; color: var(--muted); line-height: 1.6; }
   .detail-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+  .detail-section { margin-top: 20px; }
+  .detail-section h4 { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); margin-bottom: 10px; }
 
   /* ── TOAST ── */
   .toast {
@@ -505,6 +514,14 @@
         </div>
       </div>
 
+      <!-- Video -->
+      <div class="section-title">Video</div>
+
+      <div class="form-group span2">
+        <label>Video YouTube</label>
+        <input type="url" id="fYoutube" placeholder="https://www.youtube.com/watch?v=...">
+      </div>
+
       <!-- Fotos -->
       <div class="section-title">Fotografías</div>
 
@@ -512,7 +529,7 @@
         <div class="photo-zone" id="dropZone">
           <div class="icon">📷</div>
           <p><b>Arrastra fotos aquí</b> o haz clic para seleccionar</p>
-          <p style="font-size:11px;margin-top:4px;">JPG/PNG · Máx. 10 fotos · Se comprimirán automáticamente</p>
+          <p style="font-size:11px;margin-top:4px;">JPG/PNG · Máx. 30 fotos · Se comprimirán automáticamente</p>
           <input type="file" id="fileInput" multiple accept="image/*" hidden>
         </div>
         <div class="photo-grid" id="photoGrid"></div>
@@ -619,13 +636,48 @@ function actualizarStorage() {
 }
 
 // ═══════════════════════════════════════════
+//  TOGGLE BUTTONS (Terraza / Bodega)
+// ═══════════════════════════════════════════
+function setToggle(field, val) {
+  toggleState[field] = val;
+  const cap = field.charAt(0).toUpperCase() + field.slice(1);
+  document.getElementById('f' + cap + 'Si').classList.toggle('selected', val === 'si');
+  document.getElementById('f' + cap + 'No').classList.toggle('selected', val === 'no');
+}
+
+function clearToggle(field) {
+  toggleState[field] = null;
+  const cap = field.charAt(0).toUpperCase() + field.slice(1);
+  document.getElementById('f' + cap + 'Si').classList.remove('selected');
+  document.getElementById('f' + cap + 'No').classList.remove('selected');
+}
+
+// ═══════════════════════════════════════════
+//  YOUTUBE
+// ═══════════════════════════════════════════
+function getYouTubeId(url) {
+  if (!url) return null;
+  const patterns = [
+    /[?&]v=([^&#]+)/,
+    /youtu\.be\/([^?&#]+)/,
+    /\/embed\/([^?&#]+)/
+  ];
+  for (const p of patterns) {
+    const m = url.match(p);
+    if (m) return m[1];
+  }
+  return null;
+}
+
+// ═══════════════════════════════════════════
 //  RENDER
 // ═══════════════════════════════════════════
 function render() {
   const q = (document.getElementById('searchBox').value || '').toLowerCase();
+  const estadoFiltros = ['disponible','vendida','arrendada','inactiva'];
   const filtered = propiedades.filter(p => {
     if (currentFilter === 'todos') {}
-    else if (['disponible','vendida','arrendada','inactiva'].includes(currentFilter)) {
+    else if (estadoFiltros.includes(currentFilter)) {
       if (p.estado !== currentFilter) return false;
     } else {
       if (p.operacion !== currentFilter) return false;
@@ -663,6 +715,7 @@ function cardHTML(p) {
 
   const precio = p.precio ? Number(p.precio).toLocaleString('es-CL') : '—';
   const moneda = p.moneda || 'CLP';
+  const ytBadge = p.youtubeUrl ? `<span class="card-badge" title="Video disponible">▶ Video</span>` : '';
 
   return `
   <div class="prop-card" onclick="openDetail('${p.id}')">
@@ -676,13 +729,14 @@ function cardHTML(p) {
         ${p.recamaras ? `<span>🛏 ${p.recamaras}</span>` : ''}
         ${p.banos ? `<span>🚿 ${p.banos}</span>` : ''}
         ${p.estacionamientos ? `<span>🚗 ${p.estacionamientos}</span>` : ''}
-        ${p.terraza === 'si' ? `<span>🏡 Terraza</span>` : ''}
+        ${p.terraza === 'si' ? `<span>🌿 Terraza</span>` : ''}
         ${p.bodega === 'si' ? `<span>📦 Bodega</span>` : ''}
       </div>
     </div>
     <div class="card-footer">
       ${opBadge}
       ${stBadge}
+      ${ytBadge}
       <button class="btn btn-secondary btn-sm" onclick="event.stopPropagation();editarPropiedad('${p.id}')">✏️ Editar</button>
     </div>
   </div>`;
@@ -695,23 +749,6 @@ function estadoLabel(e) {
 
 function escHtml(s) {
   return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
-
-// ═══════════════════════════════════════════
-//  TOGGLES SÍ/NO
-// ═══════════════════════════════════════════
-function setToggle(field, val) {
-  toggleState[field] = val;
-  const cap = field.charAt(0).toUpperCase() + field.slice(1);
-  document.getElementById('f' + cap + 'Si').classList.toggle('selected', val === 'si');
-  document.getElementById('f' + cap + 'No').classList.toggle('selected', val === 'no');
-}
-
-function clearToggle(field) {
-  toggleState[field] = null;
-  const cap = field.charAt(0).toUpperCase() + field.slice(1);
-  document.getElementById('f' + cap + 'Si').classList.remove('selected');
-  document.getElementById('f' + cap + 'No').classList.remove('selected');
 }
 
 // ═══════════════════════════════════════════
@@ -768,7 +805,7 @@ function closeForm() {
 
 function clearForm() {
   ['fNombre','fPrecio','fM2total','fM2const','fRecamaras','fBanos','fMediosbanos',
-   'fEstacionamientos','fColonia','fCiudad','fEstadoubi','fDescripcion'].forEach(id => {
+   'fEstacionamientos','fColonia','fCiudad','fEstadoubi','fDescripcion','fYoutube'].forEach(id => {
     document.getElementById(id).value = '';
   });
   document.getElementById('fTipo').value = 'Casa';
@@ -796,9 +833,9 @@ function fillForm(p) {
   document.getElementById('fCiudad').value = p.ciudad || '';
   document.getElementById('fEstadoubi').value = p.estadoubi || '';
   document.getElementById('fDescripcion').value = p.descripcion || '';
-  // Toggles
+  document.getElementById('fYoutube').value = p.youtubeUrl || '';
   if (p.terraza) setToggle('terraza', p.terraza); else clearToggle('terraza');
-  if (p.bodega)  setToggle('bodega',  p.bodega);  else clearToggle('bodega');
+  if (p.bodega) setToggle('bodega', p.bodega); else clearToggle('bodega');
 }
 
 function guardarPropiedad() {
@@ -821,6 +858,7 @@ function guardarPropiedad() {
     estacionamientos: document.getElementById('fEstacionamientos').value,
     terraza: toggleState.terraza,
     bodega: toggleState.bodega,
+    youtubeUrl: document.getElementById('fYoutube').value.trim(),
     colonia: document.getElementById('fColonia').value,
     ciudad: document.getElementById('fCiudad').value,
     estadoubi: document.getElementById('fEstadoubi').value,
@@ -871,8 +909,8 @@ fileInput.addEventListener('change', () => procesarArchivos(fileInput.files));
 
 function procesarArchivos(files) {
   const arr = Array.from(files).filter(f => f.type.startsWith('image/'));
-  const restante = 10 - currentPhotos.length;
-  if (restante <= 0) { showToast('Límite de 10 fotos alcanzado'); return; }
+  const restante = 30 - currentPhotos.length;
+  if (restante <= 0) { showToast('Límite de 30 fotos alcanzado'); return; }
   arr.slice(0, restante).forEach(f => comprimirFoto(f));
 }
 
@@ -969,8 +1007,20 @@ function openDetail(id) {
     ? `<div class="detail-tags">${p.caracteristicas.map(t => `<span class="tag">${escHtml(t)}</span>`).join('')}</div>`
     : '';
 
-  const terrazaLabel = p.terraza === 'si' ? 'Sí' : p.terraza === 'no' ? 'No' : '—';
-  const bodegaLabel  = p.bodega  === 'si' ? 'Sí' : p.bodega  === 'no' ? 'No' : '—';
+  const ytId = getYouTubeId(p.youtubeUrl);
+  const ytSection = ytId
+    ? `<div class="detail-section">
+         <h4>Video</h4>
+         <div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:8px;">
+           <iframe src="https://www.youtube.com/embed/${ytId}"
+             style="position:absolute;top:0;left:0;width:100%;height:100%;border:0;"
+             allowfullscreen loading="lazy"></iframe>
+         </div>
+       </div>`
+    : '';
+
+  const terrazaVal = p.terraza === 'si' ? 'Sí' : p.terraza === 'no' ? 'No' : '—';
+  const bodegaVal = p.bodega === 'si' ? 'Sí' : p.bodega === 'no' ? 'No' : '—';
 
   document.getElementById('detailBody').innerHTML = `
     ${fotosHTML}
@@ -984,14 +1034,15 @@ function openDetail(id) {
       <div class="detail-item"><label>Dormitorios</label><span>${p.recamaras || '—'}</span></div>
       <div class="detail-item"><label>Baños</label><span>${p.banos || '—'}</span></div>
       <div class="detail-item"><label>Estacionamientos</label><span>${p.estacionamientos || '—'}</span></div>
-      <div class="detail-item"><label>Terraza</label><span>${terrazaLabel}</span></div>
-      <div class="detail-item"><label>Bodega</label><span>${bodegaLabel}</span></div>
+      <div class="detail-item"><label>Terraza</label><span>${terrazaVal}</span></div>
+      <div class="detail-item"><label>Bodega</label><span>${bodegaVal}</span></div>
       <div class="detail-item"><label>Dirección</label><span>${escHtml(p.colonia || '—')}</span></div>
       <div class="detail-item"><label>Ciudad</label><span>${escHtml(p.ciudad || '—')}</span></div>
       <div class="detail-item"><label>Comuna</label><span>${escHtml(p.estadoubi || '—')}</span></div>
     </div>
     ${p.descripcion ? `<p class="detail-desc">${escHtml(p.descripcion)}</p>` : ''}
     ${tagsHTML}
+    ${ytSection}
     <p style="font-size:11px;color:var(--muted);margin-top:16px;">Actualizado: ${p.updatedAt ? new Date(p.updatedAt).toLocaleString('es-CL') : '—'}</p>
   `;
   document.getElementById('overlayDetail').classList.add('open');
