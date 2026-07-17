@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BROS Propiedades | Corredora High-End</title>
     
-    <!-- FAVICON DINÁMICO (Fondo claro, Letra B Dorada) -->
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23ffffff'/><text x='50%' y='55%' dominant-baseline='middle' text-anchor='middle' font-family='Arial, sans-serif' font-size='65' font-weight='900' fill='%23D0AA70'>B</text></svg>" type="image/svg+xml">
+    <!-- FAVICON DINÁMICO VECTORIAL -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23ffffff'/><path d='M50 10 L20 35 L80 35 Z' fill='%23D0AA70'/><text x='50%' y='65%' dominant-baseline='middle' text-anchor='middle' font-family='Arial, sans-serif' font-size='45' font-weight='900' fill='%23D0AA70'>B</text><text x='50%' y='92%' text-anchor='middle' font-family='Arial, sans-serif' font-size='20' font-weight='900' fill='%23000000'>BROS</text></svg>" type="image/svg+xml">
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -48,6 +48,7 @@
 </head>
 <body class="text-gray-900 antialiased selection:bg-[#D0AA70] selection:text-[#0E0D0D]">
 
+    <!-- BOTÓN WHATSAPP -->
     <a href="https://wa.me/56952046918" target="_blank" class="fixed bottom-8 right-8 z-[100] bg-[#25D366] text-white w-16 h-16 rounded-full flex items-center justify-center text-3xl shadow-2xl hover:scale-110 wa-float"><i class="fa-brands fa-whatsapp"></i></a>
 
     <!-- HEADER -->
@@ -84,16 +85,16 @@
             <span class="inline-flex items-center gap-2 bg-white/10 text-[#D0AA70] px-5 py-2 rounded-full text-xs font-bold uppercase tracking-widest mb-8 border border-white/20 backdrop-blur-md shadow-lg">✨ El Top 1% del Mercado Inmobiliario</span>
             <h1 class="text-5xl md:text-6xl lg:text-7xl font-extrabold text-[#EFEFEF] tracking-tight leading-[1.1] mb-8 drop-shadow-xl">La alegría y emoción de<br><span class="text-transparent bg-clip-text bg-gradient-to-r from-[#D0AA70] to-[#E5C992]">ver el hogar de tus sueños</span></h1>
             
-            <!-- BUSCADOR AVANZADO -->
+            <!-- BUSCADOR AVANZADO MEJORADO -->
             <div class="w-full bg-white/20 backdrop-blur-xl rounded-[2rem] shadow-2xl border border-white/30 p-4 mt-12 transition-all focus-within:bg-white/30 focus-within:border-white/50">
-                <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-7 gap-3">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-8 gap-3">
                     <div class="lg:col-span-2 relative">
                         <i class="fa-solid fa-location-dot absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
                         <input type="text" id="sUbi" placeholder="Comuna o Ciudad..." class="w-full bg-white py-3.5 pl-10 pr-4 rounded-xl outline-none text-gray-900 font-medium shadow-inner focus:ring-2 focus:ring-[#D0AA70]">
                     </div>
                     <div class="relative">
                         <i class="fa-solid fa-bed absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 text-sm"></i>
-                        <input type="number" id="sHab" placeholder="Habitaciones" min="0" class="w-full bg-white py-3.5 pl-10 pr-4 rounded-xl outline-none text-gray-900 font-medium shadow-inner focus:ring-2 focus:ring-[#D0AA70]">
+                        <input type="number" id="sHab" placeholder="Habitac." min="0" class="w-full bg-white py-3.5 pl-10 pr-4 rounded-xl outline-none text-gray-900 font-medium shadow-inner focus:ring-2 focus:ring-[#D0AA70]">
                     </div>
                     <div class="relative">
                         <i class="fa-solid fa-bath absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 text-sm"></i>
@@ -103,21 +104,30 @@
                         <i class="fa-solid fa-vector-square absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 text-sm"></i>
                         <input type="number" id="sM2" placeholder="M² mín." min="0" class="w-full bg-white py-3.5 pl-10 pr-4 rounded-xl outline-none text-gray-900 font-medium shadow-inner focus:ring-2 focus:ring-[#D0AA70]">
                     </div>
-                    <div class="relative">
-                        <i class="fa-solid fa-tag absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 text-sm"></i>
-                        <input type="number" id="sPrecio" placeholder="Precio Max (UF)" min="0" class="w-full bg-white py-3.5 pl-10 pr-4 rounded-xl outline-none text-gray-900 font-medium shadow-inner focus:ring-2 focus:ring-[#D0AA70]" title="Equivalente en UF (1 UF ≈ $38.000 CLP)">
+                    
+                    <!-- FILTRO DOBLE: UF o CLP -->
+                    <div class="lg:col-span-2 flex items-center bg-white rounded-xl shadow-inner focus-within:ring-2 focus-within:ring-[#D0AA70] overflow-hidden relative">
+                        <select id="sMoneda" class="bg-gray-50 py-3.5 pl-4 pr-2 outline-none text-gray-600 font-bold border-r border-gray-200 cursor-pointer">
+                            <option value="UF">UF</option>
+                            <option value="CLP">CLP</option>
+                        </select>
+                        <input type="number" id="sPrecio" placeholder="Precio Max..." min="0" class="w-full bg-transparent py-3.5 px-4 outline-none text-gray-900 font-medium">
+                        <!-- Pequeño indicador de carga de UF -->
+                        <i id="ufLoadingIcon" class="fa-solid fa-circle-notch fa-spin absolute right-3 top-1/2 transform -translate-y-1/2 text-[#D0AA70] text-sm opacity-0 transition-opacity"></i>
                     </div>
+
                     <button onclick="buscarPropiedadesAvanzado()" class="w-full bg-[#D0AA70] hover:bg-[#956932] text-[#0E0D0D] hover:text-white py-3.5 px-4 rounded-xl font-bold transition-all shadow-md flex items-center justify-center gap-2">
                         <i class="fa-solid fa-magnifying-glass"></i> Buscar
                     </button>
                 </div>
             </div>
+
         </div>
     </section>
 
     <!-- PROPIEDADES -->
     <section id="propiedades" class="max-w-7xl mx-auto px-6 py-24">
-        <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 reveal">
+        <div class="flex flex-col md:flex-row md:items-end justify-between mb-16 reveal">
             <div>
                 <h2 class="text-4xl font-bold tracking-tight text-[#0E0D0D] mb-3">Colección Exclusiva</h2>
                 <p class="text-gray-500 font-light text-lg" id="propiedades-contador">Explora nuestro catálogo seleccionado de alto estándar.</p>
@@ -154,6 +164,7 @@
                 <div class="bg-white/5 border border-white/10 p-10 rounded-[32px] flex flex-col justify-center text-center reveal border-[#D0AA70]/30">
                     <h3 class="text-2xl font-bold text-white mb-4">¿Cuánto vale tu propiedad hoy?</h3>
                     <p class="text-gray-400 font-light mb-8 text-sm">Descubre el valor real de mercado.</p>
+                    
                     <div class="relative group mt-2">
                         <button onclick="openModalTasacion()" class="w-full bg-[#D0AA70] text-[#0E0D0D] py-4 rounded-xl font-bold">Solicita tu tasación gratis</button>
                         <span class="absolute opacity-0 group-hover:opacity-100 transition-opacity bg-black text-[#D0AA70] text-[11px] py-1.5 px-3 rounded-lg -top-10 left-1/2 transform -translate-x-1/2 whitespace-nowrap border border-[#D0AA70]/30 shadow-xl pointer-events-none z-50 font-bold tracking-wide">
@@ -196,6 +207,9 @@
                     <div class="bg-white/5 border border-white/10 p-8 rounded-3xl"><span class="text-xs font-bold uppercase text-[#D0AA70] block mb-2">Dividendo Mensual</span><div class="text-5xl font-extrabold text-white mb-2" id="resDividendoUF">46,20 UF</div></div>
                     <div class="relative group mt-8">
                         <button onclick="openModalTasacion()" class="w-full bg-[#D0AA70] hover:bg-white text-[#0E0D0D] py-4 rounded-2xl font-bold transition-colors">Solicita tu tasación gratis</button>
+                        <span class="absolute opacity-0 group-hover:opacity-100 transition-opacity bg-black text-[#D0AA70] text-[11px] py-1.5 px-3 rounded-lg -bottom-10 left-1/2 transform -translate-x-1/2 whitespace-nowrap border border-[#D0AA70]/30 shadow-xl pointer-events-none z-50 font-bold tracking-wide">
+                            Tu tasación en menos de 24 horas ⚡
+                        </span>
                     </div>
                 </div>
             </div>
@@ -234,7 +248,6 @@
             <div class="md:col-span-5">
                 <img src="bros-logo.png" alt="BROS" class="w-36 h-36 mb-6 object-contain logo-shine">
                 <p class="text-gray-400 font-light mb-6">Somos los que concretamos tus proyectos, hacemos que las cosas sucedan. Especialistas en corretaje de alto estándar.</p>
-                <!-- REDES SOCIALES -->
                 <div class="flex gap-4">
                     <a href="#" target="_blank" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-[#D0AA70] hover:text-[#0E0D0D] transition-colors"><i class="fa-brands fa-facebook-f text-lg"></i></a>
                     <a href="https://www.instagram.com/brospropiedades/" target="_blank" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-[#D0AA70] hover:text-[#0E0D0D] transition-colors"><i class="fa-brands fa-instagram text-lg"></i></a>
@@ -407,14 +420,35 @@
         const observer = new IntersectionObserver(e => e.forEach(entry => { if(entry.isIntersecting) entry.target.classList.add('active'); }));
         document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-        // 🟢 CEREBRO: RENDERIZAR DESDE EL ARCHIVO DEL ADMIN
+        // 🔵 OBTENER VALOR UF DESDE EL BANCO CENTRAL (mindicador.cl)
+        let valorUFActual = 39000; // Valor de respaldo por defecto
+        
+        async function cargarValorUF() {
+            try {
+                document.getElementById('ufLoadingIcon').classList.remove('opacity-0');
+                const respuesta = await fetch('https://mindicador.cl/api/uf');
+                const datos = await respuesta.json();
+                
+                if(datos && datos.serie && datos.serie.length > 0) {
+                    valorUFActual = datos.serie[0].valor;
+                    // Actualizar el tooltip del buscador para que el usuario sepa que está conectado al Banco Central
+                    document.getElementById('sPrecio').title = `1 UF = $${Math.round(valorUFActual).toLocaleString('es-CL')} CLP (Valor actualizado de mindicador.cl)`;
+                }
+            } catch (error) {
+                console.warn("Se usarán 39.000 CLP como UF de respaldo por bloqueo de conexión.");
+            } finally {
+                document.getElementById('ufLoadingIcon').classList.add('opacity-0');
+            }
+        }
+
+        // 🟢 RENDERIZAR DESDE EL ARCHIVO DEL ADMIN
         let filtroActual = "Todos";
         function renderProperties(list) {
             const grid = document.getElementById('propertiesGrid');
             grid.innerHTML = '';
             
             if (!list || list.length === 0) {
-                grid.innerHTML = '<p class="text-gray-500 col-span-3 text-center py-10 font-medium">No hay propiedades publicadas aún.</p>';
+                grid.innerHTML = '<p class="text-gray-500 col-span-3 text-center py-10 font-medium">No hay propiedades que coincidan con tu búsqueda.</p>';
                 document.getElementById('propiedades-contador').innerText = `Explora nuestro catálogo seleccionado de alto estándar.`;
                 return;
             }
@@ -472,29 +506,37 @@
             });
         }
 
-        // BUSCADOR AVANZADO
+        // BUSCADOR AVANZADO MEJORADO CON UF AUTOMÁTICA
         function buscarPropiedadesAvanzado() {
             if(typeof PROPIEDADES === 'undefined') return;
             
-            // Traer valores de los inputs
             const sUbi = document.getElementById('sUbi').value.toLowerCase();
             const sHab = parseInt(document.getElementById('sHab').value) || 0;
             const sBanos = parseInt(document.getElementById('sBanos').value) || 0;
             const sM2 = parseInt(document.getElementById('sM2').value) || 0;
             const sPrecio = parseInt(document.getElementById('sPrecio').value) || Infinity;
+            const sMoneda = document.getElementById('sMoneda').value; // Filtro del usuario (UF o CLP)
 
             const filtradas = PROPIEDADES.filter(p => {
-                // Validación por Texto (Comuna o Ciudad)
                 const textUbi = ((p.colonia || "") + " " + (p.ciudad || "") + " " + (p.estadoubi || "")).toLowerCase();
                 const matchUbi = !sUbi || textUbi.includes(sUbi);
                 
-                // Validación numérica
                 const matchHab = (parseInt(p.recamaras) || 0) >= sHab;
                 const matchBanos = (parseInt(p.banos) || 0) >= sBanos;
                 const matchM2 = (parseInt(p.m2total) || 0) >= sM2;
-                const matchPrecio = (parseInt(p.precio) || 0) <= sPrecio;
                 
-                // Validación por Botón Categoría
+                // Conversión inteligente de Moneda usando UF en tiempo real
+                let precioProp = parseFloat(p.precio) || 0;
+                
+                if (sMoneda === "CLP") {
+                    // Si el usuario busca en CLP, pero la propiedad está en UF (u otra moneda), la transformamos a CLP
+                    if (p.moneda !== "CLP" && p.moneda !== "MXN") precioProp = precioProp * valorUFActual; 
+                } else {
+                    // Si el usuario busca en UF, pero la propiedad está en Pesos, la transformamos a UF
+                    if (p.moneda === "CLP" || p.moneda === "MXN") precioProp = precioProp / valorUFActual; 
+                }
+                
+                const matchPrecio = precioProp <= sPrecio;
                 const matchCat = (filtroActual === "Todos" || p.tipo === filtroActual);
 
                 return matchUbi && matchHab && matchBanos && matchM2 && matchPrecio && matchCat;
@@ -564,8 +606,12 @@
             document.getElementById('modalTasacion').classList.add('hidden');
         }
 
-        // CARGA
+        // CARGA INICIAL
         window.onload = () => { 
+            // Cargar UF en tiempo real
+            cargarValorUF();
+
+            // Cargar Propiedades
             if (typeof PROPIEDADES !== 'undefined') {
                 renderProperties(PROPIEDADES); 
             } else {
