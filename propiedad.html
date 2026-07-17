@@ -24,7 +24,7 @@
 
     <script>
         const urlParams = new URLSearchParams(window.location.search);
-        const propId = urlParams.get('id'); // El admin de propiedades.js genera IDs como texto alfanumérico
+        const propId = urlParams.get('id'); 
         
         if(typeof PROPIEDADES !== 'undefined') {
             const propiedad = PROPIEDADES.find(p => p.id === propId);
@@ -34,7 +34,11 @@
                 const fotoPrincipal = (propiedad.fotos && propiedad.fotos.length > 0) ? propiedad.fotos[0] : 'bros-logo.png';
                 const precio = propiedad.precio ? Number(propiedad.precio).toLocaleString('es-CL') : '0';
 
-                // Generar miniaturas si subiste más de una foto en el administrador
+                // Lógica de Venta o Arriendo
+                let tituloValor = "Valor de Inversión";
+                if(propiedad.operacion === "Venta") tituloValor = "Valor Venta";
+                if(propiedad.operacion === "Renta" || propiedad.operacion === "Arriendo") tituloValor = "Valor Arriendo";
+
                 let galeriaHTML = '';
                 if(propiedad.fotos && propiedad.fotos.length > 1) {
                     galeriaHTML = '<div class="flex gap-3 mt-4 overflow-x-auto pb-2">';
@@ -44,7 +48,6 @@
                     galeriaHTML += '</div>';
                 }
 
-                // Generar etiquetas (tags) si las pusiste en el administrador
                 let caracteristicasHTML = '';
                 if (propiedad.caracteristicas && propiedad.caracteristicas.length > 0) {
                     caracteristicasHTML = '<div class="flex flex-wrap gap-2 mt-6">';
@@ -79,8 +82,8 @@
                         </div>
                         
                         <div class="lg:col-span-1">
-                            <div class="bg-[#0E0D0D] rounded-3xl p-8 shadow-2xl sticky top-32">
-                                <span class="text-gray-400 uppercase tracking-widest text-xs font-bold block mb-2">Valor Inversión</span>
+                            <div class="bg-[#0E0D0D] rounded-3xl p-8 shadow-2xl sticky top-10">
+                                <span class="text-gray-400 uppercase tracking-widest text-xs font-bold block mb-2">${tituloValor}</span>
                                 <div class="text-[#D0AA70] text-4xl lg:text-5xl font-extrabold mb-8">${precio} ${propiedad.moneda || 'UF'}</div>
                                 
                                 <h4 class="text-white font-bold mb-4">¿Te interesa esta propiedad?</h4>
