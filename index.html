@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BROS Propiedades | Corredora High-End</title>
+    
+    <!-- FAVICON -->
+    <link rel="icon" href="bros-logo.png" type="image/png">
+    
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Fonts -->
@@ -13,7 +17,7 @@
     <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- 🟢 AQUÍ CONECTAMOS CON TU PANEL DE CONTROL (ADMIN) -->
+    <!-- 🟢 CONEXIÓN CON EL PANEL ADMIN -->
     <script src="propiedades.js"></script>
     
     <style>
@@ -37,6 +41,8 @@
         .badge { position: absolute; top: 1rem; left: 1rem; z-index: 10; padding: 0.35rem 0.85rem; border-radius: 9999px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); backdrop-filter: blur(4px); }
         @keyframes pulse-wa { 0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7); } 70% { box-shadow: 0 0 0 20px rgba(37, 211, 102, 0); } 100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); } }
         .wa-float { animation: pulse-wa 2s infinite; }
+        
+        /* Animación para Pasos del Formulario */
         .step-content { display: none; }
         .step-content.active { display: block; animation: fadeInUp 0.4s ease forwards; }
         @keyframes fadeInUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
@@ -59,10 +65,12 @@
                 <a href="#propiedades" class="hover:text-[#D0AA70] transition-colors">Propiedades</a>
                 <a href="#experiencia" class="hover:text-[#D0AA70] transition-colors">Experiencia</a>
                 <a href="#calculadora" class="hover:text-[#D0AA70] transition-colors">Calculadora</a>
-                <a href="#" onclick="openTasacionModal()" class="text-[#D0AA70] hover:text-white transition-colors">Deja tu propiedad aquí</a>
+                <a href="#" onclick="openModalDejaPropiedad()" class="text-[#D0AA70] hover:text-white transition-colors">Deja tu propiedad aquí</a>
                 <a href="#equipo" class="hover:text-[#D0AA70] transition-colors">Equipo</a>
             </nav>
-            <button onclick="openPreEvaluarModal()" class="bg-[#D0AA70] hover:bg-[#956932] text-[#0E0D0D] px-7 py-3.5 rounded-full text-sm font-bold shadow-[0_0_20px_rgba(208,170,112,0.3)] transition-all transform hover:scale-105">Pre Evaluar Gratis</button>
+            <button onclick="openModalTasacion()" class="bg-[#D0AA70] hover:bg-[#956932] text-[#0E0D0D] hover:text-white px-7 py-3.5 rounded-full text-sm font-bold transition-all transform hover:scale-105 shadow-[0_0_20px_rgba(208,170,112,0.3)]">
+                Solicita tu tasación gratis
+            </button>
         </div>
     </header>
 
@@ -77,14 +85,14 @@
             <div class="w-full max-w-3xl mx-auto bg-white/20 backdrop-blur-md rounded-full shadow-2xl border border-white/30 p-2 flex flex-col md:flex-row items-center gap-2">
                 <div class="flex items-center flex-1 w-full px-5">
                     <i class="fa-solid fa-location-dot text-[#D0AA70] mr-4 text-lg"></i>
-                    <input type="text" id="smartSearchInput" placeholder="Busca por comuna, barrio o precio..." class="w-full bg-transparent py-4 outline-none text-white placeholder-gray-200 font-medium text-lg" oninput="filtrarPropiedades()">
+                    <input type="text" id="smartSearchInput" placeholder="Busca por comuna, barrio o UF..." class="w-full bg-transparent py-4 outline-none text-white placeholder-gray-200 font-medium text-lg" oninput="filtrarPropiedades()">
                 </div>
                 <button class="w-full md:w-auto bg-[#D0AA70] hover:bg-[#956932] text-[#0E0D0D] hover:text-white px-10 py-4 rounded-full font-bold transition-all shadow-md">Buscar</button>
             </div>
         </div>
     </section>
 
-    <!-- PROPIEDADES DINÁMICAS -->
+    <!-- PROPIEDADES -->
     <section id="propiedades" class="max-w-7xl mx-auto px-6 py-24">
         <div class="flex flex-col md:flex-row md:items-end justify-between mb-16 reveal">
             <div>
@@ -103,6 +111,7 @@
 
     <!-- EXPERIENCIA / SOCIAL PROOF -->
     <section id="experiencia" class="py-24 bg-[#0E0D0D] relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-[800px] h-[800px] bg-[#D0AA70]/5 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/3"></div>
         <div class="max-w-7xl mx-auto px-6 relative z-10">
             <div class="text-center mb-16 reveal">
                 <span class="text-[#D0AA70] text-xs font-bold uppercase tracking-widest mb-4 block">Experiencia Comprobada</span>
@@ -122,7 +131,7 @@
                 <div class="bg-white/5 border border-white/10 p-10 rounded-[32px] flex flex-col justify-center text-center reveal border-[#D0AA70]/30">
                     <h3 class="text-2xl font-bold text-white mb-4">¿Cuánto vale tu propiedad hoy?</h3>
                     <p class="text-gray-400 font-light mb-8 text-sm">Descubre el valor real de mercado.</p>
-                    <button onclick="openTasacionModal()" class="w-full bg-[#D0AA70] text-[#0E0D0D] py-4 rounded-xl font-bold">Solicitar Análisis Gratis</button>
+                    <button onclick="openModalTasacion()" class="w-full bg-[#D0AA70] text-[#0E0D0D] py-4 rounded-xl font-bold">Solicita tu tasación gratis</button>
                 </div>
             </div>
         </div>
@@ -157,7 +166,7 @@
                     <h3 class="text-xl font-semibold border-b border-white/10 pb-6 mb-8">Resumen de Inversión</h3>
                     <div class="space-y-6 mb-10"><div class="flex justify-between"><span>Monto a financiar:</span><strong id="resMontoFinanciar">8.000 UF</strong></div><div class="flex justify-between"><span>Pie aportado:</span><strong id="resPieAportado">2.000 UF</strong></div></div>
                     <div class="bg-white/5 border border-white/10 p-8 rounded-3xl"><span class="text-xs font-bold uppercase text-[#D0AA70] block mb-2">Dividendo Mensual</span><div class="text-5xl font-extrabold text-white mb-2" id="resDividendoUF">46,20 UF</div></div>
-                    <button onclick="openPreEvaluarModal()" class="w-full bg-[#D0AA70] text-[#0E0D0D] py-4 rounded-2xl font-bold mt-8">Pre-evaluar Gratis</button>
+                    <button onclick="openModalTasacion()" class="w-full bg-[#D0AA70] hover:bg-white text-[#0E0D0D] py-4 rounded-2xl font-bold mt-8 transition-colors">Solicita tu tasación gratis</button>
                 </div>
             </div>
         </div>
@@ -169,21 +178,21 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
                 <div class="bg-gray-50 rounded-[32px] p-10 flex flex-col items-center">
                     <div class="w-24 h-24 rounded-full bg-[#0E0D0D] flex items-center justify-center text-[#D0AA70] font-bold text-2xl mb-6">FR</div>
-                    <h3 class="text-2xl font-bold mb-1">Fernando Rojas</h3><div class="w-10 h-1 bg-[#D0AA70] rounded-full mb-4"></div><span class="text-sm font-semibold text-gray-500 uppercase mb-8">Asesor</span>
-                    <a href="https://wa.me/56952046918" class="w-full bg-green-50 text-green-700 py-2.5 rounded-full font-medium mb-3"><i class="fa-brands fa-whatsapp"></i> WhatsApp</a>
-                    <a href="mailto:ventas@brospropiedades.cl" class="w-full bg-gray-100 text-gray-700 py-2.5 rounded-full font-medium"><i class="fa-regular fa-envelope"></i> Correo</a>
+                    <h3 class="text-2xl font-bold mb-1">Fernando Rojas</h3><div class="w-10 h-1 bg-[#D0AA70] rounded-full mb-4"></div><span class="text-sm font-semibold text-gray-500 uppercase tracking-widest block mb-8">Asesor Inmobiliario</span>
+                    <a href="https://wa.me/56952046918" target="_blank" class="w-full bg-green-50 text-green-700 py-2.5 rounded-full font-medium mb-3 hover:bg-green-100 transition-colors"><i class="fa-brands fa-whatsapp"></i> Contactar WhatsApp</a>
+                    <a href="mailto:ventas@brospropiedades.cl" class="w-full bg-gray-100 text-gray-700 py-2.5 rounded-full font-medium hover:bg-gray-200 transition-colors"><i class="fa-regular fa-envelope"></i> Enviar Correo</a>
                 </div>
                 <div class="bg-gray-50 rounded-[32px] p-10 flex flex-col items-center">
                     <div class="w-24 h-24 rounded-full bg-[#0E0D0D] flex items-center justify-center text-[#D0AA70] font-bold text-2xl mb-6">JR</div>
-                    <h3 class="text-2xl font-bold mb-1">Jonathan Rojas</h3><div class="w-10 h-1 bg-[#D0AA70] rounded-full mb-4"></div><span class="text-sm font-semibold text-gray-500 uppercase mb-8">Asesor</span>
-                    <a href="https://wa.me/56934832370" class="w-full bg-green-50 text-green-700 py-2.5 rounded-full font-medium mb-3"><i class="fa-brands fa-whatsapp"></i> WhatsApp</a>
-                    <a href="mailto:ventas@brospropiedades.cl" class="w-full bg-gray-100 text-gray-700 py-2.5 rounded-full font-medium"><i class="fa-regular fa-envelope"></i> Correo</a>
+                    <h3 class="text-2xl font-bold mb-1">Jonathan Rojas</h3><div class="w-10 h-1 bg-[#D0AA70] rounded-full mb-4"></div><span class="text-sm font-semibold text-gray-500 uppercase tracking-widest block mb-8">Asesor Inmobiliario</span>
+                    <a href="https://wa.me/56934832370" target="_blank" class="w-full bg-green-50 text-green-700 py-2.5 rounded-full font-medium mb-3 hover:bg-green-100 transition-colors"><i class="fa-brands fa-whatsapp"></i> Contactar WhatsApp</a>
+                    <a href="mailto:ventas@brospropiedades.cl" class="w-full bg-gray-100 text-gray-700 py-2.5 rounded-full font-medium hover:bg-gray-200 transition-colors"><i class="fa-regular fa-envelope"></i> Enviar Correo</a>
                 </div>
                 <div class="bg-gray-50 rounded-[32px] p-10 flex flex-col items-center">
                     <div class="w-24 h-24 rounded-full bg-[#0E0D0D] flex items-center justify-center text-[#D0AA70] font-bold text-2xl mb-6">JB</div>
-                    <h3 class="text-2xl font-bold mb-1">Jessica Bustamante</h3><div class="w-10 h-1 bg-[#D0AA70] rounded-full mb-4"></div><span class="text-sm font-semibold text-gray-500 uppercase mb-8">Asesora</span>
-                    <a href="https://wa.me/56984422632" class="w-full bg-green-50 text-green-700 py-2.5 rounded-full font-medium mb-3"><i class="fa-brands fa-whatsapp"></i> WhatsApp</a>
-                    <a href="mailto:ventas@brospropiedades.cl" class="w-full bg-gray-100 text-gray-700 py-2.5 rounded-full font-medium"><i class="fa-regular fa-envelope"></i> Correo</a>
+                    <h3 class="text-2xl font-bold mb-1">Jessica Bustamante</h3><div class="w-10 h-1 bg-[#D0AA70] rounded-full mb-4"></div><span class="text-sm font-semibold text-gray-500 uppercase tracking-widest block mb-8">Asesora Inmobiliaria</span>
+                    <a href="https://wa.me/56984422632" target="_blank" class="w-full bg-green-50 text-green-700 py-2.5 rounded-full font-medium mb-3 hover:bg-green-100 transition-colors"><i class="fa-brands fa-whatsapp"></i> Contactar WhatsApp</a>
+                    <a href="mailto:ventas@brospropiedades.cl" class="w-full bg-gray-100 text-gray-700 py-2.5 rounded-full font-medium hover:bg-gray-200 transition-colors"><i class="fa-regular fa-envelope"></i> Enviar Correo</a>
                 </div>
             </div>
         </div>
@@ -191,28 +200,173 @@
 
     <!-- FOOTER -->
     <footer class="bg-[#0E0D0D] text-[#EFEFEF] pt-20 pb-10 px-6">
-        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-12 pb-16 border-b border-white/10">
-            <div>
-                <img src="bros-logo.png" alt="BROS" class="w-32 h-32 mb-6 object-contain logo-shine">
-                <p class="text-gray-400 font-light">Somos los que concretamos tus proyectos, hacemos que las cosas sucedan.</p>
+        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-12 pb-16 border-b border-white/10">
+            <div class="md:col-span-5">
+                <img src="bros-logo.png" alt="BROS" class="w-36 h-36 mb-6 object-contain logo-shine">
+                <p class="text-gray-400 font-light mb-6">Somos los que concretamos tus proyectos, hacemos que las cosas sucedan. Especialistas en corretaje de alto estándar.</p>
+                <!-- REDES SOCIALES -->
+                <div class="flex gap-4">
+                    <a href="#" target="_blank" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-[#D0AA70] hover:text-[#0E0D0D] transition-colors"><i class="fa-brands fa-facebook-f text-lg"></i></a>
+                    <a href="#" target="_blank" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-[#D0AA70] hover:text-[#0E0D0D] transition-colors"><i class="fa-brands fa-instagram text-lg"></i></a>
+                </div>
             </div>
-            <div>
+            <div class="md:col-span-3">
+                <h4 class="font-bold text-[#D0AA70] uppercase tracking-widest mb-6">Navegación</h4>
+                <ul class="space-y-4 text-gray-300 font-light text-sm">
+                    <li><a href="#propiedades" class="hover:text-white transition-colors">Catálogo de Ventas</a></li>
+                    <li><a href="#calculadora" class="hover:text-white transition-colors">Simulador de Crédito</a></li>
+                    <li><a href="#" onclick="openModalDejaPropiedad()" class="hover:text-white transition-colors">Deja tu propiedad aquí</a></li>
+                </ul>
+            </div>
+            <div class="md:col-span-4">
                 <h4 class="font-bold text-[#D0AA70] uppercase tracking-widest mb-6">Contacto Directo</h4>
                 <ul class="space-y-4 text-gray-300 font-light text-sm">
                     <li><i class="fa-solid fa-location-dot text-[#D0AA70] mr-2"></i> Antonio Poupin 841, of. 1801, Antofagasta</li>
-                    <li><i class="fa-brands fa-whatsapp text-green-400 mr-2"></i> +56 9 5204 6918</li>
-                    <li><i class="fa-regular fa-envelope text-[#D0AA70] mr-2"></i> contacto@brospropiedades.cl</li>
+                    <li><i class="fa-brands fa-whatsapp text-green-400 mr-2"></i> <a href="https://wa.me/56952046918" class="hover:text-[#D0AA70]">+56 9 5204 6918</a></li>
+                    <li><i class="fa-regular fa-envelope text-[#D0AA70] mr-2"></i> <a href="mailto:contacto@brospropiedades.cl" class="hover:text-[#D0AA70]">contacto@brospropiedades.cl</a></li>
                 </ul>
             </div>
         </div>
-        <div class="max-w-7xl mx-auto pt-8 text-center text-xs text-gray-500"><p>&copy; 2026 BROS Propiedades.</p></div>
+        <div class="max-w-7xl mx-auto pt-8 flex justify-between items-center text-xs text-gray-500">
+            <p>&copy; 2026 BROS Propiedades. Todos los derechos reservados.</p>
+            <button onclick="document.getElementById('privacidadModal').classList.remove('hidden')" class="hover:text-white transition-colors uppercase">Políticas de Privacidad</button>
+        </div>
     </footer>
 
-    <!-- MODALES OMITIDOS PARA AHORRAR ESPACIO (Mantienen la misma estructura) -->
-    <!-- (Asegúrate de no borrar tus modales de Pre-Evaluar y Tasación del código original) -->
+    <!-- ================= MODALES ================= -->
+
+    <!-- MODAL 1: DEJA TU PROPIEDAD AQUÍ -->
+    <div id="modalDejaPropiedad" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[110] flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-3xl shadow-2xl max-w-md w-full overflow-hidden border border-gray-100 relative">
+            <div class="p-6 border-b flex justify-between items-center bg-gray-50">
+                <h3 class="font-bold text-xl text-gray-900">Deja tu propiedad aquí</h3>
+                <button onclick="document.getElementById('modalDejaPropiedad').classList.add('hidden')" class="text-gray-400 hover:text-gray-900"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <form onsubmit="event.preventDefault(); document.getElementById('modalDejaPropiedad').classList.add('hidden');" class="p-6 space-y-4">
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 mb-1 uppercase">Nombre</label>
+                        <input type="text" required class="w-full border-2 p-3 rounded-xl focus:border-[#D0AA70] outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 mb-1 uppercase">Apellido</label>
+                        <input type="text" required class="w-full border-2 p-3 rounded-xl focus:border-[#D0AA70] outline-none">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 mb-1 uppercase">Correo Electrónico</label>
+                    <input type="email" required class="w-full border-2 p-3 rounded-xl focus:border-[#D0AA70] outline-none">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 mb-1 uppercase">Tipo de Inmueble</label>
+                    <select required class="w-full border-2 p-3 rounded-xl font-medium focus:border-[#D0AA70] outline-none bg-white">
+                        <option value="" disabled selected>Selecciona una opción...</option>
+                        <option value="Casa">Casa</option>
+                        <option value="Departamento">Departamento</option>
+                        <option value="Terreno">Terreno</option>
+                        <option value="Oficina">Oficina</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 mb-1 uppercase">ROL de la propiedad</label>
+                    <input type="text" placeholder="Ej: 1234-56" required class="w-full border-2 p-3 rounded-xl focus:border-[#D0AA70] outline-none">
+                </div>
+                <button type="submit" class="w-full bg-[#0E0D0D] text-white py-4 rounded-xl font-bold hover:bg-[#D0AA70] hover:text-[#0E0D0D] transition-all mt-4 shadow-lg">Enviar Datos</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL 2: SOLICITA TU TASACIÓN GRATIS (2 Pasos) -->
+    <div id="modalTasacion" class="fixed inset-0 bg-black/60 backdrop-blur-md z-[110] flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-[32px] shadow-2xl max-w-lg w-full overflow-hidden border border-gray-100">
+            <div class="p-6 border-b flex justify-between items-center bg-[#0E0D0D] text-white">
+                <h3 class="font-bold text-lg"><i class="fa-solid fa-chart-line text-[#D0AA70] mr-2"></i> Solicita tu tasación gratis</h3>
+                <button onclick="document.getElementById('modalTasacion').classList.add('hidden')" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
+            </div>
+            
+            <form onsubmit="event.preventDefault(); document.getElementById('modalTasacion').classList.add('hidden');" class="p-8">
+                <!-- PASO 1: Detalles -->
+                <div id="tasPaso1" class="step-content active">
+                    <h4 class="font-bold mb-4 text-gray-800 border-b pb-2">1. Detalles del Inmueble</h4>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-xs font-bold text-gray-500 mb-1 uppercase">¿Dónde se ubica? (Región/Ciudad)</label>
+                            <select required class="w-full border-2 p-3 rounded-xl bg-white outline-none focus:border-[#D0AA70]">
+                                <option value="" disabled selected>Selecciona tu región...</option>
+                                <option value="Arica y Parinacota">Arica y Parinacota</option>
+                                <option value="Tarapacá">Tarapacá</option>
+                                <option value="Antofagasta">Antofagasta</option>
+                                <option value="Atacama">Atacama</option>
+                                <option value="Coquimbo">Coquimbo</option>
+                                <option value="Valparaíso">Valparaíso</option>
+                                <option value="Metropolitana">Metropolitana de Santiago</option>
+                                <option value="O'Higgins">O'Higgins</option>
+                                <option value="Maule">Maule</option>
+                                <option value="Ñuble">Ñuble</option>
+                                <option value="Biobío">Biobío</option>
+                                <option value="Araucanía">Araucanía</option>
+                                <option value="Los Ríos">Los Ríos</option>
+                                <option value="Los Lagos">Los Lagos</option>
+                                <option value="Aysén">Aysén</option>
+                                <option value="Magallanes">Magallanes</option>
+                            </select>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-bold text-gray-500 mb-1 uppercase">Tipo</label>
+                                <select required class="w-full border-2 p-3 rounded-xl bg-white outline-none">
+                                    <option value="Casa">Casa</option><option value="Depto">Depto</option><option value="Terreno">Terreno</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-gray-500 mb-1 uppercase">ROL</label>
+                                <input type="text" required class="w-full border-2 p-3 rounded-xl outline-none">
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-3 gap-4">
+                            <div><label class="block text-xs font-bold text-gray-500 mb-1 uppercase">Habitac.</label><input type="number" required class="w-full border-2 p-3 rounded-xl outline-none"></div>
+                            <div><label class="block text-xs font-bold text-gray-500 mb-1 uppercase">Baños</label><input type="number" required class="w-full border-2 p-3 rounded-xl outline-none"></div>
+                            <div>
+                                <label class="block text-xs font-bold text-gray-500 mb-1 uppercase">¿Bodega?</label>
+                                <select class="w-full border-2 p-3 rounded-xl bg-white outline-none"><option value="Si">Sí</option><option value="No">No</option></select>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div><label class="block text-xs font-bold text-gray-500 mb-1 uppercase">M² Útiles</label><input type="number" required class="w-full border-2 p-3 rounded-xl outline-none"></div>
+                            <div><label class="block text-xs font-bold text-gray-500 mb-1 uppercase">M² Totales</label><input type="number" required class="w-full border-2 p-3 rounded-xl outline-none"></div>
+                        </div>
+                    </div>
+                    <button type="button" onClick="goToTasPaso(2)" class="w-full bg-[#0E0D0D] text-white py-4 rounded-xl font-bold mt-6 shadow-lg hover:bg-[#D0AA70] hover:text-[#0E0D0D] transition-all">Siguiente Paso <i class="fa-solid fa-arrow-right"></i></button>
+                </div>
+
+                <!-- PASO 2: Contacto -->
+                <div id="tasPaso2" class="step-content">
+                    <h4 class="font-bold mb-4 text-gray-800 border-b pb-2">2. Información de Contacto</h4>
+                    <div class="space-y-4 mb-8">
+                        <div><label class="block text-xs font-bold text-gray-500 mb-1 uppercase">Nombre Completo</label><input type="text" required class="w-full border-2 p-3.5 rounded-xl outline-none focus:border-[#D0AA70]"></div>
+                        <div><label class="block text-xs font-bold text-gray-500 mb-1 uppercase">Correo Electrónico</label><input type="email" required class="w-full border-2 p-3.5 rounded-xl outline-none focus:border-[#D0AA70]"></div>
+                        <div><label class="block text-xs font-bold text-gray-500 mb-1 uppercase">Teléfono / WhatsApp</label><input type="tel" required class="w-full border-2 p-3.5 rounded-xl outline-none focus:border-[#D0AA70]"></div>
+                    </div>
+                    <div class="flex gap-4">
+                        <button type="button" onclick="goToTasPaso(1)" class="w-1/3 border-2 border-gray-200 text-gray-600 font-bold py-4 rounded-xl hover:bg-gray-50">Atrás</button>
+                        <button type="submit" class="w-2/3 bg-[#D0AA70] text-[#0E0D0D] font-bold py-4 rounded-xl shadow-lg hover:bg-[#956932] hover:text-white transition-all">Finalizar Tasación</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL PRIVACIDAD -->
+    <div id="privacidadModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[120] flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-3xl shadow-2xl max-w-xl w-full p-8">
+            <h3 class="font-bold text-xl text-[#0E0D0D] mb-4 border-b pb-4"><i class="fa-solid fa-shield-halved text-[#D0AA70] mr-2"></i>Privacidad y Seguridad</h3>
+            <p class="text-gray-600 leading-relaxed font-light mb-6">En estricto cumplimiento con la <strong>Ley N° 19.628 de Protección de la Vida Privada en Chile</strong>, BROS Propiedades garantiza que todos los datos ingresados en nuestros formularios se mantienen bajo confidencialidad absoluta.</p>
+            <button onclick="document.getElementById('privacidadModal').classList.add('hidden')" class="w-full bg-[#0E0D0D] text-white font-bold py-3.5 rounded-xl hover:bg-[#956932] transition-colors">Entendido y Cerrar</button>
+        </div>
+    </div>
 
     <script>
-        // Efecto Scroll Header
+        // Header Animación
         window.addEventListener('scroll', () => { document.getElementById('main-header').classList.toggle('header-scrolled', window.scrollY > 50); });
         
         // Efecto Reveal
@@ -251,6 +405,7 @@
                             <h3 class="font-bold text-xl text-gray-900 line-clamp-1 mb-1">${titulo}</h3>
                             <div class="flex justify-between items-center mt-2">
                                 <p class="text-gray-500 text-sm font-medium line-clamp-1"><i class="fa-solid fa-location-dot mr-1.5 text-gray-300"></i>${ubi}</p>
+                                <!-- BOTÓN DESCRIPCIÓN -->
                                 <a href="propiedad.html?id=${prop.id}" class="text-xs font-semibold text-gray-400 hover:text-[#D0AA70] transition-colors uppercase tracking-widest flex items-center gap-1 cursor-pointer shrink-0 ml-2">
                                     Descripción <i class="fa-solid fa-arrow-right"></i>
                                 </a>
@@ -287,15 +442,23 @@
             filtrarPropiedades();
         }
 
-        // Simulación Crédito
+        // Calculadora
         function calcularSimulacion() {
             const v=parseFloat(document.getElementById('inputValorPropiedad').value), p=parseFloat(document.getElementById('inputPie').value), t=parseFloat(document.getElementById('inputTasa').value), pl=parseInt(document.getElementById('inputPlazo').value);
             const mPie=v*(p/100), mFin=v-mPie, tm=(t/100)/12, nm=pl*12, divUF=tm>0?mFin*((tm*Math.pow(1+tm,nm))/(Math.pow(1+tm,nm)-1)):mFin/nm;
             document.getElementById('labelValorPropiedad').innerText = `${v.toLocaleString('es-CL')} UF`; document.getElementById('labelPie').innerHTML = `${p}% <span class="text-gray-400 text-lg ml-2">(~ ${mPie.toLocaleString('es-CL')} UF)</span>`;
-            document.getElementById('resMontoFinanciar').innerText = `${mFinanciar.toLocaleString('es-CL')} UF`; document.getElementById('resDividendoUF').innerText = `${divUF.toFixed(2).replace('.', ',')} UF`;
+            document.getElementById('resMontoFinanciar').innerText = `${mFin.toLocaleString('es-CL')} UF`; document.getElementById('resDividendoUF').innerText = `${divUF.toFixed(2).replace('.', ',')} UF`;
         }
 
-        // CARGAR DATA AL INICIO
+        // Modales
+        function openModalDejaPropiedad() { document.getElementById('modalDejaPropiedad').classList.remove('hidden'); }
+        function openModalTasacion() { document.getElementById('modalTasacion').classList.remove('hidden'); goToTasPaso(1); }
+        function goToTasPaso(s) { 
+            document.querySelectorAll('#modalTasacion .step-content').forEach(sc => sc.classList.remove('active')); 
+            document.getElementById(`tasPaso${s}`).classList.add('active'); 
+        }
+
+        // CARGA
         window.onload = () => { 
             if (typeof PROPIEDADES !== 'undefined') renderProperties(PROPIEDADES); 
             else document.getElementById('propertiesGrid').innerHTML = '<p class="text-gray-500 col-span-3 text-center py-10 font-medium">Por favor sube el archivo propiedades.js generado por tu administrador.</p>';
