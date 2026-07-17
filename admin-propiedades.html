@@ -143,11 +143,25 @@
     display: inline-block; padding: 2px 10px; border-radius: 20px;
     font-size: 11.5px; font-weight: 600; text-transform: uppercase; letter-spacing: .04em;
   }
-  .badge-venta { background: #d1fae5; color: #065f46; }
-  .badge-arriendo { background: #dbeafe; color: #1e40af; }
-  .badge-disponible { background: #d1fae5; color: #065f46; }
-  .badge-en_proceso { background: #fef3c7; color: #92400e; }
-  .badge-vendida { background: #fee2e2; color: #991b1b; }
+  .badge-venta     { background: #d1fae5; color: #065f46; }
+  .badge-arriendo  { background: #dbeafe; color: #1e40af; }
+  .badge-disponible{ background: #d1fae5; color: #065f46; }
+  .badge-vendida   { background: #fee2e2; color: #991b1b; }
+  .badge-arrendada { background: #dbeafe; color: #1e40af; }
+  .badge-inactiva  { background: #f3f4f6; color: #374151; }
+
+  /* ── TOGGLE SÍ/NO ── */
+  .toggle-group { display: flex; }
+  .toggle-btn {
+    flex: 1; padding: 9px 0; border: 1px solid var(--border);
+    background: var(--surface); color: var(--muted);
+    font-size: 14px; font-family: inherit; cursor: pointer;
+    transition: all .15s; font-weight: 500;
+  }
+  .toggle-btn:first-child { border-radius: 8px 0 0 8px; }
+  .toggle-btn:last-child  { border-radius: 0 8px 8px 0; border-left: none; }
+  .toggle-btn.selected    { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .toggle-btn.selected + .toggle-btn { border-left: none; }
 
   /* ── EMPTY STATE ── */
   .empty {
@@ -328,8 +342,9 @@
   <button class="filter-btn" data-filter="Venta">Venta</button>
   <button class="filter-btn" data-filter="Arriendo">Arriendo</button>
   <button class="filter-btn" data-filter="disponible">Disponible</button>
-  <button class="filter-btn" data-filter="en_proceso">En proceso</button>
-  <button class="filter-btn" data-filter="vendida">Vendida/Arrendada</button>
+  <button class="filter-btn" data-filter="vendida">Vendida</button>
+  <button class="filter-btn" data-filter="arrendada">Arrendada</button>
+  <button class="filter-btn" data-filter="inactiva">Inactiva</button>
   <input type="text" class="search-box" id="searchBox" placeholder="🔍  Buscar propiedad...">
 </div>
 
@@ -394,8 +409,9 @@
         <label>Estado</label>
         <select id="fEstado">
           <option value="disponible">Disponible</option>
-          <option value="en_proceso">En proceso</option>
-          <option value="vendida">Vendida / Arrendada</option>
+          <option value="vendida">Vendida</option>
+          <option value="arrendada">Arrendada</option>
+          <option value="inactiva">Inactiva</option>
         </select>
       </div>
 
@@ -433,6 +449,22 @@
       <div class="form-group">
         <label>Estacionamientos</label>
         <input type="number" id="fEstacionamientos" placeholder="2" min="0">
+      </div>
+
+      <div class="form-group">
+        <label>Terraza</label>
+        <div class="toggle-group">
+          <button type="button" class="toggle-btn" id="fTerrazaSi" onclick="setToggle('terraza','si')">Sí</button>
+          <button type="button" class="toggle-btn" id="fTerrazaNo" onclick="setToggle('terraza','no')">No</button>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Bodega</label>
+        <div class="toggle-group">
+          <button type="button" class="toggle-btn" id="fBodegaSi" onclick="setToggle('bodega','si')">Sí</button>
+          <button type="button" class="toggle-btn" id="fBodegaNo" onclick="setToggle('bodega','no')">No</button>
+        </div>
       </div>
 
       <!-- Ubicación -->
@@ -554,6 +586,7 @@ let currentPhotos = [];
 let currentTags = [];
 let currentFilter = 'todos';
 let detailId = null;
+let toggleState = { terraza: null, bodega: null };
 
 function genId() {
   return Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
@@ -592,7 +625,7 @@ function render() {
   const q = (document.getElementById('searchBox').value || '').toLowerCase();
   const filtered = propiedades.filter(p => {
     if (currentFilter === 'todos') {}
-    else if (['disponible','en_proceso','vendida'].includes(currentFilter)) {
+    else if (['disponible','vendida','arrendada','inactiva'].includes(currentFilter)) {
       if (p.estado !== currentFilter) return false;
     } else {
       if (p.operacion !== currentFilter) return false;
@@ -643,6 +676,8 @@ function cardHTML(p) {
         ${p.recamaras ? `<span>🛏 ${p.recamaras}</span>` : ''}
         ${p.banos ? `<span>🚿 ${p.banos}</span>` : ''}
         ${p.estacionamientos ? `<span>🚗 ${p.estacionamientos}</span>` : ''}
+        ${p.terraza === 'si' ? `<span>🏡 Terraza</span>` : ''}
+        ${p.bodega === 'si' ? `<span>📦 Bodega</span>` : ''}
       </div>
     </div>
     <div class="card-footer">
@@ -654,12 +689,29 @@ function cardHTML(p) {
 }
 
 function estadoLabel(e) {
-  const m = { disponible:'Disponible', en_proceso:'En proceso', vendida:'Vendida/Arrendada' };
+  const m = { disponible:'Disponible', vendida:'Vendida', arrendada:'Arrendada', inactiva:'Inactiva' };
   return m[e] || e;
 }
 
 function escHtml(s) {
   return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ═══════════════════════════════════════════
+//  TOGGLES SÍ/NO
+// ═══════════════════════════════════════════
+function setToggle(field, val) {
+  toggleState[field] = val;
+  const cap = field.charAt(0).toUpperCase() + field.slice(1);
+  document.getElementById('f' + cap + 'Si').classList.toggle('selected', val === 'si');
+  document.getElementById('f' + cap + 'No').classList.toggle('selected', val === 'no');
+}
+
+function clearToggle(field) {
+  toggleState[field] = null;
+  const cap = field.charAt(0).toUpperCase() + field.slice(1);
+  document.getElementById('f' + cap + 'Si').classList.remove('selected');
+  document.getElementById('f' + cap + 'No').classList.remove('selected');
 }
 
 // ═══════════════════════════════════════════
@@ -723,6 +775,8 @@ function clearForm() {
   document.getElementById('fOperacion').value = 'Venta';
   document.getElementById('fMoneda').value = 'CLP';
   document.getElementById('fEstado').value = 'disponible';
+  clearToggle('terraza');
+  clearToggle('bodega');
 }
 
 function fillForm(p) {
@@ -742,6 +796,9 @@ function fillForm(p) {
   document.getElementById('fCiudad').value = p.ciudad || '';
   document.getElementById('fEstadoubi').value = p.estadoubi || '';
   document.getElementById('fDescripcion').value = p.descripcion || '';
+  // Toggles
+  if (p.terraza) setToggle('terraza', p.terraza); else clearToggle('terraza');
+  if (p.bodega)  setToggle('bodega',  p.bodega);  else clearToggle('bodega');
 }
 
 function guardarPropiedad() {
@@ -762,6 +819,8 @@ function guardarPropiedad() {
     banos: document.getElementById('fBanos').value,
     mediosbanos: document.getElementById('fMediosbanos').value,
     estacionamientos: document.getElementById('fEstacionamientos').value,
+    terraza: toggleState.terraza,
+    bodega: toggleState.bodega,
     colonia: document.getElementById('fColonia').value,
     ciudad: document.getElementById('fCiudad').value,
     estadoubi: document.getElementById('fEstadoubi').value,
@@ -910,6 +969,9 @@ function openDetail(id) {
     ? `<div class="detail-tags">${p.caracteristicas.map(t => `<span class="tag">${escHtml(t)}</span>`).join('')}</div>`
     : '';
 
+  const terrazaLabel = p.terraza === 'si' ? 'Sí' : p.terraza === 'no' ? 'No' : '—';
+  const bodegaLabel  = p.bodega  === 'si' ? 'Sí' : p.bodega  === 'no' ? 'No' : '—';
+
   document.getElementById('detailBody').innerHTML = `
     ${fotosHTML}
     <div class="detail-grid">
@@ -922,6 +984,8 @@ function openDetail(id) {
       <div class="detail-item"><label>Dormitorios</label><span>${p.recamaras || '—'}</span></div>
       <div class="detail-item"><label>Baños</label><span>${p.banos || '—'}</span></div>
       <div class="detail-item"><label>Estacionamientos</label><span>${p.estacionamientos || '—'}</span></div>
+      <div class="detail-item"><label>Terraza</label><span>${terrazaLabel}</span></div>
+      <div class="detail-item"><label>Bodega</label><span>${bodegaLabel}</span></div>
       <div class="detail-item"><label>Dirección</label><span>${escHtml(p.colonia || '—')}</span></div>
       <div class="detail-item"><label>Ciudad</label><span>${escHtml(p.ciudad || '—')}</span></div>
       <div class="detail-item"><label>Comuna</label><span>${escHtml(p.estadoubi || '—')}</span></div>
