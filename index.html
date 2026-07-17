@@ -207,7 +207,7 @@
                 <!-- REDES SOCIALES -->
                 <div class="flex gap-4">
                     <a href="#" target="_blank" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-[#D0AA70] hover:text-[#0E0D0D] transition-colors"><i class="fa-brands fa-facebook-f text-lg"></i></a>
-                    <a href="#" target="_blank" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-[#D0AA70] hover:text-[#0E0D0D] transition-colors"><i class="fa-brands fa-instagram text-lg"></i></a>
+                    <a href="https://www.instagram.com/brospropiedades/" target="_blank" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-[#D0AA70] hover:text-[#0E0D0D] transition-colors"><i class="fa-brands fa-instagram text-lg"></i></a>
                 </div>
             </div>
             <div class="md:col-span-3">
@@ -390,6 +390,14 @@
                 const ubi = prop.colonia || prop.ciudad || 'Ubicación no especificada';
                 const titulo = prop.nombre || 'Propiedad sin título';
                 
+                // Determinar el color y texto del Estado
+                let estadoColor = 'text-gray-400';
+                let estadoTexto = 'Inactiva';
+                if(prop.estado === 'disponible') { estadoColor = 'text-green-500'; estadoTexto = 'Disponible'; }
+                else if(prop.estado === 'vendida') { estadoColor = 'text-red-500'; estadoTexto = 'Vendida'; }
+                else if(prop.estado === 'rentada') { estadoColor = 'text-red-500'; estadoTexto = 'Arrendada'; }
+                else if(prop.estado === 'en_proceso') { estadoColor = 'text-yellow-600'; estadoTexto = 'En proceso'; }
+                
                 grid.innerHTML += `
                     <div class="property-card bg-white border border-gray-100 reveal active" style="transition-delay: ${(i%3)*100}ms">
                         <div class="h-64 relative bg-gray-100 overflow-hidden">
@@ -410,14 +418,21 @@
                                     Descripción <i class="fa-solid fa-arrow-right"></i>
                                 </a>
                             </div>
-                            <div class="flex justify-between items-end pt-5 mt-5 border-t border-gray-100">
+                            
+                            <!-- ICONOS DE CARACTERÍSTICAS -->
+                            <div class="grid grid-cols-4 gap-2 mt-4 text-gray-500 text-xs font-medium bg-gray-50 p-2.5 rounded-xl border border-gray-100/50">
+                                <span class="flex flex-col items-center justify-center gap-1" title="Dormitorios"><i class="fa-solid fa-bed text-[#D0AA70] text-sm"></i> ${prop.recamaras || 0}</span>
+                                <span class="flex flex-col items-center justify-center gap-1 border-l border-gray-200" title="Baños"><i class="fa-solid fa-bath text-[#D0AA70] text-sm"></i> ${prop.banos || 0}</span>
+                                <span class="flex flex-col items-center justify-center gap-1 border-l border-gray-200" title="Estacionamientos"><i class="fa-solid fa-car text-[#D0AA70] text-sm"></i> ${prop.estacionamientos || 0}</span>
+                                <span class="flex flex-col items-center justify-center gap-1 border-l border-gray-200" title="M2 Totales"><i class="fa-solid fa-ruler-combined text-[#D0AA70] text-sm"></i> ${prop.m2total || 0}</span>
+                            </div>
+
+                            <div class="flex justify-between items-end pt-4 mt-4 border-t border-gray-100">
                                 <div class="flex flex-col">
                                     <span class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-0.5">Valor ${prop.moneda || 'UF'}</span>
                                     <span class="text-[#D0AA70] font-extrabold text-2xl leading-none">${precioFmt}</span>
-                                </div>
-                                <div class="text-gray-400 text-xs font-medium flex gap-3">
-                                    <span title="Dormitorios"><i class="fa-solid fa-bed"></i> ${prop.recamaras || 0}</span>
-                                    <span title="Baños"><i class="fa-solid fa-bath"></i> ${prop.banos || 0}</span>
+                                    <!-- ESTADO -->
+                                    <span class="text-xs font-bold mt-2 uppercase tracking-wider ${estadoColor}">${estadoTexto}</span>
                                 </div>
                             </div>
                         </div>
