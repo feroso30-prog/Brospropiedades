@@ -424,17 +424,17 @@
                             </div>
                             
                             <div class="flex justify-between items-end pt-5 mt-5 border-t border-gray-100">
-                                <div class="flex flex-col">
+                                <div class="flex flex-col min-w-[100px]">
                                     <span class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-0.5">Valor ${prop.moneda || 'UF'}</span>
                                     <span class="text-[#D0AA70] font-extrabold text-2xl leading-none">${precioFmt}</span>
                                     <!-- ESTADO -->
                                     <span class="text-xs font-bold mt-2 uppercase tracking-wider ${estadoColor}">${estadoTexto}</span>
                                 </div>
-                                <div class="text-gray-400 text-xs font-medium flex flex-wrap justify-end gap-3 max-w-[120px]">
+                                <div class="text-gray-400 text-[11px] font-medium flex items-center justify-end gap-2.5 whitespace-nowrap">
                                     <span title="Dormitorios"><i class="fa-solid fa-bed"></i> ${prop.recamaras || 0}</span>
                                     <span title="Baños"><i class="fa-solid fa-bath"></i> ${prop.banos || 0}</span>
                                     <span title="Estacionamientos"><i class="fa-solid fa-car"></i> ${prop.estacionamientos || 0}</span>
-                                    <span title="M2 Totales"><i class="fa-solid fa-ruler-combined"></i> ${prop.m2total || 0}</span>
+                                    <span title="M2 Totales" class="flex items-center gap-1"><i class="fa-solid fa-vector-square"></i> ${prop.m2total || 0} m²</span>
                                 </div>
                             </div>
                         </div>
