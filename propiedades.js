@@ -1,4 +1,4 @@
-// propiedades.js — generado el 17-07-2026, 2:33:17 p. m.
+// propiedades.js — generado el 17-07-2026, 7:11:55 p. m.
 // NO editar manualmente. Usa el panel de administración.
 const PROPIEDADES = [
   {
