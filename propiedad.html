@@ -5,24 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Detalle Propiedad | BROS</title>
     
-    <!-- FAVICON DINÁMICO VECTORIAL -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23222222'/><path d='M50 15 L20 40 L80 40 Z' fill='%23D0AA70'/><text x='50%' y='75%' dominant-baseline='middle' text-anchor='middle' font-family='Arial, sans-serif' font-size='55' font-weight='900' fill='%23D0AA70'>B</text></svg>" type="image/svg+xml">
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- 🟢 AQUÍ CONECTAMOS CON TU PANEL DE CONTROL (ADMIN) -->
-    <script src="propiedades.js"></script>
-    
     <style>
         .scrollbar-hide::-webkit-scrollbar { display: none; }
         .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+        .loader { border: 4px solid #f3f3f3; border-top: 4px solid #D0AA70; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 0 auto; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
 <body class="bg-gray-50 font-['Inter'] flex flex-col min-h-screen">
 
-    <!-- HEADER -->
     <header class="w-full bg-[#0E0D0D] h-24 flex items-center px-6 shadow-md shrink-0">
         <div class="max-w-7xl mx-auto w-full flex justify-between items-center">
             <a href="index.html" class="w-20 h-20"><img src="bros-logo.png" class="w-full h-full object-contain hover:scale-105 transition-transform"></a>
@@ -30,44 +27,13 @@
         </div>
     </header>
 
-    <!-- CONTENEDOR PRINCIPAL -->
-    <main class="max-w-7xl mx-auto px-6 py-12 flex-grow w-full" id="detalle-container"></main>
+    <main class="max-w-7xl mx-auto px-6 py-12 flex-grow w-full" id="detalle-container">
+        <div class="text-center py-20"><div class="loader"></div><p class="text-gray-400 mt-4 font-semibold">Cargando detalles de la propiedad...</p></div>
+    </main>
 
-    <!-- FOOTER -->
-    <footer class="bg-[#0E0D0D] text-[#EFEFEF] pt-16 pb-10 px-6 shrink-0 mt-10">
-        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-12 pb-12 border-b border-white/10">
-            <div class="md:col-span-5">
-                <img src="bros-logo.png" alt="BROS" class="w-24 h-24 mb-6 object-contain">
-                <p class="text-gray-400 font-light mb-6 text-sm">Somos los que concretamos tus proyectos, hacemos que las cosas sucedan. Especialistas en corretaje de alto estándar.</p>
-                <div class="flex gap-4">
-                    <a href="#" target="_blank" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-[#D0AA70] hover:text-[#0E0D0D] transition-colors"><i class="fa-brands fa-facebook-f"></i></a>
-                    <a href="https://www.instagram.com/brospropiedades/" target="_blank" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-[#D0AA70] hover:text-[#0E0D0D] transition-colors"><i class="fa-brands fa-instagram"></i></a>
-                </div>
-            </div>
-            <div class="md:col-span-3">
-                <h4 class="font-bold text-[#D0AA70] uppercase tracking-widest mb-6 text-sm">Navegación</h4>
-                <ul class="space-y-4 text-gray-300 font-light text-sm">
-                    <li><a href="index.html#propiedades" class="hover:text-white transition-colors">Catálogo de Ventas</a></li>
-                    <li><a href="index.html#calculadora" class="hover:text-white transition-colors">Simulador de Crédito</a></li>
-                </ul>
-            </div>
-            <div class="md:col-span-4">
-                <h4 class="font-bold text-[#D0AA70] uppercase tracking-widest mb-6 text-sm">Contacto Directo</h4>
-                <ul class="space-y-4 text-gray-300 font-light text-sm">
-                    <li><i class="fa-solid fa-location-dot text-[#D0AA70] mr-2"></i> Antonio Poupin 841, of. 1801, Antofagasta</li>
-                    <li><i class="fa-brands fa-whatsapp text-green-400 mr-2"></i> <a href="https://wa.me/56952046918" class="hover:text-[#D0AA70]">+56 9 5204 6918</a></li>
-                    <li><i class="fa-regular fa-envelope text-[#D0AA70] mr-2"></i> <a href="mailto:conversemos@brospropiedades.cl" class="hover:text-[#D0AA70]">conversemos@brospropiedades.cl</a></li>
-                </ul>
-            </div>
-        </div>
-        <div class="max-w-7xl mx-auto pt-8 flex justify-center items-center text-xs text-gray-500">
-            <p>&copy; 2026 BROS Propiedades. Todos los derechos reservados.</p>
-        </div>
-    </footer>
+    <!-- FOOTER OMITIDO POR ESPACIO (Conserva el que tenías en propiedad.html) -->
 
-    <!-- SCRIPT CENTRAL -->
     <script>
-        // Funciones Globales para el Carrusel
         let currentImgIndex = 0;
         let propertyPhotos = [];
 
@@ -98,150 +64,122 @@
             return (match && match[2].length === 11) ? match[2] : null;
         }
 
-        const urlParams = new URLSearchParams(window.location.search);
-        const propId = urlParams.get('id'); 
-        
-        if(typeof PROPIEDADES !== 'undefined') {
-            const propiedad = PROPIEDADES.find(p => p.id === propId);
+        // Cargar desde Kiteprop
+        async function cargarDetallePropiedad() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const propId = urlParams.get('id'); 
+            const container = document.getElementById('detalle-container');
 
-            if(propiedad) {
-                const container = document.getElementById('detalle-container');
-                propertyPhotos = propiedad.fotos || [];
-                const fotoPrincipal = propertyPhotos.length > 0 ? propertyPhotos[0] : 'bros-logo.png';
-                const precio = propiedad.precio ? Number(propiedad.precio).toLocaleString('es-CL') : '0';
+            if(!propId) {
+                container.innerHTML = `<div class="text-center py-20"><h1 class="text-3xl font-bold text-gray-900">Propiedad no encontrada</h1></div>`;
+                return;
+            }
 
-                let tituloValor = "Valor de Inversión";
-                if(propiedad.operacion === "Venta") tituloValor = "Valor Venta";
-                if(propiedad.operacion === "Renta" || propiedad.operacion === "Arriendo") tituloValor = "Valor Arriendo";
+            const API_KEY = "kp_RWPQdkrrMLApXNdCHYU49Igi1IvwsW9HZNk0wZFM";
+            // Usaremos el mismo endpoint de listado para buscarla
+            const URL_KITEPROP = "https://www.kiteprop.com/api/v1/properties";
 
-                // Construir HTML del Carrusel y Miniaturas
-                let galeriaHTML = '';
-                let flechasHTML = '';
-                
-                if(propertyPhotos.length > 1) {
-                    galeriaHTML = '<div class="flex gap-3 mt-4 overflow-x-auto pb-2 scrollbar-hide">';
-                    propertyPhotos.forEach((img, idx) => {
-                        galeriaHTML += `<img src="${img}" class="w-24 h-24 md:w-32 md:h-32 object-cover rounded-xl border-2 border-transparent hover:border-[#D0AA70] cursor-pointer transition-all shrink-0 shadow-sm" onclick="setMainImage(${idx})">`;
-                    });
-                    galeriaHTML += '</div>';
+            try {
+                const response = await fetch(URL_KITEPROP, {
+                    method: 'GET',
+                    headers: { 'X-API-Key': API_KEY, 'Content-Type': 'application/json' }
+                });
 
-                    // Flechas de navegación (Se muestran al hacer hover sobre la imagen principal)
-                    flechasHTML = `
-                        <button onclick="prevImage()" class="absolute left-4 top-1/2 -translate-y-1/2 bg-black/60 hover:bg-[#D0AA70] text-white w-12 h-12 rounded-full flex items-center justify-center backdrop-blur-md transition-all opacity-0 group-hover:opacity-100 shadow-xl z-10 text-xl">
-                            <i class="fa-solid fa-chevron-left"></i>
-                        </button>
-                        <button onclick="nextImage()" class="absolute right-4 top-1/2 -translate-y-1/2 bg-black/60 hover:bg-[#D0AA70] text-white w-12 h-12 rounded-full flex items-center justify-center backdrop-blur-md transition-all opacity-0 group-hover:opacity-100 shadow-xl z-10 text-xl">
-                            <i class="fa-solid fa-chevron-right"></i>
-                        </button>
-                    `;
-                }
+                const json = await response.json();
+                const kp = json.data.find(p => String(p.id) === propId);
 
-                let caracteristicasHTML = '';
-                if (propiedad.caracteristicas && propiedad.caracteristicas.length > 0) {
-                    caracteristicasHTML = '<div class="flex flex-wrap gap-2 mt-6">';
-                    propiedad.caracteristicas.forEach(c => {
-                        caracteristicasHTML += `<span class="bg-gray-100 text-gray-600 text-xs font-bold px-3 py-1.5 rounded-full border border-gray-200">${c}</span>`;
-                    });
-                    caracteristicasHTML += '</div>';
-                }
+                if(kp) {
+                    // TRADUCTOR DE DATOS
+                    propertyPhotos = (kp.images_list && kp.images_list.length > 0) ? kp.images_list.map(img => img.lg || img.md || 'bros-logo.png') : ['bros-logo.png'];
+                    const fotoPrincipal = propertyPhotos[0];
+                    
+                    let preFinal = 0;
+                    let monFinal = "UF";
+                    let tituloValor = "Valor Venta";
 
-                // 🎬 LÓGICA DEL RECUADRO DE VIDEO PARA LA COLUMNA DERECHA
-                let videoHTML = '';
-                const linkVideo = propiedad.video || propiedad.url_video || propiedad.youtube || propiedad.link_video;
-                
-                if (linkVideo) {
-                    const ytId = obtenerIdYouTube(linkVideo);
-                    if (ytId) {
-                        videoHTML = `
-                            <div class="bg-[#1A1A1A] rounded-3xl p-6 shadow-xl border border-[#D0AA70]/20 relative">
-                                <span class="text-gray-400 uppercase tracking-widest text-xs font-bold block mb-4 flex items-center gap-2">
-                                    <i class="fa-brands fa-youtube text-[#D0AA70] text-lg"></i> Recorrido Virtual
-                                </span>
-                                <div class="relative w-full rounded-2xl overflow-hidden shadow-lg border border-black" style="padding-top: 56.25%;">
-                                    <iframe class="absolute top-0 left-0 w-full h-full" 
-                                        src="https://www.youtube.com/embed/${ytId}?rel=0" 
-                                        frameborder="0" 
-                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                                        allowfullscreen>
-                                    </iframe>
-                                </div>
-                            </div>
+                    if (kp.operations && kp.operations.length > 0) {
+                        const op = kp.operations[0];
+                        tituloValor = (op.operation_type === 'rental' || op.operation_type === 'temporary_rental') ? "Valor Arriendo" : "Valor Venta";
+                        if (op.prices && op.prices.length > 0) {
+                            preFinal = op.prices[0].amount || op.prices[0].value || 0;
+                            let c_id = op.prices[0].currency_id || (op.prices[0].currency ? op.prices[0].currency.id : null);
+                            if (c_id == 6 || op.prices[0].currency_name === 'CLP') monFinal = "CLP";
+                        }
+                    }
+
+                    const precioFmt = preFinal ? Number(preFinal).toLocaleString('es-CL') : '0';
+
+                    // Galería y Flechas
+                    let galeriaHTML = '';
+                    let flechasHTML = '';
+                    if(propertyPhotos.length > 1) {
+                        galeriaHTML = '<div class="flex gap-3 mt-4 overflow-x-auto pb-2 scrollbar-hide">';
+                        propertyPhotos.forEach((img, idx) => {
+                            galeriaHTML += `<img src="${img}" class="w-24 h-24 md:w-32 md:h-32 object-cover rounded-xl border-2 border-transparent hover:border-[#D0AA70] cursor-pointer transition-all shrink-0 shadow-sm" onclick="setMainImage(${idx})">`;
+                        });
+                        galeriaHTML += '</div>';
+
+                        flechasHTML = `
+                            <button onclick="prevImage()" class="absolute left-4 top-1/2 -translate-y-1/2 bg-black/60 hover:bg-[#D0AA70] text-white w-12 h-12 rounded-full flex items-center justify-center backdrop-blur-md transition-all opacity-0 group-hover:opacity-100 shadow-xl z-10 text-xl"><i class="fa-solid fa-chevron-left"></i></button>
+                            <button onclick="nextImage()" class="absolute right-4 top-1/2 -translate-y-1/2 bg-black/60 hover:bg-[#D0AA70] text-white w-12 h-12 rounded-full flex items-center justify-center backdrop-blur-md transition-all opacity-0 group-hover:opacity-100 shadow-xl z-10 text-xl"><i class="fa-solid fa-chevron-right"></i></button>
                         `;
                     }
+
+                    // Video
+                    let videoHTML = '';
+                    if (kp.link_youtube) {
+                        const ytId = obtenerIdYouTube(kp.link_youtube);
+                        if (ytId) {
+                            videoHTML = `
+                                <div class="bg-[#1A1A1A] rounded-3xl p-6 shadow-xl border border-[#D0AA70]/20 relative mt-6">
+                                    <span class="text-gray-400 uppercase tracking-widest text-xs font-bold block mb-4 flex items-center gap-2"><i class="fa-brands fa-youtube text-[#D0AA70] text-lg"></i> Recorrido Virtual</span>
+                                    <div class="relative w-full rounded-2xl overflow-hidden shadow-lg border border-black" style="padding-top: 56.25%;">
+                                        <iframe class="absolute top-0 left-0 w-full h-full" src="https://www.youtube.com/embed/${ytId}?rel=0" frameborder="0" allowfullscreen></iframe>
+                                    </div>
+                                </div>`;
+                        }
+                    }
+
+                    // Render Final
+                    container.innerHTML = `
+                        <div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
+                            <div class="lg:col-span-2">
+                                <div class="relative group bg-white p-2 rounded-3xl shadow-sm border border-gray-100">
+                                    <img id="main-img" src="${fotoPrincipal}" class="w-full h-[450px] md:h-[600px] object-cover rounded-2xl shadow-inner transition-all duration-300">
+                                    ${flechasHTML}
+                                </div>
+                                ${galeriaHTML}
+                                <div class="bg-white p-8 md:p-10 rounded-3xl shadow-sm border border-gray-100 mt-8">
+                                    <h1 class="text-3xl md:text-4xl font-extrabold text-[#0E0D0D] mb-6">${kp.title || 'Sin Título'}</h1>
+                                    <div class="flex flex-wrap gap-4 md:gap-8 mb-6 border-y border-gray-100 py-6">
+                                        <div class="flex items-center gap-2 text-gray-600"><i class="fa-solid fa-bed text-[#D0AA70] text-xl"></i> <b>${kp.bedrooms || 0}</b> Dorm.</div>
+                                        <div class="flex items-center gap-2 text-gray-600"><i class="fa-solid fa-bath text-[#D0AA70] text-xl"></i> <b>${kp.bathrooms || 0}</b> Baños</div>
+                                        <div class="flex items-center gap-2 text-gray-600"><i class="fa-solid fa-vector-square text-[#D0AA70] text-xl"></i> <b>${kp.total_meters || 0}</b> m²</div>
+                                    </div>
+                                    <h3 class="text-xl font-bold mb-4 text-gray-900">Descripción</h3>
+                                    <p class="text-gray-600 font-light leading-relaxed text-lg whitespace-pre-line">${kp.description || ''}</p>
+                                </div>
+                            </div>
+                            
+                            <div class="lg:col-span-1">
+                                <div class="sticky top-28 flex flex-col gap-6">
+                                    <div class="bg-[#0E0D0D] rounded-3xl p-8 shadow-2xl border border-white/5">
+                                        <span class="text-gray-400 uppercase tracking-widest text-xs font-bold block mb-2">${tituloValor}</span>
+                                        <div class="text-[#D0AA70] text-4xl lg:text-5xl font-extrabold mb-8">${precioFmt} <span class="text-xl">${monFinal}</span></div>
+                                        <a href="https://wa.me/56952046918" target="_blank" class="w-full bg-[#D0AA70] text-[#0E0D0D] text-center py-4 rounded-xl font-bold hover:bg-white mb-3"><i class="fa-brands fa-whatsapp text-xl"></i> Contactar</a>
+                                    </div>
+                                    ${videoHTML}
+                                </div>
+                            </div>
+                        </div>
+                    `;
                 }
-
-                container.innerHTML = `
-                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
-                        
-                        <!-- Columna Izquierda (Carrusel FOTOS Y DESCRIPCIÓN TEXTUAL) -->
-                        <div class="lg:col-span-2">
-                            <!-- Contenedor de la Imagen con Flechas -->
-                            <div class="relative group bg-white p-2 rounded-3xl shadow-sm border border-gray-100">
-                                <img id="main-img" src="${fotoPrincipal}" class="w-full h-[450px] md:h-[600px] object-cover rounded-2xl shadow-inner transition-all duration-300">
-                                ${flechasHTML}
-                            </div>
-                            
-                            ${galeriaHTML}
-                            
-                            <div class="bg-white p-8 md:p-10 rounded-3xl shadow-sm border border-gray-100 mt-8">
-                                <span class="text-[#D0AA70] font-bold tracking-widest uppercase text-sm mb-2 block">${propiedad.tipo || 'Propiedad'} en ${propiedad.colonia || propiedad.ciudad || ''}</span>
-                                <h1 class="text-3xl md:text-4xl font-extrabold text-[#0E0D0D] mb-6">${propiedad.nombre}</h1>
-                                
-                                <div class="flex flex-wrap gap-4 md:gap-8 mb-6 border-y border-gray-100 py-6">
-                                    <div class="flex items-center gap-2 text-gray-600"><i class="fa-solid fa-bed text-[#D0AA70] text-xl"></i> <b>${propiedad.recamaras || 0}</b> Dorm.</div>
-                                    <div class="flex items-center gap-2 text-gray-600"><i class="fa-solid fa-bath text-[#D0AA70] text-xl"></i> <b>${propiedad.banos || 0}</b> Baños</div>
-                                    <div class="flex items-center gap-2 text-gray-600"><i class="fa-solid fa-vector-square text-[#D0AA70] text-xl"></i> <b>${propiedad.m2total || 0}</b> m²</div>
-                                    <div class="flex items-center gap-2 text-gray-600"><i class="fa-solid fa-car text-[#D0AA70] text-xl"></i> <b>${propiedad.estacionamientos || 0}</b> Estac.</div>
-                                </div>
-
-                                <h3 class="text-xl font-bold mb-4 text-gray-900">Descripción de la Propiedad</h3>
-                                <p class="text-gray-600 font-light leading-relaxed text-lg whitespace-pre-line">${propiedad.descripcion || 'No hay descripción detallada disponible en este momento.'}</p>
-                                
-                                ${caracteristicasHTML}
-                            </div>
-                        </div>
-                        
-                        <!-- Columna Derecha (PRECIO, CONTACTO Y VIDEO - TODO STICKY) -->
-                        <div class="lg:col-span-1">
-                            <!-- Contenedor Sticky para que ambas cajas bajen juntas -->
-                            <div class="sticky top-28 flex flex-col gap-6">
-                                
-                                <!-- CAJA 1: Precio y Contacto (Negro Profundo) -->
-                                <div class="bg-[#0E0D0D] rounded-3xl p-8 shadow-2xl border border-white/5">
-                                    <span class="text-gray-400 uppercase tracking-widest text-xs font-bold block mb-2">${tituloValor}</span>
-                                    <div class="text-[#D0AA70] text-4xl lg:text-5xl font-extrabold mb-8">${precio} <span class="text-xl">${propiedad.moneda || 'UF'}</span></div>
-                                    
-                                    <h4 class="text-white font-bold mb-4">¿Te interesa esta propiedad?</h4>
-                                    <p class="text-gray-400 text-sm mb-6 font-light">Agenda una visita guiada con nuestros asesores inmobiliarios o solicita más información.</p>
-                                    
-                                    <a href="https://wa.me/56952046918?text=Hola,%20me%20interesa%20saber%20más%20sobre%20la%20propiedad%20${encodeURIComponent(propiedad.nombre)}" target="_blank" class="w-full bg-[#D0AA70] text-[#0E0D0D] text-center py-4 rounded-xl font-bold hover:bg-white transition-all flex items-center justify-center gap-2 mb-3 shadow-[0_0_15px_rgba(208,170,112,0.3)]">
-                                        <i class="fa-brands fa-whatsapp text-xl"></i> Contactar Asesor
-                                    </a>
-                                    
-                                    <a href="mailto:conversemos@brospropiedades.cl?subject=Consulta sobre propiedad: ${encodeURIComponent(propiedad.nombre)}" class="w-full bg-transparent border border-gray-600 text-white text-center py-4 rounded-xl font-bold hover:border-white transition-all flex items-center justify-center gap-2">
-                                        <i class="fa-regular fa-envelope"></i> Enviar Correo
-                                    </a>
-                                </div>
-
-                                <!-- CAJA 2: Video YouTube (Gris Antracita Elegante) -->
-                                ${videoHTML}
-
-                            </div>
-                        </div>
-                    </div>
-                `;
-            } else {
-                document.getElementById('detalle-container').innerHTML = `
-                    <div class="text-center py-20">
-                        <i class="fa-solid fa-house-circle-exclamation text-6xl text-gray-300 mb-6"></i>
-                        <h1 class="text-3xl font-bold text-gray-900 mb-4">Propiedad no encontrada</h1>
-                        <p class="text-gray-500 mb-8">El inmueble que buscas no existe o ha sido retirado de nuestro catálogo.</p>
-                        <a href="index.html" class="bg-[#0E0D0D] text-white px-8 py-3 rounded-full font-bold hover:bg-[#D0AA70] hover:text-[#0E0D0D] transition-colors">Volver al Inicio</a>
-                    </div>`;
+            } catch(e) {
+                container.innerHTML = `<div class="text-center py-20"><p class="text-red-500 font-bold">Error de conexión. Contacte soporte (CORS).</p></div>`;
             }
-        } else {
-            document.getElementById('detalle-container').innerHTML = "<div class='text-center py-20'><h1 class='text-3xl font-bold text-gray-500'>Falta el archivo propiedades.js</h1></div>";
         }
+        
+        window.onload = cargarDetallePropiedad;
     </script>
 </body>
 </html>
