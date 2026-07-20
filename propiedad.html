@@ -22,16 +22,20 @@
 
     <header class="w-full bg-[#0E0D0D] h-24 flex items-center px-6 shadow-md shrink-0">
         <div class="max-w-7xl mx-auto w-full flex justify-between items-center">
-            <a href="index.html" class="w-20 h-20"><img src="bros-logo.png" class="w-full h-full object-contain hover:scale-105 transition-transform"></a>
+            <a href="index.html" class="w-20 h-20"><img src="bros-logo.png" class="w-full h-full object-contain hover:scale-105 transition-transform" onerror="this.src='https://placehold.co/200x200/0E0D0D/D0AA70?text=BROS'"></a>
             <a href="index.html" class="text-white hover:text-[#D0AA70] font-semibold flex items-center gap-2 transition-colors"><i class="fa-solid fa-arrow-left"></i> Volver al Catálogo</a>
         </div>
     </header>
 
     <main class="max-w-7xl mx-auto px-6 py-12 flex-grow w-full" id="detalle-container">
-        <div class="text-center py-20"><div class="loader"></div><p class="text-gray-400 mt-4 font-semibold">Cargando detalles de la propiedad...</p></div>
+        <div class="text-center py-20"><div class="loader"></div><p class="text-gray-400 mt-4 font-semibold">Descargando detalles a través del túnel seguro...</p></div>
     </main>
 
-    <!-- FOOTER OMITIDO POR ESPACIO (Conserva el que tenías en propiedad.html) -->
+    <footer class="bg-[#0E0D0D] text-[#EFEFEF] pt-16 pb-10 px-6 shrink-0 mt-10">
+        <div class="max-w-7xl mx-auto flex justify-center items-center text-xs text-gray-500">
+            <p>&copy; 2026 BROS Propiedades.</p>
+        </div>
+    </footer>
 
     <script>
         let currentImgIndex = 0;
@@ -64,7 +68,6 @@
             return (match && match[2].length === 11) ? match[2] : null;
         }
 
-        // Cargar desde Kiteprop
         async function cargarDetallePropiedad() {
             const urlParams = new URLSearchParams(window.location.search);
             const propId = urlParams.get('id'); 
@@ -76,27 +79,31 @@
             }
 
             const API_KEY = "kp_RWPQdkrrMLApXNdCHYU49Igi1IvwsW9HZNk0wZFM";
-            // Usaremos el mismo endpoint de listado para buscarla
-            const URL_KITEPROP = "https://www.kiteprop.com/api/v1/properties";
+            const baseUrl = window.location.origin;
+            const URL_KITEPROP = `${baseUrl}/api/kiteprop/properties`;
 
             try {
+                // Validación para el entorno de pruebas
+                if (baseUrl.includes('usercontent.goog') || baseUrl.includes('localhost') || baseUrl.includes('127.0.0.1')) {
+                     container.innerHTML = `<div class="text-center py-20 bg-yellow-50 rounded-3xl border border-yellow-200"><p class="text-yellow-700 font-bold text-xl mb-3"><i class="fa-solid fa-triangle-exclamation"></i> Modo Vista Previa</p><p class="text-yellow-600">El túnel de Netlify no funciona en esta pantalla de prueba.<br><b>Sube los archivos a GitHub para que tu sitio conecte con Kiteprop.</b></p></div>`;
+                     return;
+                }
+
                 const response = await fetch(URL_KITEPROP, {
                     method: 'GET',
                     headers: { 'X-API-Key': API_KEY, 'Content-Type': 'application/json' }
                 });
 
+                if (!response.ok) throw new Error("Error de red");
+
                 const json = await response.json();
                 const kp = json.data.find(p => String(p.id) === propId);
 
                 if(kp) {
-                    // TRADUCTOR DE DATOS
                     propertyPhotos = (kp.images_list && kp.images_list.length > 0) ? kp.images_list.map(img => img.lg || img.md || 'bros-logo.png') : ['bros-logo.png'];
                     const fotoPrincipal = propertyPhotos[0];
                     
-                    let preFinal = 0;
-                    let monFinal = "UF";
-                    let tituloValor = "Valor Venta";
-
+                    let preFinal = 0; let monFinal = "UF"; let tituloValor = "Valor Venta";
                     if (kp.operations && kp.operations.length > 0) {
                         const op = kp.operations[0];
                         tituloValor = (op.operation_type === 'rental' || op.operation_type === 'temporary_rental') ? "Valor Arriendo" : "Valor Venta";
@@ -109,9 +116,7 @@
 
                     const precioFmt = preFinal ? Number(preFinal).toLocaleString('es-CL') : '0';
 
-                    // Galería y Flechas
-                    let galeriaHTML = '';
-                    let flechasHTML = '';
+                    let galeriaHTML = ''; let flechasHTML = '';
                     if(propertyPhotos.length > 1) {
                         galeriaHTML = '<div class="flex gap-3 mt-4 overflow-x-auto pb-2 scrollbar-hide">';
                         propertyPhotos.forEach((img, idx) => {
@@ -125,7 +130,6 @@
                         `;
                     }
 
-                    // Video
                     let videoHTML = '';
                     if (kp.link_youtube) {
                         const ytId = obtenerIdYouTube(kp.link_youtube);
@@ -140,7 +144,6 @@
                         }
                     }
 
-                    // Render Final
                     container.innerHTML = `
                         <div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
                             <div class="lg:col-span-2">
@@ -166,7 +169,7 @@
                                     <div class="bg-[#0E0D0D] rounded-3xl p-8 shadow-2xl border border-white/5">
                                         <span class="text-gray-400 uppercase tracking-widest text-xs font-bold block mb-2">${tituloValor}</span>
                                         <div class="text-[#D0AA70] text-4xl lg:text-5xl font-extrabold mb-8">${precioFmt} <span class="text-xl">${monFinal}</span></div>
-                                        <a href="https://wa.me/56952046918" target="_blank" class="w-full bg-[#D0AA70] text-[#0E0D0D] text-center py-4 rounded-xl font-bold hover:bg-white mb-3"><i class="fa-brands fa-whatsapp text-xl"></i> Contactar</a>
+                                        <a href="https://wa.me/56952046918?text=Hola,%20me%20interesa%20la%20propiedad%20${encodeURIComponent(kp.title)}" target="_blank" class="w-full bg-[#D0AA70] text-[#0E0D0D] text-center py-4 rounded-xl font-bold hover:bg-white mb-3 flex items-center justify-center gap-2"><i class="fa-brands fa-whatsapp text-xl"></i> Agendar Visita</a>
                                     </div>
                                     ${videoHTML}
                                 </div>
@@ -175,7 +178,7 @@
                     `;
                 }
             } catch(e) {
-                container.innerHTML = `<div class="text-center py-20"><p class="text-red-500 font-bold">Error de conexión. Contacte soporte (CORS).</p></div>`;
+                container.innerHTML = `<div class="text-center py-20"><p class="text-red-500 font-bold">Error conectando con la red segura. Por favor, intente de nuevo en unos minutos.</p></div>`;
             }
         }
         

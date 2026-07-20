@@ -5,10 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BROS Propiedades | Corredora High-End</title>
     
-    <!-- FAVICON DINÁMICO VECTORIAL -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23222222'/><path d='M50 15 L20 40 L80 40 Z' fill='%23D0AA70'/><text x='50%' y='75%' dominant-baseline='middle' text-anchor='middle' font-family='Arial, sans-serif' font-size='55' font-weight='900' fill='%23D0AA70'>B</text></svg>" type="image/svg+xml">
     
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -32,10 +30,6 @@
         .overlay-action { position: absolute; bottom: -80px; left: 0; right: 0; display: flex; justify-content: center; padding: 1.5rem 1rem; transition: all 0.4s ease; background: linear-gradient(to top, rgba(14,13,13,0.95) 0%, rgba(14,13,13,0.5) 50%, transparent 100%); }
         .property-card:hover .overlay-action { bottom: 0; }
         .badge { position: absolute; top: 1rem; left: 1rem; z-index: 10; padding: 0.35rem 0.85rem; border-radius: 9999px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); backdrop-filter: blur(4px); }
-        .step-content { display: none; }
-        .step-content.active { display: block; animation: fadeInUp 0.4s ease forwards; }
-        @keyframes fadeInUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
-        /* Loader de Kiteprop */
         .loader { border: 4px solid #f3f3f3; border-top: 4px solid #D0AA70; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 0 auto; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
@@ -44,30 +38,26 @@
 
     <a href="https://wa.me/56952046918" target="_blank" class="fixed bottom-8 right-8 z-[100] bg-[#25D366] text-white w-16 h-16 rounded-full flex items-center justify-center text-3xl shadow-2xl hover:scale-110 transition-transform"><i class="fa-brands fa-whatsapp"></i></a>
 
-    <!-- HEADER -->
     <header id="main-header" class="w-full bg-[#0E0D0D] fixed top-0 z-50 h-28 flex items-center shadow-lg">
         <div class="max-w-7xl mx-auto px-6 w-full flex items-center justify-between">
             <a href="#" class="flex items-center group">
                 <div id="header-logo-container" class="flex items-center justify-center w-28 h-28 overflow-hidden rounded-xl">
-                    <img src="bros-logo.png" alt="BROS PROPIEDADES" class="w-full h-full object-contain logo-shine">
+                    <img src="bros-logo.png" alt="BROS" class="w-full h-full object-contain logo-shine" onerror="this.src='https://placehold.co/200x200/0E0D0D/D0AA70?text=BROS'">
                 </div>
             </a>
             <nav class="hidden lg:flex items-center space-x-8 text-sm font-medium text-[#EFEFEF]">
                 <a href="#propiedades" class="hover:text-[#D0AA70] transition-colors">Propiedades</a>
-                <a href="#experiencia" class="hover:text-[#D0AA70] transition-colors">Experiencia</a>
-                <a href="#calculadora" class="hover:text-[#D0AA70] transition-colors">Calculadora</a>
-                <a href="#" onclick="openModalDejaPropiedad()" class="text-[#D0AA70] hover:text-white transition-colors">Deja tu propiedad aquí</a>
-                <a href="#equipo" class="hover:text-[#D0AA70] transition-colors">Equipo</a>
+                <a href="https://wa.me/56952046918?text=Hola,%20quisiera%20tasar%20mi%20propiedad" target="_blank" class="hover:text-[#D0AA70] transition-colors">Tasaciones</a>
+                <a href="https://wa.me/56952046918?text=Hola,%20quiero%20dejar%20mi%20propiedad%20con%20ustedes" target="_blank" class="text-[#D0AA70] hover:text-white transition-colors">Deja tu propiedad aquí</a>
             </nav>
             <div class="relative group hidden lg:block">
-                <button onclick="openModalTasacion()" class="bg-[#D0AA70] hover:bg-[#956932] text-[#0E0D0D] hover:text-white px-7 py-3.5 rounded-full text-sm font-bold transition-all transform hover:scale-105 shadow-[0_0_20px_rgba(208,170,112,0.3)]">
+                <a href="https://wa.me/56952046918?text=Hola,%20quisiera%20solicitar%20una%20tasación%20gratuita" target="_blank" class="bg-[#D0AA70] hover:bg-[#956932] text-[#0E0D0D] hover:text-white px-7 py-3.5 rounded-full text-sm font-bold transition-all transform hover:scale-105 shadow-[0_0_20px_rgba(208,170,112,0.3)] block">
                     Solicita tu tasación gratis
-                </button>
+                </a>
             </div>
         </div>
     </header>
 
-    <!-- HERO & BUSCADOR -->
     <section class="relative pt-40 pb-36 px-6 overflow-hidden z-0">
         <div class="hero-bg"></div>
         <div class="absolute inset-0 bg-gradient-to-b from-[#0E0D0D]/70 via-[#0E0D0D]/40 to-[#0E0D0D] z-0"></div>
@@ -75,49 +65,23 @@
             <span class="inline-flex items-center gap-2 bg-white/10 text-[#D0AA70] px-5 py-2 rounded-full text-xs font-bold uppercase tracking-widest mb-8 border border-white/20 backdrop-blur-md shadow-lg">✨ El Top 1% del Mercado Inmobiliario</span>
             <h1 class="text-5xl md:text-6xl lg:text-7xl font-extrabold text-[#EFEFEF] tracking-tight leading-[1.1] mb-8 drop-shadow-xl">La alegría y emoción de<br><span class="text-transparent bg-clip-text bg-gradient-to-r from-[#D0AA70] to-[#E5C992]">ver el hogar de tus sueños</span></h1>
             
-            <div class="w-full bg-white/20 backdrop-blur-xl rounded-[2rem] shadow-2xl border border-white/30 p-4 mt-12 transition-all focus-within:bg-white/30 focus-within:border-white/50">
+            <div class="w-full bg-white/20 backdrop-blur-xl rounded-[2rem] shadow-2xl border border-white/30 p-4 mt-12 transition-all">
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-8 gap-3">
-                    <div class="relative">
-                        <select id="sOperacion" class="w-full bg-white py-3.5 pl-4 pr-8 rounded-xl outline-none text-gray-900 font-medium shadow-inner focus:ring-2 focus:ring-[#D0AA70] appearance-none cursor-pointer">
+                    <div class="relative lg:col-span-2">
+                        <select id="sOperacion" class="w-full bg-white py-3.5 pl-4 pr-8 rounded-xl outline-none text-gray-900 font-medium shadow-inner">
                             <option value="Todos">Operación</option><option value="Venta">Venta</option><option value="Arriendo">Arriendo</option>
                         </select>
-                        <i class="fa-solid fa-chevron-down absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 text-xs pointer-events-none"></i>
+                    </div>
+                    <div class="relative lg:col-span-2">
+                        <input type="text" id="sUbi" placeholder="Ubicación o Ciudad..." class="w-full bg-white py-3.5 pl-4 pr-8 rounded-xl outline-none text-gray-900 font-medium shadow-inner">
                     </div>
                     <div class="relative">
-                        <select id="sUbi" class="w-full bg-white py-3.5 pl-4 pr-8 rounded-xl outline-none text-gray-900 font-medium shadow-inner focus:ring-2 focus:ring-[#D0AA70] appearance-none cursor-pointer">
-                            <option value="">Ubicación...</option>
-                            <optgroup label="Norte">
-                                <option value="Arica">Arica</option><option value="Iquique">Iquique</option><option value="Antofagasta">Antofagasta</option><option value="Calama">Calama</option><option value="Copiapó">Copiapó</option><option value="La Serena">La Serena</option><option value="Coquimbo">Coquimbo</option>
-                            </optgroup>
-                            <optgroup label="Región Metropolitana">
-                                <option value="Santiago">Santiago Centro</option><option value="Vitacura">Vitacura</option><option value="Las Condes">Las Condes</option><option value="Providencia">Providencia</option><option value="Lo Barnechea">Lo Barnechea</option><option value="Ñuñoa">Ñuñoa</option><option value="La Reina">La Reina</option><option value="Chicureo">Chicureo</option><option value="Colina">Colina</option><option value="Macul">Macul</option>
-                            </optgroup>
-                            <optgroup label="Centro y Sur">
-                                <option value="Viña del Mar">Viña del Mar</option><option value="Valparaíso">Valparaíso</option><option value="Concón">Concón</option><option value="Zapallar">Zapallar</option><option value="Rancagua">Rancagua</option><option value="Talca">Talca</option><option value="Concepción">Concepción</option><option value="Temuco">Temuco</option><option value="Valdivia">Valdivia</option><option value="Osorno">Osorno</option><option value="Puerto Varas">Puerto Varas</option><option value="Puerto Montt">Puerto Montt</option>
-                            </optgroup>
-                        </select>
-                        <i class="fa-solid fa-chevron-down absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 text-xs pointer-events-none"></i>
+                        <input type="number" id="sHab" placeholder="Dorm." min="0" class="w-full bg-white py-3.5 pl-4 pr-4 rounded-xl outline-none text-gray-900 font-medium shadow-inner">
                     </div>
                     <div class="relative">
-                        <i class="fa-solid fa-bed absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 text-sm"></i>
-                        <input type="number" id="sHab" placeholder="Dorm." min="0" class="w-full bg-white py-3.5 pl-10 pr-4 rounded-xl outline-none text-gray-900 font-medium shadow-inner focus:ring-2 focus:ring-[#D0AA70]">
+                        <input type="number" id="sBanos" placeholder="Baños" min="0" class="w-full bg-white py-3.5 pl-4 pr-4 rounded-xl outline-none text-gray-900 font-medium shadow-inner">
                     </div>
-                    <div class="relative">
-                        <i class="fa-solid fa-bath absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 text-sm"></i>
-                        <input type="number" id="sBanos" placeholder="Baños" min="0" class="w-full bg-white py-3.5 pl-10 pr-4 rounded-xl outline-none text-gray-900 font-medium shadow-inner focus:ring-2 focus:ring-[#D0AA70]">
-                    </div>
-                    <div class="relative">
-                        <i class="fa-solid fa-vector-square absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 text-sm"></i>
-                        <input type="number" id="sM2" placeholder="M² mín." min="0" class="w-full bg-white py-3.5 pl-10 pr-4 rounded-xl outline-none text-gray-900 font-medium shadow-inner focus:ring-2 focus:ring-[#D0AA70]">
-                    </div>
-                    <div class="lg:col-span-2 flex items-center bg-white rounded-xl shadow-inner focus-within:ring-2 focus-within:ring-[#D0AA70] overflow-hidden relative">
-                        <select id="sMoneda" class="bg-gray-50 py-3.5 pl-4 pr-2 outline-none text-gray-600 font-bold border-r border-gray-200 cursor-pointer">
-                            <option value="UF">UF</option><option value="CLP">CLP</option>
-                        </select>
-                        <input type="number" id="sPrecio" placeholder="Precio Max..." min="0" class="w-full bg-transparent py-3.5 px-4 outline-none text-gray-900 font-medium">
-                        <i id="ufLoadingIcon" class="fa-solid fa-circle-notch fa-spin absolute right-3 top-1/2 transform -translate-y-1/2 text-[#D0AA70] text-sm opacity-0 transition-opacity"></i>
-                    </div>
-                    <button onclick="buscarPropiedadesAvanzado()" class="w-full bg-[#D0AA70] hover:bg-[#956932] text-[#0E0D0D] hover:text-white py-3.5 px-4 rounded-xl font-bold transition-all shadow-md flex items-center justify-center gap-2">
+                    <button onclick="buscarPropiedadesAvanzado()" class="lg:col-span-2 w-full bg-[#D0AA70] hover:bg-[#956932] text-[#0E0D0D] hover:text-white py-3.5 px-4 rounded-xl font-bold transition-all shadow-md flex items-center justify-center gap-2">
                         <i class="fa-solid fa-magnifying-glass"></i> Buscar
                     </button>
                 </div>
@@ -125,60 +89,54 @@
         </div>
     </section>
 
-    <!-- PROPIEDADES -->
     <section id="propiedades" class="max-w-7xl mx-auto px-6 py-24">
         <div class="flex flex-col md:flex-row md:items-end justify-between mb-16 reveal">
             <div>
                 <h2 class="text-4xl font-bold tracking-tight text-[#0E0D0D] mb-3">Colección Exclusiva</h2>
-                <p class="text-gray-500 font-light text-lg" id="propiedades-contador">Conectando con base de datos...</p>
+                <p class="text-gray-500 font-light text-lg" id="propiedades-contador">Conectando con túnel seguro de Netlify...</p>
             </div>
             <div class="mt-6 md:mt-0 flex flex-wrap gap-3">
                 <button onclick="filtrarCategoria('Todos')" class="cat-btn px-6 py-2.5 rounded-full text-sm font-semibold bg-[#0E0D0D] text-[#EFEFEF]">Todos</button>
                 <button onclick="filtrarCategoria('Casa')" class="cat-btn px-6 py-2.5 rounded-full text-sm font-semibold bg-white border border-gray-200 text-gray-600">Casas</button>
                 <button onclick="filtrarCategoria('Departamento')" class="cat-btn px-6 py-2.5 rounded-full text-sm font-semibold bg-white border border-gray-200 text-gray-600">Departamentos</button>
-                <button onclick="filtrarCategoria('Terreno')" class="cat-btn px-6 py-2.5 rounded-full text-sm font-semibold bg-white border border-gray-200 text-gray-600">Terrenos</button>
             </div>
         </div>
+        
         <div id="propertiesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
             <div class="col-span-3 py-20 text-center"><div class="loader"></div><p class="text-gray-400 mt-4 font-semibold">Sincronizando con Kiteprop...</p></div>
         </div>
     </section>
 
-    <!-- FOOTER Y SECCIONES EXTRAS OMITIDAS POR ESPACIO PERO DEBEN QUEDAR IGUAL... -->
-
-    <!-- ================= MODALES ================= -->
-    <!-- (Los mismos modales de siempre, no cambian) -->
-
     <script>
-        // Efecto Header y Scroll
-        window.addEventListener('scroll', () => { document.getElementById('main-header').classList.toggle('header-scrolled', window.scrollY > 50); });
-        const observer = new IntersectionObserver(e => e.forEach(entry => { if(entry.isIntersecting) entry.target.classList.add('active'); }));
-        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-
-        // 🔵 OBTENER UF EN TIEMPO REAL
+        // OBTENER UF EN TIEMPO REAL
         let valorUFActual = 39000; 
         async function cargarValorUF() {
             try {
-                document.getElementById('ufLoadingIcon').classList.remove('opacity-0');
                 const respuesta = await fetch('https://mindicador.cl/api/uf');
                 const datos = await respuesta.json();
                 if(datos && datos.serie && datos.serie.length > 0) {
                     valorUFActual = datos.serie[0].valor;
-                    document.getElementById('sPrecio').title = `1 UF = $${Math.round(valorUFActual).toLocaleString('es-CL')} CLP`;
                 }
             } catch (error) { console.warn("UF de respaldo activa."); } 
-            finally { document.getElementById('ufLoadingIcon').classList.add('opacity-0'); }
         }
 
-        // 🟢 NUEVO CEREBRO: CONEXIÓN API KITEPROP
-        window.PROPIEDADES = []; // Variable global donde guardaremos los datos limpios
+        // CONEXIÓN API KITEPROP CON RUTA ABSOLUTA
+        window.PROPIEDADES = []; 
         let filtroActual = "Todos";
 
         async function sincronizarKiteprop() {
             const API_KEY = "kp_RWPQdkrrMLApXNdCHYU49Igi1IvwsW9HZNk0wZFM";
-            const URL_KITEPROP = "https://www.kiteprop.com/api/v1/properties";
+            const baseUrl = window.location.origin;
+            const URL_KITEPROP = `${baseUrl}/api/kiteprop/properties`;
 
             try {
+                // Si detectamos que estás en la vista previa local o en el chat, detenemos la búsqueda
+                if (baseUrl.includes('usercontent.goog') || baseUrl.includes('localhost') || baseUrl.includes('127.0.0.1')) {
+                    document.getElementById('propertiesGrid').innerHTML = '<div class="col-span-3 text-center py-10 bg-yellow-50 rounded-2xl border border-yellow-200"><p class="text-yellow-700 font-bold text-lg mb-2"><i class="fa-solid fa-triangle-exclamation"></i> Entorno de Vista Previa Detectado</p><p class="text-yellow-600">El túnel seguro de Netlify no funciona en esta vista previa.<br><b>Por favor, sube estos archivos a tu GitHub para verlo funcionar en vivo en brospropiedades.cl</b></p></div>';
+                    document.getElementById('propiedades-contador').innerText = "Modo de prueba.";
+                    return;
+                }
+
                 const response = await fetch(URL_KITEPROP, {
                     method: 'GET',
                     headers: {
@@ -187,100 +145,68 @@
                     }
                 });
 
-                if (!response.ok) throw new Error("Error de conexión con Kiteprop");
+                if (!response.ok) throw new Error("Error de conexión");
 
                 const json = await response.json();
                 
                 if(json && json.data) {
-                    // TRADUCTOR: Kiteprop -> Tu sitio web
                     window.PROPIEDADES = json.data.map(kp => {
+                        let fotosArr = kp.images_list ? kp.images_list.map(img => img.lg || img.md || 'bros-logo.png') : [];
                         
-                        // Extraer imágenes
-                        let fotosArr = [];
-                        if(kp.images_list && kp.images_list.length > 0) {
-                            fotosArr = kp.images_list.map(img => img.lg || img.md || img.sm || 'bros-logo.png');
-                        }
-
-                        // Mapeo de Tipo de Inmueble
                         let tipoProp = "Propiedad";
                         if(kp.type === "houses") tipoProp = "Casa";
                         else if(kp.type === "apartments") tipoProp = "Departamento";
-                        else if(kp.type === "residential_lands" || kp.type === "industrial_lands") tipoProp = "Terreno";
-                        else if(kp.type === "offices") tipoProp = "Oficina";
+                        else if(kp.type === "residential_lands") tipoProp = "Terreno";
 
-                        // Mapeo de Estados
-                        let estadoProp = "disponible";
-                        if(kp.status === "sold") estadoProp = "vendida";
-                        else if(kp.status === "rented") estadoProp = "rentada";
-                        else if(kp.status === "reserved") estadoProp = "en_proceso";
-
-                        // Buscar el precio (Extracción robusta adaptada a Kiteprop)
-                        let opFinal = "Venta";
-                        let monFinal = "UF";
-                        let preFinal = 0;
-                        
+                        let opFinal = "Venta"; let monFinal = "UF"; let preFinal = 0;
                         if (kp.operations && kp.operations.length > 0) {
-                            const operacion = kp.operations[0];
-                            opFinal = (operacion.operation_type === 'rental' || operacion.operation_type === 'temporary_rental') ? "Arriendo" : "Venta";
-                            
-                            if (operacion.prices && operacion.prices.length > 0) {
-                                preFinal = operacion.prices[0].amount || operacion.prices[0].value || 0;
-                                let currId = operacion.prices[0].currency_id || (operacion.prices[0].currency ? operacion.prices[0].currency.id : null);
-                                if (currId == 6 || operacion.prices[0].currency_name === 'CLP') monFinal = "CLP";
-                                else if (currId == 19 || operacion.prices[0].currency_name === 'UF') monFinal = "UF";
+                            const op = kp.operations[0];
+                            opFinal = (op.operation_type === 'rental' || op.operation_type === 'temporary_rental') ? "Arriendo" : "Venta";
+                            if (op.prices && op.prices.length > 0) {
+                                preFinal = op.prices[0].amount || op.prices[0].value || 0;
+                                let currId = op.prices[0].currency_id || (op.prices[0].currency ? op.prices[0].currency.id : null);
+                                if (currId == 6 || op.prices[0].currency_name === 'CLP') monFinal = "CLP";
                             }
                         }
 
                         return {
                             id: String(kp.id),
-                            nombre: kp.title || "Propiedad sin título",
-                            ciudad: kp.city || kp.neighborhood || "Ubicación no especificada",
+                            nombre: kp.title || "Propiedad",
+                            ciudad: kp.city || kp.neighborhood || "Ubicación",
                             operacion: opFinal,
                             tipo: tipoProp,
-                            estado: estadoProp,
+                            estado: kp.status === "active" ? "disponible" : "vendida",
                             moneda: monFinal,
                             precio: preFinal,
                             recamaras: kp.bedrooms || 0,
                             banos: kp.bathrooms || 0,
-                            estacionamientos: kp.parkings || 0,
                             m2total: kp.total_meters || 0,
-                            video: kp.link_youtube || "",
-                            descripcion: kp.description || "",
                             fotos: fotosArr
                         };
                     });
 
-                    // Renderizamos las propiedades ya traducidas
                     renderProperties(window.PROPIEDADES);
                 }
             } catch (error) {
-                console.error("Error sincronizando:", error);
-                document.getElementById('propertiesGrid').innerHTML = '<p class="text-red-500 col-span-3 text-center py-10 font-bold">Error al sincronizar con Kiteprop. Verifica tu conexión o políticas de seguridad (CORS).</p>';
+                console.error(error);
+                document.getElementById('propertiesGrid').innerHTML = '<p class="text-red-500 col-span-3 text-center py-10 font-bold">Aplicando políticas de seguridad. Recarga la página en 1 minuto para que el túnel CORS se active completamente.</p>';
             }
         }
 
-        // RENDER DE TARJETAS (Idéntico a antes)
         function renderProperties(list) {
             const grid = document.getElementById('propertiesGrid');
             grid.innerHTML = '';
             
             if (!list || list.length === 0) {
-                grid.innerHTML = '<p class="text-gray-500 col-span-3 text-center py-10 font-medium">No hay propiedades que coincidan con tu búsqueda.</p>';
-                document.getElementById('propiedades-contador').innerText = `Explora nuestro catálogo seleccionado.`;
+                grid.innerHTML = '<p class="text-gray-500 col-span-3 text-center py-10 font-medium">No hay propiedades.</p>';
                 return;
             }
             
-            document.getElementById('propiedades-contador').innerText = `Mostrando ${list.length} propiedades exclusivas sincronizadas en tiempo real.`;
+            document.getElementById('propiedades-contador').innerText = `Mostrando ${list.length} propiedades exclusivas.`;
 
             list.forEach((prop, i) => {
                 const fotoP = (prop.fotos && prop.fotos.length > 0) ? prop.fotos[0] : 'bros-logo.png';
                 const precioFmt = prop.precio ? Number(prop.precio).toLocaleString('es-CL') : '0';
-                
-                let estadoColor = 'text-gray-400'; let estadoTexto = 'Inactiva';
-                if(prop.estado === 'disponible') { estadoColor = 'text-green-500'; estadoTexto = 'Disponible'; }
-                else if(prop.estado === 'vendida') { estadoColor = 'text-red-500'; estadoTexto = 'Vendida'; }
-                else if(prop.estado === 'rentada') { estadoColor = 'text-red-500'; estadoTexto = 'Arrendada'; }
-                else if(prop.estado === 'en_proceso') { estadoColor = 'text-yellow-600'; estadoTexto = 'En proceso'; }
                 
                 grid.innerHTML += `
                     <div class="property-card bg-white border border-gray-100 reveal active" style="transition-delay: ${(i%3)*100}ms">
@@ -288,31 +214,20 @@
                             <div class="badge bg-[#0E0D0D] text-[#D0AA70]">${prop.operacion}</div>
                             <img src="${fotoP}" alt="${prop.nombre}" class="w-full h-full object-cover">
                             <div class="overlay-action">
-                                <a href="https://wa.me/56952046918?text=Hola,%20me%20interesa%20la%20propiedad%20${encodeURIComponent(prop.nombre)}" target="_blank" class="w-full bg-[#D0AA70] text-[#0E0D0D] text-center py-3.5 rounded-xl font-bold hover:bg-white transition-all">
-                                    <i class="fa-regular fa-calendar-check"></i> Agendar Visita
-                                </a>
+                                <a href="propiedad.html?id=${prop.id}" class="w-full bg-[#D0AA70] text-[#0E0D0D] text-center py-3.5 rounded-xl font-bold hover:bg-white transition-all">Ver Detalles</a>
                             </div>
                         </div>
                         <div class="p-7">
                             <h3 class="font-bold text-xl text-gray-900 line-clamp-1 mb-1">${prop.nombre}</h3>
-                            <div class="flex justify-between items-center mt-2">
-                                <p class="text-gray-500 text-sm font-medium line-clamp-1"><i class="fa-solid fa-location-dot mr-1.5 text-gray-300"></i>${prop.ciudad}</p>
-                                <a href="propiedad.html?id=${prop.id}" class="text-xs font-semibold text-gray-400 hover:text-[#D0AA70] transition-colors uppercase tracking-widest flex items-center gap-1 cursor-pointer shrink-0 ml-2">
-                                    Descripción <i class="fa-solid fa-arrow-right"></i>
-                                </a>
-                            </div>
-                            
+                            <p class="text-gray-500 text-sm font-medium"><i class="fa-solid fa-location-dot mr-1.5 text-gray-300"></i>${prop.ciudad}</p>
                             <div class="flex justify-between items-end pt-5 mt-5 border-t border-gray-100">
-                                <div class="flex flex-col min-w-[100px]">
-                                    <span class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-0.5">Valor ${prop.moneda}</span>
-                                    <span class="text-[#D0AA70] font-extrabold text-2xl leading-none">${precioFmt}</span>
-                                    <span class="text-xs font-bold mt-2 uppercase tracking-wider ${estadoColor}">${estadoTexto}</span>
+                                <div>
+                                    <span class="text-xs font-bold text-gray-400 uppercase tracking-widest block mb-0.5">Valor ${prop.moneda}</span>
+                                    <span class="text-[#D0AA70] font-extrabold text-2xl">${precioFmt}</span>
                                 </div>
-                                <div class="text-gray-400 text-[11px] font-medium flex items-center justify-end gap-2.5 whitespace-nowrap">
-                                    <span title="Dormitorios"><i class="fa-solid fa-bed"></i> ${prop.recamaras}</span>
-                                    <span title="Baños"><i class="fa-solid fa-bath"></i> ${prop.banos}</span>
-                                    <span title="Estacionamientos"><i class="fa-solid fa-car"></i> ${prop.estacionamientos}</span>
-                                    <span title="M2 Totales" class="flex items-center gap-1"><i class="fa-solid fa-vector-square"></i> ${prop.m2total} m²</span>
+                                <div class="text-gray-400 text-[11px] font-medium flex gap-2.5">
+                                    <span><i class="fa-solid fa-bed"></i> ${prop.recamaras}</span>
+                                    <span><i class="fa-solid fa-bath"></i> ${prop.banos}</span>
                                 </div>
                             </div>
                         </div>
@@ -320,41 +235,22 @@
             });
         }
 
-        // BUSCADOR AVANZADO MEJORADO
         function buscarPropiedadesAvanzado() {
-            if(!window.PROPIEDADES || window.PROPIEDADES.length === 0) return;
-            
+            if(!window.PROPIEDADES) return;
             const sOperacion = document.getElementById('sOperacion').value; 
             const sUbi = document.getElementById('sUbi').value.toLowerCase();
             const sHab = parseInt(document.getElementById('sHab').value) || 0;
             const sBanos = parseInt(document.getElementById('sBanos').value) || 0;
-            const sM2 = parseInt(document.getElementById('sM2').value) || 0;
-            const sPrecio = parseInt(document.getElementById('sPrecio').value) || Infinity;
-            const sMoneda = document.getElementById('sMoneda').value; 
 
             const filtradas = window.PROPIEDADES.filter(p => {
-                const matchOperacion = (sOperacion === "Todos" || p.operacion === sOperacion || (sOperacion === "Renta" && p.operacion === "Arriendo"));
-                const textUbi = (p.ciudad || "").toLowerCase();
-                const matchUbi = !sUbi || textUbi.includes(sUbi);
+                const matchOperacion = (sOperacion === "Todos" || p.operacion === sOperacion);
+                const matchUbi = !sUbi || (p.ciudad && p.ciudad.toLowerCase().includes(sUbi));
                 const matchHab = (parseInt(p.recamaras) || 0) >= sHab;
                 const matchBanos = (parseInt(p.banos) || 0) >= sBanos;
-                const matchM2 = (parseInt(p.m2total) || 0) >= sM2;
-                
-                let precioProp = parseFloat(p.precio) || 0;
-                if (sMoneda === "CLP") {
-                    if (p.moneda !== "CLP" && p.moneda !== "MXN") precioProp = precioProp * valorUFActual; 
-                } else {
-                    if (p.moneda === "CLP" || p.moneda === "MXN") precioProp = precioProp / valorUFActual; 
-                }
-                
-                const matchPrecio = precioProp <= sPrecio;
                 const matchCat = (filtroActual === "Todos" || p.tipo === filtroActual);
-
-                return matchOperacion && matchUbi && matchHab && matchBanos && matchM2 && matchPrecio && matchCat;
+                return matchOperacion && matchUbi && matchHab && matchBanos && matchCat;
             });
-            
             renderProperties(filtradas);
-            document.getElementById('propiedades').scrollIntoView({ behavior: 'smooth' });
         }
 
         function filtrarCategoria(cat) {
@@ -364,11 +260,7 @@
             buscarPropiedadesAvanzado();
         }
 
-        // CARGA INICIAL
-        window.onload = () => { 
-            cargarValorUF();
-            sincronizarKiteprop();
-        };
+        window.onload = sincronizarKiteprop;
     </script>
 </body>
 </html>
