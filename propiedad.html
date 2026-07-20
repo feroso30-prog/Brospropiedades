@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Detalle Propiedad | BROS</title>
     
-    <!-- FAVICON DINÁMICO VECTORIAL -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23222222'/><path d='M50 15 L20 40 L80 40 Z' fill='%23D0AA70'/><text x='50%' y='75%' dominant-baseline='middle' text-anchor='middle' font-family='Arial, sans-serif' font-size='55' font-weight='900' fill='%23D0AA70'>B</text></svg>" type="image/svg+xml">
     
     <script src="https://cdn.tailwindcss.com"></script>
@@ -15,32 +14,31 @@
     <style>
         .scrollbar-hide::-webkit-scrollbar { display: none; }
         .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+        .logo-shine { filter: drop-shadow(0 0 15px rgba(208, 170, 112, 0.5)) brightness(1.15) contrast(1.05); transition: all 0.4s ease; }
     </style>
 </head>
 <body class="bg-gray-50 font-['Inter'] flex flex-col min-h-screen">
 
-    <!-- HEADER -->
     <header class="w-full bg-[#0E0D0D] h-24 flex items-center px-6 shadow-md shrink-0">
         <div class="max-w-7xl mx-auto w-full flex justify-between items-center">
-            <a href="index.html" class="w-20 h-20"><img src="bros-logo.png" class="w-full h-full object-contain hover:scale-105 transition-transform" onerror="this.src='https://placehold.co/200x200/0E0D0D/D0AA70?text=BROS'"></a>
+            <a href="index.html" class="w-20 h-20"><img src="bros-logo.png" class="w-full h-full object-contain hover:scale-105 transition-transform logo-shine" onerror="this.src='https://placehold.co/200x200/0E0D0D/D0AA70?text=BROS'"></a>
             <a href="index.html" class="text-white hover:text-[#D0AA70] font-semibold flex items-center gap-2 transition-colors"><i class="fa-solid fa-arrow-left"></i> Volver al Catálogo</a>
         </div>
     </header>
 
     <!-- CONTENEDOR PRINCIPAL -->
     <main class="max-w-7xl mx-auto px-6 py-12 flex-grow w-full" id="detalle-container">
-        <!-- Loader inicial mientras conecta con Kiteprop -->
+        <!-- Loader inicial -->
         <div class="text-center py-20">
             <i class="fa-solid fa-circle-notch fa-spin text-4xl text-[#D0AA70] mb-4"></i>
-            <p class="text-gray-400 font-semibold">Descargando detalles de la propiedad...</p>
+            <p class="text-gray-400 font-semibold">Descargando detalles de la propiedad de Kiteprop...</p>
         </div>
     </main>
 
-    <!-- FOOTER -->
     <footer class="bg-[#0E0D0D] text-[#EFEFEF] pt-16 pb-10 px-6 shrink-0 mt-10">
         <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-12 pb-12 border-b border-white/10">
             <div class="md:col-span-5">
-                <img src="bros-logo.png" alt="BROS" class="w-24 h-24 mb-6 object-contain" onerror="this.src='https://placehold.co/200x200/0E0D0D/D0AA70?text=BROS'">
+                <img src="bros-logo.png" alt="BROS" class="w-24 h-24 mb-6 object-contain logo-shine" onerror="this.src='https://placehold.co/200x200/0E0D0D/D0AA70?text=BROS'">
                 <p class="text-gray-400 font-light mb-6 text-sm">Somos los que concretamos tus proyectos, hacemos que las cosas sucedan. Especialistas en corretaje de alto estándar.</p>
                 <div class="flex gap-4">
                     <a href="#" target="_blank" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-[#D0AA70] hover:text-[#0E0D0D] transition-colors"><i class="fa-brands fa-facebook-f"></i></a>
@@ -68,7 +66,6 @@
         </div>
     </footer>
 
-    <!-- SCRIPT CENTRAL E INTEGRACIÓN KITEPROP -->
     <script>
         let currentImgIndex = 0;
         let propertyPhotos = [];
@@ -114,7 +111,7 @@
             let response;
 
             try {
-                // Intento 1: Túnel Principal Netlify
+                // INTENTO 1: Túnel Proxy Netlify
                 response = await fetch(window.location.origin + "/api/kiteprop/properties", {
                     method: 'GET',
                     headers: { 'X-API-Key': API_KEY, 'Content-Type': 'application/json' }
@@ -122,14 +119,14 @@
                 if (!response.ok) throw new Error("Netlify Inactivo");
             } catch (err) {
                 try {
-                    // Intento 2: Túnel de Respaldo Inmediato
+                    // INTENTO 2: Proxy Global de Respaldo
                     response = await fetch("https://corsproxy.io/?https://www.kiteprop.com/api/v1/properties", {
                         method: 'GET',
                         headers: { 'X-API-Key': API_KEY, 'Content-Type': 'application/json' }
                     });
                     if (!response.ok) throw new Error("Proxy global falló");
                 } catch(fallbackErr) {
-                    container.innerHTML = `<div class="text-center py-20 bg-red-50 rounded-3xl border border-red-200 p-8"><p class="text-red-700 font-bold text-xl mb-2">Activando conexión segura...</p><p class="text-red-600">Actualizando servidor. Por favor, <b>refresca esta página en 1 minuto (F5)</b>.</p></div>`;
+                    container.innerHTML = `<div class="text-center py-20 bg-red-50 rounded-3xl border border-red-200 p-8 shadow-sm max-w-2xl mx-auto"><i class="fa-solid fa-shield-halved text-red-500 text-4xl mb-4"></i><p class="text-red-700 font-bold text-xl mb-2">Activando conexión segura...</p><p class="text-red-600">Netlify está actualizando el servidor CORS. Por favor, <b>refresca esta página en 1 minuto (F5)</b>.</p></div>`;
                     return;
                 }
             }
@@ -180,7 +177,7 @@
                         const ytId = obtenerIdYouTube(kp.link_youtube);
                         if (ytId) {
                             videoHTML = `
-                                <div class="bg-[#1A1A1A] rounded-3xl p-6 shadow-xl border border-[#D0AA70]/20 relative">
+                                <div class="bg-[#1A1A1A] rounded-3xl p-6 shadow-xl border border-[#D0AA70]/20 relative mt-6">
                                     <span class="text-gray-400 uppercase tracking-widest text-xs font-bold block mb-4 flex items-center gap-2">
                                         <i class="fa-brands fa-youtube text-[#D0AA70] text-lg"></i> Recorrido Virtual
                                     </span>
