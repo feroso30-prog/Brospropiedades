@@ -107,8 +107,31 @@
         </div>
     </section>
 
+    <footer class="bg-[#0E0D0D] text-[#EFEFEF] pt-20 pb-10 px-6 border-t border-white/10 mt-10">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-10 mb-16">
+            <div>
+                <img src="bros-logo.png" class="w-32 mb-6" alt="BROS">
+                <p class="text-gray-400 font-light text-sm mb-6">Redefiniendo el estándar inmobiliario. Experiencia, exclusividad y resultados excepcionales.</p>
+            </div>
+            <div>
+                <h4 class="text-lg font-bold mb-6 text-white tracking-wide">Contacto Directo</h4>
+                <div class="flex flex-col space-y-4">
+                    <a href="https://wa.me/56952046918" class="text-gray-400 hover:text-[#D0AA70] transition-colors flex items-center gap-3"><i class="fa-brands fa-whatsapp text-xl"></i> +56 9 5204 6918</a>
+                    <p class="text-gray-400 flex items-center gap-3"><i class="fa-regular fa-envelope text-xl"></i> conversermos@brospropiedades.cl</p>
+                </div>
+            </div>
+        </div>
+        <div class="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center text-xs text-gray-500">
+            <p>&copy; 2026 BROS Propiedades. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
     <script>
-        // OBTENER UF EN TIEMPO REAL
+        // Efecto visual del Header
+        window.addEventListener('scroll', () => { document.getElementById('main-header').classList.toggle('header-scrolled', window.scrollY > 50); });
+        const observer = new IntersectionObserver(e => e.forEach(entry => { if(entry.isIntersecting) entry.target.classList.add('active'); }));
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
         let valorUFActual = 39000; 
         async function cargarValorUF() {
             try {
@@ -120,7 +143,6 @@
             } catch (error) { console.warn("UF de respaldo activa."); } 
         }
 
-        // CONEXIÓN API KITEPROP CON RUTA ABSOLUTA
         window.PROPIEDADES = []; 
         let filtroActual = "Todos";
 
@@ -128,21 +150,19 @@
             const API_KEY = "kp_RWPQdkrrMLApXNdCHYU49Igi1IvwsW9HZNk0wZFM";
             const baseUrl = window.location.origin;
             const URL_KITEPROP = `${baseUrl}/api/kiteprop/properties`;
+            const grid = document.getElementById('propertiesGrid');
 
             try {
-                // Si detectamos que estás en la vista previa local o en el chat, detenemos la búsqueda
+                // Modo Vista Previa de IA o Local
                 if (baseUrl.includes('usercontent.goog') || baseUrl.includes('localhost') || baseUrl.includes('127.0.0.1')) {
-                    document.getElementById('propertiesGrid').innerHTML = '<div class="col-span-3 text-center py-10 bg-yellow-50 rounded-2xl border border-yellow-200"><p class="text-yellow-700 font-bold text-lg mb-2"><i class="fa-solid fa-triangle-exclamation"></i> Entorno de Vista Previa Detectado</p><p class="text-yellow-600">El túnel seguro de Netlify no funciona en esta vista previa.<br><b>Por favor, sube estos archivos a tu GitHub para verlo funcionar en vivo en brospropiedades.cl</b></p></div>';
-                    document.getElementById('propiedades-contador').innerText = "Modo de prueba.";
+                    grid.innerHTML = '<div class="col-span-3 text-center py-10 bg-yellow-50 rounded-2xl border border-yellow-200"><p class="text-yellow-700 font-bold text-lg mb-2"><i class="fa-solid fa-triangle-exclamation"></i> Modo Edición Local / Inteligencia Artificial</p><p class="text-yellow-600">Sube este archivo a GitHub para ver las propiedades de Kiteprop.<br>El diseño está 100% restaurado y listo.</p></div>';
+                    document.getElementById('propiedades-contador').innerText = "Modo de diseño.";
                     return;
                 }
 
                 const response = await fetch(URL_KITEPROP, {
                     method: 'GET',
-                    headers: {
-                        'X-API-Key': API_KEY,
-                        'Content-Type': 'application/json'
-                    }
+                    headers: { 'X-API-Key': API_KEY, 'Content-Type': 'application/json' }
                 });
 
                 if (!response.ok) throw new Error("Error de conexión");
@@ -152,7 +172,6 @@
                 if(json && json.data) {
                     window.PROPIEDADES = json.data.map(kp => {
                         let fotosArr = kp.images_list ? kp.images_list.map(img => img.lg || img.md || 'bros-logo.png') : [];
-                        
                         let tipoProp = "Propiedad";
                         if(kp.type === "houses") tipoProp = "Casa";
                         else if(kp.type === "apartments") tipoProp = "Departamento";
@@ -184,30 +203,25 @@
                             fotos: fotosArr
                         };
                     });
-
                     renderProperties(window.PROPIEDADES);
                 }
             } catch (error) {
                 console.error(error);
-                document.getElementById('propertiesGrid').innerHTML = '<p class="text-red-500 col-span-3 text-center py-10 font-bold">Aplicando políticas de seguridad. Recarga la página en 1 minuto para que el túnel CORS se active completamente.</p>';
+                grid.innerHTML = '<div class="col-span-3 bg-red-50 p-8 rounded-2xl border border-red-200 text-center"><p class="text-red-700 font-bold mb-2">Activando conexión segura con Kiteprop...</p><p class="text-red-600">Netlify está creando el túnel en este momento. Por favor, <b>refresca esta página en 1 minuto</b>.</p></div>';
             }
         }
 
         function renderProperties(list) {
             const grid = document.getElementById('propertiesGrid');
             grid.innerHTML = '';
-            
             if (!list || list.length === 0) {
                 grid.innerHTML = '<p class="text-gray-500 col-span-3 text-center py-10 font-medium">No hay propiedades.</p>';
                 return;
             }
-            
             document.getElementById('propiedades-contador').innerText = `Mostrando ${list.length} propiedades exclusivas.`;
-
             list.forEach((prop, i) => {
                 const fotoP = (prop.fotos && prop.fotos.length > 0) ? prop.fotos[0] : 'bros-logo.png';
                 const precioFmt = prop.precio ? Number(prop.precio).toLocaleString('es-CL') : '0';
-                
                 grid.innerHTML += `
                     <div class="property-card bg-white border border-gray-100 reveal active" style="transition-delay: ${(i%3)*100}ms">
                         <div class="h-64 relative bg-gray-100 overflow-hidden">
@@ -260,7 +274,7 @@
             buscarPropiedadesAvanzado();
         }
 
-        window.onload = sincronizarKiteprop;
+        window.onload = () => { cargarValorUF(); sincronizarKiteprop(); };
     </script>
 </body>
 </html>
