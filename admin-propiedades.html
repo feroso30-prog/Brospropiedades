@@ -1,247 +1,788 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panel de Administración | BROS Propiedades</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>body { font-family: 'Inter', sans-serif; background-color: #f3f4f6; }</style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — Brospropiedades</title>
+<style>
+  :root {
+    --bg: #f4f5f7;
+    --surface: #ffffff;
+    --border: #e2e4e8;
+    --text: #1a1d23;
+    --muted: #6b7280;
+    --accent: #2563eb;
+    --accent-hover: #1d4ed8;
+    --danger: #dc2626;
+    --success: #16a34a;
+    --warning: #d97706;
+    --radius: 10px;
+    --shadow: 0 1px 4px rgba(0,0,0,.08), 0 4px 16px rgba(0,0,0,.06);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+  /* HEADER */
+  header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 0 24px; display: flex; align-items: center; justify-content: space-between; height: 60px; position: sticky; top: 0; z-index: 100; }
+  .logo { font-size: 18px; font-weight: 700; color: var(--accent); letter-spacing: -0.5px; }
+  .header-actions { display: flex; gap: 10px; align-items: center; }
+
+  /* BUTTONS */
+  .btn { padding: 8px 16px; border-radius: 8px; border: none; font-size: 14px; font-weight: 500; cursor: pointer; transition: all .15s; display: inline-flex; align-items: center; gap: 6px; }
+  .btn-primary { background: var(--accent); color: #fff; }
+  .btn-primary:hover { background: var(--accent-hover); }
+  .btn-secondary { background: var(--surface); color: var(--text); border: 1px solid var(--border); }
+  .btn-secondary:hover { background: var(--bg); }
+  .btn-danger { background: var(--danger); color: #fff; }
+  .btn-danger:hover { background: #b91c1c; }
+  .btn-sm { padding: 5px 10px; font-size: 12px; }
+
+  /* MAIN LAYOUT */
+  main { max-width: 1400px; margin: 0 auto; padding: 24px; }
+
+  /* STATS */
+  .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; margin-bottom: 24px; }
+  .stat-card { background: var(--surface); border-radius: var(--radius); padding: 18px 20px; border: 1px solid var(--border); }
+  .stat-label { font-size: 12px; color: var(--muted); font-weight: 500; text-transform: uppercase; letter-spacing: .5px; margin-bottom: 6px; }
+  .stat-value { font-size: 28px; font-weight: 700; color: var(--text); }
+
+  /* TOOLBAR */
+  .toolbar { display: flex; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; align-items: center; }
+  .search-box { flex: 1; min-width: 220px; position: relative; }
+  .search-box input { width: 100%; padding: 9px 14px 9px 38px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface); font-size: 14px; color: var(--text); outline: none; transition: border-color .15s; }
+  .search-box input:focus { border-color: var(--accent); }
+  .search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--muted); font-size: 16px; pointer-events: none; }
+  .filter-select { padding: 9px 12px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface); font-size: 14px; color: var(--text); cursor: pointer; outline: none; }
+  .filter-select:focus { border-color: var(--accent); }
+
+  /* PROPERTY GRID */
+  .property-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+  .property-card { background: var(--surface); border-radius: var(--radius); border: 1px solid var(--border); overflow: hidden; transition: box-shadow .2s, transform .2s; cursor: pointer; }
+  .property-card:hover { box-shadow: var(--shadow); transform: translateY(-2px); }
+  .card-img { width: 100%; height: 190px; object-fit: cover; background: var(--bg); display: block; }
+  .card-img-placeholder { width: 100%; height: 190px; background: linear-gradient(135deg, #e8eaf0 0%, #d1d5db 100%); display: flex; align-items: center; justify-content: center; color: var(--muted); font-size: 32px; }
+  .card-body { padding: 14px 16px; }
+  .card-title { font-size: 15px; font-weight: 600; margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .card-location { font-size: 13px; color: var(--muted); margin-bottom: 10px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .card-meta { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+  .meta-tag { font-size: 11px; padding: 3px 8px; border-radius: 20px; background: var(--bg); color: var(--muted); border: 1px solid var(--border); font-weight: 500; }
+  .card-price { font-size: 17px; font-weight: 700; color: var(--accent); }
+  .card-footer { padding: 10px 16px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+
+  /* BADGE */
+  .badge { font-size: 11px; padding: 3px 9px; border-radius: 20px; font-weight: 600; display: inline-flex; align-items: center; gap: 4px; }
+  .badge-disponible { background: #dcfce7; color: #15803d; }
+  .badge-vendida { background: #fee2e2; color: #b91c1c; }
+  .badge-arrendada { background: #fef3c7; color: #b45309; }
+  .badge-inactiva { background: #f1f5f9; color: #64748b; }
+  .badge-video { background: #fee2e2; color: #b91c1c; }
+
+  /* MODAL */
+  .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 1000; display: none; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(2px); }
+  .modal-overlay.open { display: flex; }
+  .modal { background: var(--surface); border-radius: 14px; width: 100%; max-width: 680px; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,.2); }
+  .modal-header { padding: 20px 24px 16px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; background: var(--surface); z-index: 10; border-radius: 14px 14px 0 0; }
+  .modal-title { font-size: 17px; font-weight: 700; }
+  .modal-close { background: var(--bg); border: none; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; font-size: 18px; display: flex; align-items: center; justify-content: center; color: var(--muted); transition: all .15s; }
+  .modal-close:hover { background: var(--border); color: var(--text); }
+  .modal-body { padding: 24px; }
+
+  /* FORM */
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .form-group { display: flex; flex-direction: column; gap: 6px; }
+  .form-group.full { grid-column: 1 / -1; }
+  label { font-size: 13px; font-weight: 600; color: var(--muted); }
+  input[type=text], input[type=number], input[type=url], textarea, select {
+    padding: 9px 12px; border-radius: 8px; border: 1px solid var(--border);
+    font-size: 14px; font-family: inherit; color: var(--text); background: var(--surface);
+    outline: none; transition: border-color .15s; width: 100%;
+  }
+  input:focus, textarea:focus, select:focus { border-color: var(--accent); }
+  textarea { resize: vertical; min-height: 80px; }
+
+  /* TOGGLE BUTTONS */
+  .toggle-group { display: flex; }
+  .toggle-btn { flex: 1; padding: 9px 0; border: 1px solid var(--border); background: var(--surface); color: var(--muted); font-size: 14px; font-family: inherit; cursor: pointer; transition: all .15s; font-weight: 500; }
+  .toggle-btn:first-child { border-radius: 8px 0 0 8px; }
+  .toggle-btn:last-child { border-radius: 0 8px 8px 0; border-left: none; }
+  .toggle-btn.selected { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+  /* PHOTO UPLOAD */
+  .drop-zone { border: 2px dashed var(--border); border-radius: var(--radius); padding: 24px; text-align: center; cursor: pointer; transition: all .15s; color: var(--muted); font-size: 14px; }
+  .drop-zone:hover, .drop-zone.dragover { border-color: var(--accent); background: #eff6ff; color: var(--accent); }
+  .drop-zone-icon { font-size: 28px; margin-bottom: 8px; }
+  .photo-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); gap: 8px; margin-top: 12px; }
+  .photo-thumb { position: relative; aspect-ratio: 1; border-radius: 8px; overflow: hidden; border: 1px solid var(--border); }
+  .photo-thumb img { width: 100%; height: 100%; object-fit: cover; }
+  .photo-remove { position: absolute; top: 3px; right: 3px; background: rgba(0,0,0,.6); color: #fff; border: none; border-radius: 50%; width: 20px; height: 20px; font-size: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+  .photo-remove:hover { background: var(--danger); }
+  .photo-main-badge { position: absolute; bottom: 3px; left: 3px; background: var(--accent); color: #fff; font-size: 9px; padding: 1px 5px; border-radius: 3px; font-weight: 700; }
+
+  /* DETAIL MODAL */
+  .detail-modal { max-width: 820px; }
+  .detail-gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 8px; margin-bottom: 20px; }
+  .detail-gallery img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 8px; border: 1px solid var(--border); cursor: pointer; transition: opacity .15s; }
+  .detail-gallery img:hover { opacity: .85; }
+  .detail-info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 20px; }
+  .detail-info-item { padding: 10px 14px; background: var(--bg); border-radius: 8px; }
+  .detail-info-label { font-size: 11px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 3px; }
+  .detail-info-value { font-size: 14px; font-weight: 600; color: var(--text); }
+  .detail-section { margin-bottom: 20px; }
+  .detail-section h4 { font-size: 13px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 10px; }
+  .detail-actions { display: flex; gap: 10px; padding: 16px 24px; border-top: 1px solid var(--border); background: var(--bg); border-radius: 0 0 14px 14px; }
+
+  /* LIGHTBOX */
+  .lightbox { position: fixed; inset: 0; background: rgba(0,0,0,.92); z-index: 2000; display: none; align-items: center; justify-content: center; }
+  .lightbox.open { display: flex; }
+  .lightbox img { max-width: 92vw; max-height: 88vh; border-radius: 8px; }
+  .lightbox-close { position: absolute; top: 20px; right: 24px; background: none; border: none; color: #fff; font-size: 32px; cursor: pointer; }
+  .lightbox-nav { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(255,255,255,.15); color: #fff; border: none; border-radius: 50%; width: 44px; height: 44px; font-size: 22px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background .15s; }
+  .lightbox-nav:hover { background: rgba(255,255,255,.3); }
+  .lightbox-prev { left: 16px; }
+  .lightbox-next { right: 16px; }
+
+  /* TOAST */
+  .toast { position: fixed; bottom: 24px; right: 24px; background: #1e293b; color: #fff; padding: 12px 20px; border-radius: 10px; font-size: 14px; font-weight: 500; z-index: 9999; transform: translateY(80px); opacity: 0; transition: all .3s cubic-bezier(.34,1.56,.64,1); box-shadow: 0 8px 24px rgba(0,0,0,.2); }
+  .toast.show { transform: translateY(0); opacity: 1; }
+
+  /* EMPTY STATE */
+  .empty-state { text-align: center; padding: 60px 20px; color: var(--muted); }
+  .empty-icon { font-size: 48px; margin-bottom: 16px; }
+  .empty-title { font-size: 18px; font-weight: 600; margin-bottom: 8px; color: var(--text); }
+  .empty-sub { font-size: 14px; }
+
+  /* DELETE CONFIRM */
+  .confirm-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 2000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(2px); }
+  .confirm-overlay.open { display: flex; }
+  .confirm-box { background: var(--surface); border-radius: 14px; padding: 28px; width: 360px; text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,.2); }
+  .confirm-icon { font-size: 36px; margin-bottom: 12px; }
+  .confirm-title { font-size: 17px; font-weight: 700; margin-bottom: 8px; }
+  .confirm-sub { font-size: 14px; color: var(--muted); margin-bottom: 24px; }
+  .confirm-actions { display: flex; gap: 10px; justify-content: center; }
+
+  /* EXPORT */
+  .export-section { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px 24px; margin-bottom: 24px; }
+  .export-title { font-size: 14px; font-weight: 700; margin-bottom: 8px; }
+  .export-desc { font-size: 13px; color: var(--muted); margin-bottom: 14px; }
+
+  @media (max-width: 600px) {
+    .form-grid { grid-template-columns: 1fr; }
+    .detail-info-grid { grid-template-columns: 1fr; }
+    main { padding: 16px; }
+  }
+</style>
 </head>
-<body class="text-gray-800">
+<body>
 
-    <header class="bg-[#0E0D0D] text-white p-6 shadow-md">
-        <div class="max-w-5xl mx-auto flex justify-between items-center">
-            <h1 class="text-2xl font-bold flex items-center gap-3"><i class="fa-solid fa-lock text-[#D0AA70]"></i> BROS Admin</h1>
-            <span class="bg-[#D0AA70] text-[#0E0D0D] px-3 py-1 rounded-full text-xs font-bold uppercase tracking-widest">Generador HD</span>
+<header>
+  <div class="logo">🏠 Brospropiedades Admin</div>
+  <div class="header-actions">
+    <button class="btn btn-secondary btn-sm" onclick="openExportModal()">📤 Exportar JS</button>
+    <button class="btn btn-primary" onclick="openFormModal()">+ Nueva Propiedad</button>
+  </div>
+</header>
+
+<main>
+  <!-- STATS -->
+  <div class="stats-grid" id="statsGrid"></div>
+
+  <!-- EXPORT SECTION -->
+  <div class="export-section">
+    <div class="export-title">📤 Exportar propiedades.js</div>
+    <div class="export-desc">Descarga el archivo JS para subir al repositorio GitHub y publicar en el sitio web.</div>
+    <button class="btn btn-primary btn-sm" onclick="exportarJS()">⬇️ Descargar propiedades.js</button>
+  </div>
+
+  <!-- TOOLBAR -->
+  <div class="toolbar">
+    <div class="search-box">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="searchInput" placeholder="Buscar por título, ciudad, tipo..." oninput="renderGrid()">
+    </div>
+    <select class="filter-select" id="filterEstado" onchange="renderGrid()">
+      <option value="">Todos los estados</option>
+      <option value="disponible">Disponible</option>
+      <option value="vendida">Vendida</option>
+      <option value="arrendada">Arrendada</option>
+      <option value="inactiva">Inactiva</option>
+    </select>
+    <select class="filter-select" id="filterTipo" onchange="renderGrid()">
+      <option value="">Todos los tipos</option>
+      <option value="casa">Casa</option>
+      <option value="departamento">Departamento</option>
+      <option value="terreno">Terreno</option>
+      <option value="oficina">Oficina</option>
+      <option value="local">Local Comercial</option>
+      <option value="otro">Otro</option>
+    </select>
+  </div>
+
+  <!-- GRID -->
+  <div class="property-grid" id="propertyGrid"></div>
+</main>
+
+<!-- FORM MODAL -->
+<div class="modal-overlay" id="formModal">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title" id="formModalTitle">Nueva Propiedad</span>
+      <button class="modal-close" onclick="closeFormModal()">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="form-group full">
+          <label>Título *</label>
+          <input type="text" id="fTitulo" placeholder="Ej: Casa 3D 2B en Las Condes">
         </div>
-    </header>
-
-    <main class="max-w-5xl mx-auto p-6 mt-6">
-        
-        <div class="bg-white rounded-2xl shadow-lg p-8">
-            <h2 class="text-xl font-bold mb-6 border-b pb-4">Cargar Nueva Propiedad</h2>
-            
-            <form id="propiedadForm" class="space-y-6">
-                <!-- SECCIÓN 1: Datos Básicos -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                        <label class="block text-xs font-bold text-gray-500 uppercase mb-2">Título de la Propiedad</label>
-                        <input type="text" id="p_nombre" required placeholder="Ej: Espectacular Casa en Vitacura" class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D0AA70]">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-gray-500 uppercase mb-2">Comuna / Ciudad</label>
-                        <input type="text" id="p_ciudad" required placeholder="Ej: Las Condes" class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D0AA70]">
-                    </div>
-                </div>
-
-                <!-- SECCIÓN 2: Clasificación y Precio -->
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-                    <div>
-                        <label class="block text-xs font-bold text-gray-500 uppercase mb-2">Operación</label>
-                        <select id="p_operacion" class="w-full border p-3 rounded-lg focus:outline-none">
-                            <option value="Venta">Venta</option>
-                            <option value="Arriendo">Arriendo</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-gray-500 uppercase mb-2">Tipo</label>
-                        <select id="p_tipo" class="w-full border p-3 rounded-lg focus:outline-none">
-                            <option value="Casa">Casa</option>
-                            <option value="Departamento">Departamento</option>
-                            <option value="Terreno">Terreno</option>
-                            <option value="Oficina">Oficina</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-gray-500 uppercase mb-2">Estado Público</label>
-                        <select id="p_estado" class="w-full border p-3 rounded-lg focus:outline-none bg-gray-50 font-semibold">
-                            <option value="disponible">🟢 Disponible</option>
-                            <option value="en_proceso">🟡 En Proceso</option>
-                            <option value="vendida">🔴 Vendida</option>
-                            <option value="rentada">🔴 Arrendada</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-gray-500 uppercase mb-2">Precio y Moneda</label>
-                        <div class="flex">
-                            <select id="p_moneda" class="border-y border-l p-3 rounded-l-lg focus:outline-none bg-gray-100 font-bold">
-                                <option value="UF">UF</option>
-                                <option value="CLP">CLP</option>
-                            </select>
-                            <input type="number" id="p_precio" required placeholder="Ej: 12000" class="w-full border p-3 rounded-r-lg focus:outline-none">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- SECCIÓN 3: Características -->
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-6 bg-gray-50 p-4 rounded-xl border border-gray-100">
-                    <div><label class="block text-xs font-bold text-gray-500 uppercase mb-2">Dormitorios</label><input type="number" id="p_recamaras" value="0" min="0" class="w-full border p-3 rounded-lg"></div>
-                    <div><label class="block text-xs font-bold text-gray-500 uppercase mb-2">Baños</label><input type="number" id="p_banos" value="0" min="0" class="w-full border p-3 rounded-lg"></div>
-                    <div><label class="block text-xs font-bold text-gray-500 uppercase mb-2">Estacionam.</label><input type="number" id="p_estacionamientos" value="0" min="0" class="w-full border p-3 rounded-lg"></div>
-                    <div><label class="block text-xs font-bold text-gray-500 uppercase mb-2">M² Totales</label><input type="number" id="p_m2" value="0" min="0" class="w-full border p-3 rounded-lg"></div>
-                </div>
-
-                <!-- SECCIÓN 4: Contenido Multimedia -->
-                <div class="space-y-6">
-                    <div>
-                        <label class="block text-xs font-bold text-blue-600 uppercase mb-2"><i class="fa-brands fa-youtube"></i> Link de Video YouTube (Opcional)</label>
-                        <input type="url" id="p_video" placeholder="Ej: https://www.youtube.com/watch?v=..." class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 bg-blue-50/30">
-                    </div>
-
-                    <div>
-                        <label class="block text-xs font-bold text-gray-500 uppercase mb-2">Descripción Detallada</label>
-                        <textarea id="p_descripcion" rows="4" class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D0AA70]"></textarea>
-                    </div>
-                    
-                    <div>
-                        <label class="block text-xs font-bold text-gray-500 uppercase mb-2">Fotografías Alta Calidad (Máx 15)</label>
-                        <input type="file" id="p_fotos" multiple accept="image/*" class="w-full border p-3 rounded-lg bg-white font-medium">
-                        <p class="text-xs text-gray-400 mt-1">El sistema ahora conserva la calidad Full HD (1920px) al 90% de detalle.</p>
-                    </div>
-                </div>
-
-                <div class="pt-6 border-t flex justify-end gap-4">
-                    <button type="button" onclick="limpiarFormulario()" class="px-6 py-3 rounded-lg font-bold text-gray-500 hover:bg-gray-100">Limpiar</button>
-                    <button type="submit" class="bg-[#0E0D0D] text-white px-8 py-3 rounded-lg font-bold hover:bg-[#D0AA70] hover:text-[#0E0D0D] transition-colors shadow-lg">Guardar Propiedad</button>
-                </div>
-            </form>
+        <div class="form-group">
+          <label>Tipo *</label>
+          <select id="fTipo">
+            <option value="">Seleccionar...</option>
+            <option value="casa">Casa</option>
+            <option value="departamento">Departamento</option>
+            <option value="terreno">Terreno</option>
+            <option value="oficina">Oficina</option>
+            <option value="local">Local Comercial</option>
+            <option value="otro">Otro</option>
+          </select>
         </div>
+        <div class="form-group">
+          <label>Estado</label>
+          <select id="fEstado">
+            <option value="disponible">Disponible</option>
+            <option value="vendida">Vendida</option>
+            <option value="arrendada">Arrendada</option>
+            <option value="inactiva">Inactiva</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Ciudad</label>
+          <input type="text" id="fCiudad" placeholder="Ej: Santiago">
+        </div>
+        <div class="form-group">
+          <label>Comuna / Sector</label>
+          <input type="text" id="fComuna" placeholder="Ej: Las Condes">
+        </div>
+        <div class="form-group">
+          <label>Precio (CLP o UF)</label>
+          <input type="text" id="fPrecio" placeholder="Ej: UF 4.500 o $85.000.000">
+        </div>
+        <div class="form-group">
+          <label>Superficie m²</label>
+          <input type="number" id="fSuperficie" placeholder="0" min="0">
+        </div>
+        <div class="form-group">
+          <label>Dormitorios</label>
+          <input type="number" id="fDormitorios" placeholder="0" min="0">
+        </div>
+        <div class="form-group">
+          <label>Baños</label>
+          <input type="number" id="fBanos" placeholder="0" min="0">
+        </div>
+        <div class="form-group">
+          <label>Estacionamientos</label>
+          <input type="number" id="fEstacionamientos" placeholder="0" min="0">
+        </div>
+        <div class="form-group">
+          <label>Terraza</label>
+          <div class="toggle-group">
+            <button class="toggle-btn" id="fTerrazaSi" onclick="setToggle('terraza','si')">Sí</button>
+            <button class="toggle-btn" id="fTerrazaNo" onclick="setToggle('terraza','no')">No</button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Bodega</label>
+          <div class="toggle-group">
+            <button class="toggle-btn" id="fBodegaSi" onclick="setToggle('bodega','si')">Sí</button>
+            <button class="toggle-btn" id="fBodegaNo" onclick="setToggle('bodega','no')">No</button>
+          </div>
+        </div>
+        <div class="form-group full">
+          <label>Link YouTube (opcional)</label>
+          <input type="url" id="fYoutube" placeholder="https://www.youtube.com/watch?v=...">
+        </div>
+        <div class="form-group full">
+          <label>Descripción</label>
+          <textarea id="fDescripcion" placeholder="Descripción detallada de la propiedad..."></textarea>
+        </div>
+        <div class="form-group full">
+          <label>Fotos (máx. 30)</label>
+          <div class="drop-zone" id="dropZone" onclick="document.getElementById('fileInput').click()" ondragover="onDragOver(event)" ondragleave="onDragLeave(event)" ondrop="onDrop(event)">
+            <div class="drop-zone-icon">📷</div>
+            <div>Arrastra fotos aquí o haz clic para seleccionar</div>
+            <p style="font-size:11px;margin-top:4px;">JPG/PNG · Máx. 30 fotos · Se comprimirán automáticamente</p>
+          </div>
+          <input type="file" id="fileInput" multiple accept="image/*" style="display:none" onchange="procesarArchivos(this.files)">
+          <div class="photo-grid" id="photoGrid"></div>
+        </div>
+      </div>
+      <div style="display:flex;gap:10px;margin-top:24px;justify-content:flex-end;">
+        <button class="btn btn-secondary" onclick="closeFormModal()">Cancelar</button>
+        <button class="btn btn-primary" onclick="guardarPropiedad()">Guardar Propiedad</button>
+      </div>
+    </div>
+  </div>
+</div>
 
-        <!-- LISTA -->
-        <div class="bg-white rounded-2xl shadow-lg p-8 mt-8">
-            <div class="flex justify-between items-center mb-6 border-b pb-4">
-                <h2 class="text-xl font-bold">Propiedades en el Sistema</h2>
-                <button onclick="exportarJS()" class="bg-[#D0AA70] text-[#0E0D0D] px-6 py-2 rounded-lg font-bold shadow-md hover:bg-[#956932] hover:text-white transition-colors flex items-center gap-2">
-                    <i class="fa-solid fa-download"></i> Exportar "propiedades.js"
-                </button>
+<!-- DETAIL MODAL -->
+<div class="modal-overlay" id="detailModal">
+  <div class="modal detail-modal">
+    <div class="modal-header">
+      <span class="modal-title" id="detailTitle">Propiedad</span>
+      <button class="modal-close" onclick="closeDetailModal()">×</button>
+    </div>
+    <div class="modal-body" id="detailBody"></div>
+    <div class="detail-actions" id="detailActions"></div>
+  </div>
+</div>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <button class="lightbox-close" onclick="closeLightbox()">×</button>
+  <button class="lightbox-nav lightbox-prev" onclick="event.stopPropagation();lightboxNav(-1)">‹</button>
+  <img id="lightboxImg" src="" alt="">
+  <button class="lightbox-nav lightbox-next" onclick="event.stopPropagation();lightboxNav(1)">›</button>
+</div>
+
+<!-- DELETE CONFIRM -->
+<div class="confirm-overlay" id="confirmOverlay">
+  <div class="confirm-box">
+    <div class="confirm-icon">🗑️</div>
+    <div class="confirm-title">¿Eliminar propiedad?</div>
+    <div class="confirm-sub">Esta acción no se puede deshacer.</div>
+    <div class="confirm-actions">
+      <button class="btn btn-secondary" onclick="closeConfirm()">Cancelar</button>
+      <button class="btn btn-danger" onclick="confirmarEliminar()">Eliminar</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+  // ─── STATE ───────────────────────────────────────────────────────────────
+  const STORAGE_KEY = 'propiedades_admin_v1';
+  let propiedades = [];
+  let editingId = null;
+  let deletingId = null;
+  let currentPhotos = [];
+  let lightboxPhotos = [];
+  let lightboxIndex = 0;
+  let detailPropId = null;
+  let toggleState = { terraza: null, bodega: null };
+
+  // ─── STORAGE ─────────────────────────────────────────────────────────────
+  function load() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      propiedades = raw ? JSON.parse(raw) : [];
+    } catch { propiedades = []; }
+  }
+
+  function save() {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(propiedades));
+    } catch(e) {
+      showToast('Error al guardar. Es posible que el almacenamiento esté lleno.');
+    }
+  }
+
+  // ─── STATS ───────────────────────────────────────────────────────────────
+  function renderStats() {
+    const total = propiedades.length;
+    const disp = propiedades.filter(p => p.estado === 'disponible').length;
+    const vend = propiedades.filter(p => p.estado === 'vendida').length;
+    const arr  = propiedades.filter(p => p.estado === 'arrendada').length;
+    const inac = propiedades.filter(p => p.estado === 'inactiva').length;
+    document.getElementById('statsGrid').innerHTML = `
+      <div class="stat-card"><div class="stat-label">Total</div><div class="stat-value">${total}</div></div>
+      <div class="stat-card"><div class="stat-label">Disponibles</div><div class="stat-value" style="color:var(--success)">${disp}</div></div>
+      <div class="stat-card"><div class="stat-label">Vendidas</div><div class="stat-value" style="color:var(--danger)">${vend}</div></div>
+      <div class="stat-card"><div class="stat-label">Arrendadas</div><div class="stat-value" style="color:var(--warning)">${arr}</div></div>
+      <div class="stat-card"><div class="stat-label">Inactivas</div><div class="stat-value" style="color:var(--muted)">${inac}</div></div>
+    `;
+  }
+
+  // ─── GRID ────────────────────────────────────────────────────────────────
+  function renderGrid() {
+    const q = document.getElementById('searchInput').value.toLowerCase();
+    const fe = document.getElementById('filterEstado').value;
+    const ft = document.getElementById('filterTipo').value;
+
+    let list = propiedades.filter(p => {
+      const match = !q || [p.titulo, p.ciudad, p.comuna, p.tipo, p.descripcion].some(v => v && v.toLowerCase().includes(q));
+      const est = !fe || p.estado === fe;
+      const tip = !ft || p.tipo === ft;
+      return match && est && tip;
+    });
+
+    const grid = document.getElementById('propertyGrid');
+    if (!list.length) {
+      grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1">
+        <div class="empty-icon">🏘️</div>
+        <div class="empty-title">Sin propiedades</div>
+        <div class="empty-sub">${propiedades.length ? 'Prueba cambiando los filtros.' : 'Agrega tu primera propiedad.'}</div>
+      </div>`;
+      return;
+    }
+
+    grid.innerHTML = list.map(p => {
+      const img = p.fotos && p.fotos.length ? `<img class="card-img" src="${p.fotos[0]}" loading="lazy">` : `<div class="card-img-placeholder">🏠</div>`;
+      const badgeClass = { disponible: 'badge-disponible', vendida: 'badge-vendida', arrendada: 'badge-arrendada', inactiva: 'badge-inactiva' }[p.estado] || 'badge-disponible';
+      const badgeLabel = { disponible: 'Disponible', vendida: 'Vendida', arrendada: 'Arrendada', inactiva: 'Inactiva' }[p.estado] || p.estado;
+      const metas = [];
+      if (p.superficie) metas.push(`${p.superficie} m²`);
+      if (p.dormitorios) metas.push(`${p.dormitorios}D`);
+      if (p.banos) metas.push(`${p.banos}B`);
+      if (p.terraza === 'si') metas.push('Terraza');
+      if (p.bodega === 'si') metas.push('Bodega');
+      const videoBadge = getYouTubeId(p.youtubeUrl) ? `<span class="badge badge-video">▶ Video</span>` : '';
+      return `
+        <div class="property-card" onclick="openDetail('${p.id}')">
+          ${img}
+          <div class="card-body">
+            <div class="card-title">${p.titulo || 'Sin título'}</div>
+            <div class="card-location">📍 ${[p.comuna, p.ciudad].filter(Boolean).join(', ') || '—'}</div>
+            <div class="card-meta">
+              ${metas.map(m => `<span class="meta-tag">${m}</span>`).join('')}
             </div>
-            <div id="listaPropiedades" class="space-y-4">
-                <p class="text-gray-400 text-center py-4">No hay propiedades guardadas aún.</p>
+            <div class="card-price">${p.precio || '—'}</div>
+          </div>
+          <div class="card-footer">
+            <span class="badge ${badgeClass}">${badgeLabel}</span>
+            <div style="display:flex;gap:6px;align-items:center">
+              ${videoBadge}
+              <span style="font-size:12px;color:var(--muted)">${p.fotos ? p.fotos.length : 0} foto${p.fotos && p.fotos.length !== 1 ? 's' : ''}</span>
             </div>
+          </div>
         </div>
-    </main>
+      `;
+    }).join('');
+  }
 
-    <script>
-        let inventario = [];
+  // ─── FORM MODAL ──────────────────────────────────────────────────────────
+  function openFormModal(id) {
+    editingId = id || null;
+    currentPhotos = [];
+    toggleState = { terraza: null, bodega: null };
 
-        // 🚀 NUEVA FUNCIÓN DE COMPRESIÓN: ALTA CALIDAD FULL HD
-        function procesarImagen(file) {
-            return new Promise((resolve) => {
-                const reader = new FileReader();
-                reader.readAsDataURL(file);
-                reader.onload = (event) => {
-                    const img = new Image();
-                    img.src = event.target.result;
-                    img.onload = () => {
-                        const canvas = document.createElement('canvas');
-                        // Ampliamos el ancho a 1920 para que no pierda resolución
-                        const MAX_WIDTH = 1920; 
-                        let width = img.width;
-                        let height = img.height;
+    if (id) {
+      const p = propiedades.find(x => x.id === id);
+      if (!p) return;
+      document.getElementById('formModalTitle').textContent = 'Editar Propiedad';
+      document.getElementById('fTitulo').value = p.titulo || '';
+      document.getElementById('fTipo').value = p.tipo || '';
+      document.getElementById('fEstado').value = p.estado || 'disponible';
+      document.getElementById('fCiudad').value = p.ciudad || '';
+      document.getElementById('fComuna').value = p.comuna || '';
+      document.getElementById('fPrecio').value = p.precio || '';
+      document.getElementById('fSuperficie').value = p.superficie || '';
+      document.getElementById('fDormitorios').value = p.dormitorios || '';
+      document.getElementById('fBanos').value = p.banos || '';
+      document.getElementById('fEstacionamientos').value = p.estacionamientos || '';
+      document.getElementById('fDescripcion').value = p.descripcion || '';
+      document.getElementById('fYoutube').value = p.youtubeUrl || '';
+      currentPhotos = p.fotos ? [...p.fotos] : [];
+      if (p.terraza) setToggle('terraza', p.terraza);
+      if (p.bodega) setToggle('bodega', p.bodega);
+    } else {
+      document.getElementById('formModalTitle').textContent = 'Nueva Propiedad';
+      ['fTitulo','fTipo','fCiudad','fComuna','fPrecio','fSuperficie','fDormitorios','fBanos','fEstacionamientos','fDescripcion','fYoutube'].forEach(id => {
+        const el = document.getElementById(id);
+        el.value = id === 'fEstado' ? 'disponible' : '';
+      });
+      document.getElementById('fEstado').value = 'disponible';
+      clearToggle('terraza');
+      clearToggle('bodega');
+    }
+    renderPhotoGrid();
+    document.getElementById('formModal').classList.add('open');
+  }
 
-                        if (width > MAX_WIDTH) {
-                            height = Math.round((height * MAX_WIDTH) / width);
-                            width = MAX_WIDTH;
-                        }
-                        canvas.width = width;
-                        canvas.height = height;
-                        const ctx = canvas.getContext('2d');
-                        ctx.drawImage(img, 0, 0, width, height);
-                        // Subimos la calidad JPEG a 0.90 (90%) para nitidez extrema
-                        resolve(canvas.toDataURL('image/jpeg', 0.90)); 
-                    };
-                };
-            });
+  function closeFormModal() {
+    document.getElementById('formModal').classList.remove('open');
+    editingId = null;
+    currentPhotos = [];
+  }
+
+  function guardarPropiedad() {
+    const titulo = document.getElementById('fTitulo').value.trim();
+    if (!titulo) { showToast('El título es obligatorio'); return; }
+
+    const id = editingId || Date.now().toString(36) + Math.random().toString(36).slice(2);
+    const propiedad = {
+      id,
+      titulo,
+      tipo: document.getElementById('fTipo').value,
+      estado: document.getElementById('fEstado').value || 'disponible',
+      ciudad: document.getElementById('fCiudad').value.trim(),
+      comuna: document.getElementById('fComuna').value.trim(),
+      precio: document.getElementById('fPrecio').value.trim(),
+      superficie: document.getElementById('fSuperficie').value,
+      dormitorios: document.getElementById('fDormitorios').value,
+      banos: document.getElementById('fBanos').value,
+      estacionamientos: document.getElementById('fEstacionamientos').value,
+      terraza: toggleState.terraza,
+      bodega: toggleState.bodega,
+      youtubeUrl: document.getElementById('fYoutube').value.trim(),
+      descripcion: document.getElementById('fDescripcion').value.trim(),
+      fotos: [...currentPhotos],
+      updatedAt: new Date().toISOString()
+    };
+
+    if (editingId) {
+      const idx = propiedades.findIndex(p => p.id === editingId);
+      if (idx !== -1) propiedades[idx] = propiedad;
+    } else {
+      propiedad.createdAt = propiedad.updatedAt;
+      propiedades.unshift(propiedad);
+    }
+
+    save();
+    renderStats();
+    renderGrid();
+    closeFormModal();
+    showToast(editingId ? 'Propiedad actualizada ✓' : 'Propiedad creada ✓');
+  }
+
+  // ─── TOGGLE ──────────────────────────────────────────────────────────────
+  function setToggle(field, val) {
+    toggleState[field] = val;
+    const cap = field.charAt(0).toUpperCase() + field.slice(1);
+    document.getElementById('f' + cap + 'Si').classList.toggle('selected', val === 'si');
+    document.getElementById('f' + cap + 'No').classList.toggle('selected', val === 'no');
+  }
+
+  function clearToggle(field) {
+    toggleState[field] = null;
+    const cap = field.charAt(0).toUpperCase() + field.slice(1);
+    document.getElementById('f' + cap + 'Si').classList.remove('selected');
+    document.getElementById('f' + cap + 'No').classList.remove('selected');
+  }
+
+  // ─── PHOTOS ──────────────────────────────────────────────────────────────
+  function onDragOver(e) { e.preventDefault(); document.getElementById('dropZone').classList.add('dragover'); }
+  function onDragLeave() { document.getElementById('dropZone').classList.remove('dragover'); }
+  function onDrop(e) {
+    e.preventDefault();
+    document.getElementById('dropZone').classList.remove('dragover');
+    procesarArchivos(e.dataTransfer.files);
+  }
+
+  function procesarArchivos(files) {
+    const arr = Array.from(files).filter(f => f.type.startsWith('image/'));
+    const restante = 30 - currentPhotos.length;
+    if (restante <= 0) { showToast('Límite de 30 fotos alcanzado'); return; }
+    arr.slice(0, restante).forEach(f => comprimirFoto(f));
+  }
+
+  function comprimirFoto(file) {
+    const reader = new FileReader();
+    reader.onload = e => {
+      const img = new Image();
+      img.onload = () => {
+        const MAX = 800;
+        let w = img.width, h = img.height;
+        if (w > MAX || h > MAX) {
+          if (w > h) { h = Math.round(h * MAX / w); w = MAX; }
+          else { w = Math.round(w * MAX / h); h = MAX; }
         }
+        const canvas = document.createElement('canvas');
+        canvas.width = w; canvas.height = h;
+        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+        const dataUrl = canvas.toDataURL('image/jpeg', 0.72);
+        currentPhotos.push(dataUrl);
+        renderPhotoGrid();
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  }
 
-        document.getElementById('propiedadForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
-            const btnSubmit = e.target.querySelector('button[type="submit"]');
-            const originalText = btnSubmit.innerText;
-            btnSubmit.innerText = "Procesando fotos en Alta Calidad...";
-            btnSubmit.disabled = true;
+  function renderPhotoGrid() {
+    const grid = document.getElementById('photoGrid');
+    grid.innerHTML = currentPhotos.map((src, i) => `
+      <div class="photo-thumb">
+        <img src="${src}" loading="lazy">
+        ${i === 0 ? '<span class="photo-main-badge">PORTADA</span>' : ''}
+        <button class="photo-remove" onclick="removePhoto(${i})">×</button>
+      </div>
+    `).join('');
+  }
 
-            const fotosInput = document.getElementById('p_fotos').files;
-            let fotosBase64 = [];
-            
-            for (let i = 0; i < Math.min(fotosInput.length, 15); i++) {
-                let imgComprimida = await procesarImagen(fotosInput[i]);
-                fotosBase64.push(imgComprimida);
-            }
+  function removePhoto(i) {
+    currentPhotos.splice(i, 1);
+    renderPhotoGrid();
+  }
 
-            const nuevaPropiedad = {
-                id: 'bros_' + Date.now().toString(36),
-                nombre: document.getElementById('p_nombre').value,
-                ciudad: document.getElementById('p_ciudad').value,
-                operacion: document.getElementById('p_operacion').value,
-                tipo: document.getElementById('p_tipo').value,
-                estado: document.getElementById('p_estado').value,
-                moneda: document.getElementById('p_moneda').value,
-                precio: document.getElementById('p_precio').value,
-                recamaras: document.getElementById('p_recamaras').value,
-                banos: document.getElementById('p_banos').value,
-                estacionamientos: document.getElementById('p_estacionamientos').value,
-                m2total: document.getElementById('p_m2').value,
-                video: document.getElementById('p_video').value,
-                descripcion: document.getElementById('p_descripcion').value,
-                fotos: fotosBase64
-            };
+  // ─── DETAIL MODAL ────────────────────────────────────────────────────────
+  function openDetail(id) {
+    const p = propiedades.find(x => x.id === id);
+    if (!p) return;
+    detailPropId = id;
+    document.getElementById('detailTitle').textContent = p.titulo || 'Propiedad';
 
-            inventario.unshift(nuevaPropiedad);
-            actualizarLista();
-            limpiarFormulario();
-            
-            btnSubmit.innerText = originalText;
-            btnSubmit.disabled = false;
-        });
+    const badgeClass = { disponible: 'badge-disponible', vendida: 'badge-vendida', arrendada: 'badge-arrendada', inactiva: 'badge-inactiva' }[p.estado] || '';
+    const badgeLabel = { disponible: 'Disponible', vendida: 'Vendida', arrendada: 'Arrendada', inactiva: 'Inactiva' }[p.estado] || p.estado;
 
-        function eliminarPropiedad(id) {
-            if(confirm('¿Estás seguro de eliminar esta propiedad?')) {
-                inventario = inventario.filter(p => p.id !== id);
-                actualizarLista();
-            }
-        }
+    const gallery = p.fotos && p.fotos.length
+      ? `<div class="detail-gallery">${p.fotos.map((src, i) => `<img src="${src}" loading="lazy" onclick="openLightbox(${i})">`).join('')}</div>`
+      : '<div style="color:var(--muted);font-size:13px;margin-bottom:16px;">Sin fotos</div>';
 
-        function actualizarLista() {
-            const container = document.getElementById('listaPropiedades');
-            container.innerHTML = '';
-            if(inventario.length === 0) {
-                container.innerHTML = '<p class="text-gray-400 text-center py-4">No hay propiedades guardadas aún.</p>';
-                return;
-            }
-            inventario.forEach(p => {
-                const img = (p.fotos && p.fotos.length > 0) ? p.fotos[0] : 'https://via.placeholder.com/150?text=Sin+Foto';
-                container.innerHTML += `
-                    <div class="flex items-center justify-between bg-white border p-4 rounded-xl shadow-sm">
-                        <div class="flex items-center gap-4">
-                            <img src="${img}" class="w-16 h-16 object-cover rounded-lg">
-                            <div>
-                                <h4 class="font-bold text-gray-900">${p.nombre}</h4>
-                                <p class="text-xs text-gray-500">${p.operacion} | ${p.moneda} ${p.precio} | ${p.estado}</p>
-                            </div>
-                        </div>
-                        <button onclick="eliminarPropiedad('${p.id}')" class="text-red-500 hover:text-red-700 bg-red-50 p-3 rounded-lg"><i class="fa-solid fa-trash"></i></button>
-                    </div>
-                `;
-            });
-        }
+    const info = [
+      ['Tipo', p.tipo || '—'],
+      ['Ciudad', p.ciudad || '—'],
+      ['Comuna', p.comuna || '—'],
+      ['Precio', p.precio || '—'],
+      ['Superficie', p.superficie ? p.superficie + ' m²' : '—'],
+      ['Dormitorios', p.dormitorios || '—'],
+      ['Baños', p.banos || '—'],
+      ['Estacionamientos', p.estacionamientos || '—'],
+      ['Terraza', p.terraza === 'si' ? 'Sí' : p.terraza === 'no' ? 'No' : '—'],
+      ['Bodega', p.bodega === 'si' ? 'Sí' : p.bodega === 'no' ? 'No' : '—'],
+    ];
 
-        function limpiarFormulario() { document.getElementById('propiedadForm').reset(); }
+    const ytId = getYouTubeId(p.youtubeUrl);
+    const ytSection = ytId
+      ? `<div class="detail-section">
+           <h4>Video</h4>
+           <div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:8px;">
+             <iframe src="https://www.youtube.com/embed/${ytId}"
+               style="position:absolute;top:0;left:0;width:100%;height:100%;border:0;"
+               allowfullscreen loading="lazy"></iframe>
+           </div>
+         </div>`
+      : '';
 
-        function exportarJS() {
-            if(inventario.length === 0) { alert("Debes cargar al menos una propiedad."); return; }
-            const jsContent = "const PROPIEDADES = " + JSON.stringify(inventario, null, 4) + ";";
-            const blob = new Blob([jsContent], { type: "text/javascript" });
-            const a = document.createElement("a");
-            a.href = URL.createObjectURL(blob);
-            a.download = "propiedades.js";
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-        }
-    </script>
+    document.getElementById('detailBody').innerHTML = `
+      ${gallery}
+      <div class="detail-section">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+          <span class="badge ${badgeClass}">${badgeLabel}</span>
+          <span style="font-size:13px;color:var(--muted)">${p.fotos ? p.fotos.length : 0} fotos</span>
+        </div>
+        <div class="detail-info-grid">
+          ${info.map(([l, v]) => `<div class="detail-info-item"><div class="detail-info-label">${l}</div><div class="detail-info-value">${v}</div></div>`).join('')}
+        </div>
+      </div>
+      ${p.descripcion ? `<div class="detail-section"><h4>Descripción</h4><p style="font-size:14px;line-height:1.6;color:var(--text)">${p.descripcion}</p></div>` : ''}
+      ${ytSection}
+    `;
+
+    document.getElementById('detailActions').innerHTML = `
+      <button class="btn btn-secondary btn-sm" onclick="closeDetailModal();openFormModal('${id}')">✏️ Editar</button>
+      <button class="btn btn-danger btn-sm" onclick="closeDetailModal();openConfirm('${id}')">🗑️ Eliminar</button>
+      <div style="flex:1"></div>
+      <button class="btn btn-secondary btn-sm" onclick="closeDetailModal()">Cerrar</button>
+    `;
+
+    lightboxPhotos = p.fotos || [];
+    document.getElementById('detailModal').classList.add('open');
+  }
+
+  function closeDetailModal() {
+    document.getElementById('detailModal').classList.remove('open');
+    detailPropId = null;
+  }
+
+  // ─── LIGHTBOX ────────────────────────────────────────────────────────────
+  function openLightbox(i) {
+    lightboxIndex = i;
+    document.getElementById('lightboxImg').src = lightboxPhotos[i];
+    document.getElementById('lightbox').classList.add('open');
+  }
+
+  function closeLightbox() {
+    document.getElementById('lightbox').classList.remove('open');
+  }
+
+  function lightboxNav(dir) {
+    lightboxIndex = (lightboxIndex + dir + lightboxPhotos.length) % lightboxPhotos.length;
+    document.getElementById('lightboxImg').src = lightboxPhotos[lightboxIndex];
+  }
+
+  // ─── DELETE ──────────────────────────────────────────────────────────────
+  function openConfirm(id) {
+    deletingId = id;
+    document.getElementById('confirmOverlay').classList.add('open');
+  }
+
+  function closeConfirm() {
+    document.getElementById('confirmOverlay').classList.remove('open');
+    deletingId = null;
+  }
+
+  function confirmarEliminar() {
+    if (!deletingId) return;
+    propiedades = propiedades.filter(p => p.id !== deletingId);
+    save();
+    renderStats();
+    renderGrid();
+    closeConfirm();
+    showToast('Propiedad eliminada');
+  }
+
+  // ─── YOUTUBE ─────────────────────────────────────────────────────────────
+  function getYouTubeId(url) {
+    if (!url) return null;
+    const patterns = [
+      /[?&]v=([^&#]+)/,
+      /youtu\.be\/([^?&#]+)/,
+      /\/embed\/([^?&#]+)/
+    ];
+    for (const p of patterns) {
+      const m = url.match(p);
+      if (m) return m[1];
+    }
+    return null;
+  }
+
+  // ─── EXPORT ──────────────────────────────────────────────────────────────
+  function exportarJS() {
+    const data = JSON.stringify(propiedades, null, 2);
+    const content = `// propiedades.js — Generado por Brospropiedades Admin
+// Última actualización: ${new Date().toLocaleString('es-CL')}
+// Total propiedades: ${propiedades.length}
+
+var propiedades = ${data};
+`;
+    const blob = new Blob([content], { type: 'text/javascript' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'propiedades.js';
+    a.click();
+    showToast(`Exportado: ${propiedades.length} propiedad${propiedades.length !== 1 ? 'es' : ''}`);
+  }
+
+  function openExportModal() { exportarJS(); }
+
+  // ─── TOAST ───────────────────────────────────────────────────────────────
+  let toastTimer;
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => t.classList.remove('show'), 3000);
+  }
+
+  // ─── KEYBOARD ────────────────────────────────────────────────────────────
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+      closeLightbox();
+      closeDetailModal();
+      closeFormModal();
+      closeConfirm();
+    }
+    if (e.key === 'ArrowLeft' && document.getElementById('lightbox').classList.contains('open')) lightboxNav(-1);
+    if (e.key === 'ArrowRight' && document.getElementById('lightbox').classList.contains('open')) lightboxNav(1);
+  });
+
+  // ─── INIT ─────────────────────────────────────────────────────────────────
+  load();
+  renderStats();
+  renderGrid();
+</script>
 </body>
 </html>
