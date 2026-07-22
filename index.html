@@ -41,6 +41,9 @@
         .det-thumb { width: 5rem; height: 3.75rem; object-fit: cover; border-radius: 0.6rem; cursor: pointer; flex-shrink: 0; opacity: 0.6; transition: opacity 0.2s, outline 0.2s; outline: 2px solid transparent; }
         .det-thumb:hover { opacity: 1; }
         .det-thumb.active { opacity: 1; outline: 2px solid #D0AA70; }
+        .gal-arrow { position: absolute; top: 50%; transform: translateY(-50%); width: 2.75rem; height: 2.75rem; border-radius: 9999px; background: rgba(14,13,13,0.55); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 1rem; transition: background 0.2s; z-index: 10; }
+        .gal-arrow:hover { background: #D0AA70; color: #0E0D0D; }
+        .gal-left { left: 0.75rem; } .gal-right { right: 0.75rem; }
         @keyframes pulse-wa { 0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7); } 70% { box-shadow: 0 0 0 20px rgba(37, 211, 102, 0); } 100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); } }
         .wa-float { animation: pulse-wa 2s infinite; }
         .step-content { display: none; }
@@ -473,6 +476,9 @@
                 <div class="relative">
                     <span id="detBadge" class="badge bg-[#0E0D0D] text-[#D0AA70]">Venta</span>
                     <img id="detImgMain" src="bros-logo.png" alt="Propiedad" class="w-full h-72 md:h-[26rem] object-cover rounded-2xl bg-gray-100">
+                    <button id="detPrev" onclick="galNav(-1)" class="gal-arrow gal-left" aria-label="Anterior"><i class="fa-solid fa-chevron-left"></i></button>
+                    <button id="detNext" onclick="galNav(1)" class="gal-arrow gal-right" aria-label="Siguiente"><i class="fa-solid fa-chevron-right"></i></button>
+                    <span id="detContador" class="absolute bottom-3 right-3 bg-black/60 text-white text-xs font-semibold px-2.5 py-1 rounded-full"></span>
                 </div>
                 <div id="detThumbs" class="flex gap-2 mt-3 overflow-x-auto pb-1"></div>
 
@@ -672,9 +678,30 @@
         // 🟢 DETALLE DE PROPIEDAD (modal) — datos desde window.PROPIEDADES (API KiteProp)
         function ytID(url) {
             if (!url) return null;
+            url = String(url).trim();
+            if (/^[A-Za-z0-9_-]{11}$/.test(url)) return url;
             const m = url.match(/(?:youtu\.be\/|v=|embed\/|shorts\/)([A-Za-z0-9_-]{11})/);
             return m ? m[1] : null;
         }
+        // Galería con flechas y contador
+        let galFotos = [], galIdx = 0;
+        function setFoto(idx) {
+            if (!galFotos.length) return;
+            galIdx = (idx + galFotos.length) % galFotos.length;
+            document.getElementById('detImgMain').src = galFotos[galIdx];
+            document.querySelectorAll('#detThumbs .det-thumb').forEach(t => t.classList.toggle('active', +t.dataset.idx === galIdx));
+            const c = document.getElementById('detContador');
+            if (c) c.textContent = (galIdx + 1) + ' / ' + galFotos.length;
+            const act = document.querySelector('#detThumbs .det-thumb.active');
+            if (act) act.scrollIntoView({ inline: 'center', block: 'nearest' });
+        }
+        function galNav(d) { setFoto(galIdx + d); }
+        document.addEventListener('keydown', e => {
+            const md = document.getElementById('modalDetalle');
+            if (!md || md.classList.contains('hidden')) return;
+            if (e.key === 'ArrowLeft') galNav(-1);
+            if (e.key === 'ArrowRight') galNav(1);
+        });
         function abrirDetalle(id) {
             const lista = (typeof window.PROPIEDADES !== 'undefined') ? window.PROPIEDADES : [];
             const p = lista.find(x => String(x.id) === String(id));
@@ -702,24 +729,22 @@
             // Descripción con el mismo formato de KiteProp (respeta saltos de línea y emojis)
             document.getElementById('detDesc').textContent = p.descripcion || 'Sin descripción disponible.';
 
-            // Galería de fotos
-            const fotos = (p.fotos && p.fotos.length) ? p.fotos : ['bros-logo.png'];
-            const main = document.getElementById('detImgMain');
-            main.src = fotos[0];
+            // Galería de fotos (con flechas y contador)
+            galFotos = (p.fotos && p.fotos.length) ? p.fotos : ['bros-logo.png'];
             const thumbs = document.getElementById('detThumbs');
             thumbs.innerHTML = '';
-            if (fotos.length > 1) {
-                fotos.forEach((f, idx) => {
-                    const im = document.createElement('img');
-                    im.src = f; im.className = 'det-thumb' + (idx === 0 ? ' active' : '');
-                    im.onclick = () => {
-                        main.src = f;
-                        thumbs.querySelectorAll('.det-thumb').forEach(t => t.classList.remove('active'));
-                        im.classList.add('active');
-                    };
-                    thumbs.appendChild(im);
-                });
-            }
+            galFotos.forEach((f, idx) => {
+                const im = document.createElement('img');
+                im.src = f; im.className = 'det-thumb'; im.dataset.idx = idx;
+                im.onclick = () => setFoto(idx);
+                thumbs.appendChild(im);
+            });
+            const multi = galFotos.length > 1;
+            document.getElementById('detPrev').style.display = multi ? 'flex' : 'none';
+            document.getElementById('detNext').style.display = multi ? 'flex' : 'none';
+            thumbs.style.display = multi ? 'flex' : 'none';
+            document.getElementById('detContador').style.display = multi ? 'block' : 'none';
+            setFoto(0);
 
             // Video de YouTube (sobrio) — solo si existe
             const vid = ytID(p.link_youtube);
