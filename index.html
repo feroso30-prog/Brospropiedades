@@ -17,9 +17,6 @@
     <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- 🟢 CONEXIÓN CON EL PANEL ADMIN -->
-    <script src="propiedades.js"></script>
-    
     <style>
         body { font-family: 'Inter', sans-serif; background-color: #fafafa; overflow-x: hidden; scroll-behavior: smooth; }
         .logo-shine { filter: drop-shadow(0 0 15px rgba(208, 170, 112, 0.5)) brightness(1.15) contrast(1.05); transition: all 0.4s ease; }
@@ -653,15 +650,15 @@
             document.getElementById('modalTasacion').classList.add('hidden');
         }
 
-        window.onload = () => { 
+        window.onload = () => {
             cargarValorUF();
-            if (typeof PROPIEDADES !== 'undefined') {
-                renderProperties(PROPIEDADES); 
-            } else {
-                document.getElementById('propertiesGrid').innerHTML = '<p class="text-gray-500 col-span-3 text-center py-10 font-medium">Por favor sube el archivo propiedades.js generado por tu administrador.</p>';
-            }
-            calcularSimulacion(); 
+            // 🔗 Las propiedades ahora las carga kiteprop-loader.js (Plan A/B/C).
+            //    Ya no se pintan aquí para evitar duplicar el renderizado.
+            calcularSimulacion();
         };
     </script>
+
+    <!-- 🟢 INTEGRACIÓN KITEPROP · Puente con respaldo A/B/C (no toca el diseño) -->
+    <script src="kiteprop-loader.js"></script>
 </body>
 </html>

@@ -1,0 +1,14 @@
+# ============================================================================
+#  Configuración de Netlify para BROS PROPIEDADES
+#  Le dice a Netlify dónde está la función que hace de puente con KiteProp.
+# ============================================================================
+
+[build]
+  publish = "."                      # tu sitio está en la raíz del repositorio
+  functions = "netlify/functions"    # aquí vive la función propiedades.js
+
+# Ruta amistosa: /api/propiedades  ->  la función real
+[[redirects]]
+  from = "/api/propiedades"
+  to   = "/.netlify/functions/propiedades"
+  status = 200
