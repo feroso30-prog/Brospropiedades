@@ -50,6 +50,10 @@
         .wa-float { animation: pulse-wa 2s infinite; }
         .step-content { display: none; }
         .step-content.active { display: block; animation: fadeInUp 0.4s ease forwards; }
+        .rol-help { position: relative; display: inline-flex; }
+        .rol-q { width: 1.15rem; height: 1.15rem; border-radius: 9999px; background: #ef4444; color: #fff; font-size: 0.7rem; font-weight: 700; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+        .rol-tip { position: absolute; bottom: 150%; left: 0; width: 220px; background: #0E0D0D; color: #fff; font-size: 11px; line-height: 1.4; padding: 8px 10px; border-radius: 8px; opacity: 0; pointer-events: none; transition: opacity .15s; z-index: 30; box-shadow: 0 8px 20px rgba(0,0,0,.25); }
+        .rol-help:hover .rol-tip, .rol-tip.show { opacity: 1; }
         @keyframes fadeInUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
@@ -261,19 +265,19 @@
                     <div class="w-24 h-24 rounded-full bg-[#0E0D0D] flex items-center justify-center text-[#D0AA70] font-bold text-2xl mb-6">FR</div>
                     <h3 class="text-2xl font-bold mb-1">Fernando Rojas</h3><div class="w-10 h-1 bg-[#D0AA70] rounded-full mb-4"></div><span class="text-sm font-semibold text-gray-500 uppercase tracking-widest block mb-8">Asesor Inmobiliario</span>
                     <a href="https://wa.me/56952046918" target="_blank" class="w-full bg-green-50 text-green-700 py-2.5 rounded-full font-medium mb-3 hover:bg-green-100 transition-colors"><i class="fa-brands fa-whatsapp"></i> Contactar WhatsApp</a>
-                    <a href="mailto:conversemos@brospropiedades.cl" target="_blank" class="w-full bg-gray-100 text-gray-700 py-2.5 rounded-full font-medium hover:bg-gray-200 transition-colors"><i class="fa-regular fa-envelope"></i> Enviar Correo</a>
+                    <button onclick="openAsesor('Fernando Rojas')" class="w-full bg-gray-100 text-gray-700 py-2.5 rounded-full font-medium hover:bg-gray-200 transition-colors"><i class="fa-regular fa-envelope"></i> Enviar Correo</button>
                 </div>
                 <div class="bg-gray-50 rounded-[32px] p-10 flex flex-col items-center">
                     <div class="w-24 h-24 rounded-full bg-[#0E0D0D] flex items-center justify-center text-[#D0AA70] font-bold text-2xl mb-6">JR</div>
                     <h3 class="text-2xl font-bold mb-1">Jonathan Rojas</h3><div class="w-10 h-1 bg-[#D0AA70] rounded-full mb-4"></div><span class="text-sm font-semibold text-gray-500 uppercase tracking-widest block mb-8">Asesor Inmobiliario</span>
                     <a href="https://wa.me/56934832370" target="_blank" class="w-full bg-green-50 text-green-700 py-2.5 rounded-full font-medium mb-3 hover:bg-green-100 transition-colors"><i class="fa-brands fa-whatsapp"></i> Contactar WhatsApp</a>
-                    <a href="mailto:conversemos@brospropiedades.cl" target="_blank" class="w-full bg-gray-100 text-gray-700 py-2.5 rounded-full font-medium hover:bg-gray-200 transition-colors"><i class="fa-regular fa-envelope"></i> Enviar Correo</a>
+                    <button onclick="openAsesor('Jonathan Rojas')" class="w-full bg-gray-100 text-gray-700 py-2.5 rounded-full font-medium hover:bg-gray-200 transition-colors"><i class="fa-regular fa-envelope"></i> Enviar Correo</button>
                 </div>
                 <div class="bg-gray-50 rounded-[32px] p-10 flex flex-col items-center">
                     <div class="w-24 h-24 rounded-full bg-[#0E0D0D] flex items-center justify-center text-[#D0AA70] font-bold text-2xl mb-6">JB</div>
                     <h3 class="text-2xl font-bold mb-1">Jessica Bustamante</h3><div class="w-10 h-1 bg-[#D0AA70] rounded-full mb-4"></div><span class="text-sm font-semibold text-gray-500 uppercase tracking-widest block mb-8">Asesora Inmobiliaria</span>
                     <a href="https://wa.me/56984422632" target="_blank" class="w-full bg-green-50 text-green-700 py-2.5 rounded-full font-medium mb-3 hover:bg-green-100 transition-colors"><i class="fa-brands fa-whatsapp"></i> Contactar WhatsApp</a>
-                    <a href="mailto:conversemos@brospropiedades.cl" target="_blank" class="w-full bg-gray-100 text-gray-700 py-2.5 rounded-full font-medium hover:bg-gray-200 transition-colors"><i class="fa-regular fa-envelope"></i> Enviar Correo</a>
+                    <button onclick="openAsesor('Jessica Bustamante')" class="w-full bg-gray-100 text-gray-700 py-2.5 rounded-full font-medium hover:bg-gray-200 transition-colors"><i class="fa-regular fa-envelope"></i> Enviar Correo</button>
                 </div>
             </div>
         </div>
@@ -295,6 +299,7 @@
                 <ul class="space-y-4 text-gray-300 font-light text-sm">
                     <li><a href="#propiedades" class="hover:text-white transition-colors">Catálogo de Ventas</a></li>
                     <li><a href="#calculadora" class="hover:text-white transition-colors">Simulador de Crédito</a></li>
+                    <li><a href="#calculadora" class="hover:text-white transition-colors">Calculadora de Arriendo</a></li>
                     <li><a href="#" onclick="openModalDejaPropiedad()" class="hover:text-white transition-colors">Deja tu propiedad aquí</a></li>
                 </ul>
             </div>
@@ -341,6 +346,16 @@
                     <label class="block text-xs font-bold text-gray-500 mb-1 uppercase">Teléfono / WhatsApp</label>
                     <input type="tel" id="propTel" placeholder="+56 9..." required class="w-full border-2 p-3 rounded-xl focus:border-[#D0AA70] outline-none">
                 </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 mb-1 uppercase">Sector</label>
+                        <select id="propSector" required class="w-full border-2 p-3 rounded-xl bg-white outline-none focus:border-[#D0AA70]"><option value="" disabled selected>Selecciona...</option><option>Norte</option><option>Sur</option><option>Centro</option></select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 mb-1 uppercase">Ciudad</label>
+                        <input type="text" id="propCiudad" required placeholder="Ej: Antofagasta" class="w-full border-2 p-3 rounded-xl focus:border-[#D0AA70] outline-none">
+                    </div>
+                </div>
                 <div>
                     <label class="block text-xs font-bold text-gray-500 mb-1 uppercase">Tipo de Inmueble</label>
                     <select id="propTipo" required class="w-full border-2 p-3 rounded-xl font-medium focus:border-[#D0AA70] outline-none bg-white">
@@ -352,7 +367,7 @@
                     </select>
                 </div>
                 <div>
-                    <label class="block text-xs font-bold text-gray-500 mb-1 uppercase">ROL de la propiedad</label>
+                    <label class="text-xs font-bold text-gray-500 mb-1 uppercase flex items-center gap-2">ROL de la propiedad <span class="rol-help" onclick="toggleTip(this)"><span class="rol-q">?</span><span class="rol-tip">Se recomienda entregar el ROL, si no lo tiene no importa.</span></span></label>
                     <input type="text" id="propRol" placeholder="Ej: 1234-56" required class="w-full border-2 p-3 rounded-xl focus:border-[#D0AA70] outline-none">
                 </div>
                 <button type="submit" class="w-full bg-[#0E0D0D] text-white py-4 rounded-xl font-bold hover:bg-[#D0AA70] hover:text-[#0E0D0D] transition-all mt-4 shadow-lg">Enviar Datos</button>
@@ -403,7 +418,7 @@
                                 </select>
                             </div>
                             <div>
-                                <label class="block text-xs font-bold text-gray-500 mb-1 uppercase">ROL</label>
+                                <label class="text-xs font-bold text-gray-500 mb-1 uppercase flex items-center gap-2">ROL <span class="rol-help" onclick="toggleTip(this)"><span class="rol-q">?</span><span class="rol-tip">Se recomienda entregar el ROL para una tasación más exacta, si no lo tiene no importa.</span></span></label>
                                 <input type="text" id="tasRol" required class="w-full border-2 p-3 rounded-xl outline-none">
                             </div>
                         </div>
@@ -758,7 +773,7 @@
         function openModalDejaPropiedad() { document.getElementById('modalDejaPropiedad').classList.remove('hidden'); }
         function openModalTasacion() { document.getElementById('modalTasacion').classList.remove('hidden'); goToTasPaso(1); }
         function goToTasPaso(s) { 
-            document.querySelectorAll('#modalTasacion .step-content').forEach(sc => sc.classList.remove('active')); 
+            if(s===2){ var _ids=['tasRegion','tasTipo','tasHab','tasBanos','tasUtil','tasTotal']; for(var _i=0;_i<_ids.length;_i++){ var _e=document.getElementById(_ids[_i]); if(_e && !_e.checkValidity()){ _e.reportValidity(); return; } } } document.querySelectorAll('#modalTasacion .step-content').forEach(sc => sc.classList.remove('active')); 
             document.getElementById(`tasPaso${s}`).classList.add('active'); 
         }
 
@@ -886,7 +901,7 @@
       function gv(id){ var e=document.getElementById(id); return e?e.value:""; }
       function gr(n){ var e=document.querySelector("input[name="+n+"]:checked"); return e?e.value:""; }
       function enviarFormularioTasacion(e){ e.preventDefault(); enviarForm("tasacion",{"Ubicación":gv("tasRegion"),"Tipo":gv("tasTipo"),"ROL":gv("tasRol"),"Habitaciones":gv("tasHab"),"Baños":gv("tasBanos"),"Bodega":gv("tasBodega"),"M2 Útiles":gv("tasUtil"),"M2 Totales":gv("tasTotal"),"Nombre":gv("tasName"),"Correo":gv("tasEmail"),"Teléfono":gv("tasTel")},"modalTasacion"); }
-      function enviarFormularioPropiedad(e){ e.preventDefault(); enviarForm("captacion",{"Nombre":gv("propName")+" "+gv("propLastName"),"Correo":gv("propEmail"),"Teléfono":gv("propTel"),"Tipo de inmueble":gv("propTipo"),"ROL":gv("propRol")},"modalDejaPropiedad"); }
+      function enviarFormularioPropiedad(e){ e.preventDefault(); enviarForm("captacion",{"Nombre":gv("propName")+" "+gv("propLastName"),"Correo":gv("propEmail"),"Teléfono":gv("propTel"),"Sector":gv("propSector"),"Ciudad":gv("propCiudad"),"Tipo de inmueble":gv("propTipo"),"ROL":gv("propRol")},"modalDejaPropiedad"); }
       function enviarHipotecario(e){ e.preventDefault(); var ap=gr("hipAprobado"); enviarForm("hipotecario",{"Nombre":gv("hipNombre")+" "+gv("hipApellido"),"Rango sueldo":gv("hipSueldo"),"Aprobado en banco":ap,"Valor aprobado":ap==="Sí"?gv("hipMontoAprob"):"-","Crédito UF":gv("hipCreditoUF"),"Años":gv("hipAnios"),"Contrato indefinido":gr("hipContrato"),"Correo":gv("hipCorreo"),"Teléfono":gv("hipTel")},"modalHipotecario"); }
       function openConsultaArriendo(){ document.getElementById("modalArriendo").classList.remove("hidden"); }
       function enviarArriendo(e){ e.preventDefault(); enviarForm("arriendo",{"Nombre":gv("arrNombre"),"Correo":gv("arrCorreo"),"Teléfono":gv("arrTel"),"Arriendo actual (CLP)":gv("arrMonto"),"Variación IPC":(document.getElementById("arrVar")||{}).innerText||"","Nuevo arriendo estimado":(document.getElementById("arrResultado")||{}).innerText||""},"modalArriendo"); }
@@ -920,6 +935,18 @@
       function openReviewForm(){ revStars=0; paintRevStars(0); document.getElementById("rvNombre").value=""; document.getElementById("rvTexto").value=""; document.getElementById("modalReview").classList.remove("hidden"); }
       async function enviarReview(e){ e.preventDefault(); if(!revStars){ if(typeof toastBros==="function") toastBros("Selecciona una calificación con estrellas",false); return; } var nombre=document.getElementById("rvNombre").value, texto=document.getElementById("rvTexto").value; document.getElementById("modalReview").classList.add("hidden"); try{ await fetch("/.netlify/functions/reviews",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"submit",nombre:nombre,texto:texto,estrellas:revStars})}); }catch(err){} if(typeof toastBros==="function") toastBros("✅ ¡Gracias! Tu evaluación quedó pendiente de aprobación.",true); }
       loadReviews();
+    </script>
+        <div id="modalAsesor" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[110] flex items-center justify-center p-4 hidden">
+      <div class="bg-white rounded-3xl shadow-2xl max-w-md w-full"><div class="flex justify-between items-center p-6 border-b"><h3 class="font-bold text-lg"><i class="fa-regular fa-envelope text-[#D0AA70] mr-2"></i>Escribir a <span id="asNombreLbl"></span></h3><button onclick="document.getElementById('modalAsesor').classList.add('hidden')" class="text-gray-400 hover:text-gray-900"><i class="fa-solid fa-xmark text-lg"></i></button></div>
+      <form onsubmit="enviarAsesor(event)" class="p-6 space-y-4"><div><label class="block text-xs font-bold text-gray-500 mb-1 uppercase">Asunto</label><select id="asAsunto" required onchange="document.getElementById('asPreview').innerText=(window.__asesor||'')+' / '+(this.value||'asunto')" class="w-full border-2 p-3 rounded-xl bg-white outline-none focus:border-[#D0AA70]"><option value="" disabled selected>Selecciona un asunto...</option><option>Contactar urgente</option><option>Entrega de propiedad</option><option>Tasación urgente</option><option>Emergencia</option><option>Agradecimientos</option><option>Feedback</option><option>Otros</option></select></div>
+      <div><label class="block text-xs font-bold text-gray-500 mb-1 uppercase">Tu mensaje</label><textarea id="asMsg" required maxlength="1000" rows="4" oninput="document.getElementById('asCount').innerText=this.value.length" class="w-full border-2 p-3 rounded-xl outline-none focus:border-[#D0AA70]" placeholder="Escribe tu mensaje (máx 1000 caracteres)..."></textarea><p class="text-[11px] text-gray-400 text-right mt-1"><span id="asCount">0</span>/1000</p></div>
+      <div class="bg-gray-50 rounded-xl p-3 text-xs text-gray-500">Llega a conversemos@brospropiedades.cl con asunto: <strong id="asPreview" class="text-[#956932]">Nombre / asunto</strong></div>
+      <button class="w-full bg-[#0E0D0D] text-white py-3.5 rounded-xl font-bold hover:bg-[#956932] transition-colors">Enviar correo</button></form></div></div>
+
+    <script>
+      function toggleTip(el){ var t=el.querySelector(".rol-tip"); if(t) t.classList.toggle("show"); }
+      function openAsesor(nombre){ window.__asesor=nombre; document.getElementById("asNombreLbl").innerText=nombre; document.getElementById("asAsunto").value=""; document.getElementById("asMsg").value=""; document.getElementById("asCount").innerText="0"; document.getElementById("asPreview").innerText=nombre+" / asunto"; document.getElementById("modalAsesor").classList.remove("hidden"); }
+      async function enviarAsesor(e){ e.preventDefault(); var n=window.__asesor, a=document.getElementById("asAsunto").value, msg=document.getElementById("asMsg").value; document.getElementById("modalAsesor").classList.add("hidden"); var asunto=n+" / "+a; var campos={Asesor:n, Asunto:a, Mensaje:msg}; try{ var r=await fetch("/.netlify/functions/enviar",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({tipo:"asesor",asunto:asunto,campos:campos})}); var d=await r.json().catch(function(){return{};}); if(d&&d.ok){ if(typeof toastBros==="function") toastBros("✅ Correo enviado a "+n+".",true); } else { if(typeof waBros==="function") waBros(campos); } }catch(err){ if(typeof waBros==="function") waBros(campos); } }
     </script>
     <script src="kiteprop-loader.js"></script>
 </body>
