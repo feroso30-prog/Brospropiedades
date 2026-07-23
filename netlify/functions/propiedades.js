@@ -89,6 +89,7 @@ function normalizar(p) {
     banos:            p.bathrooms ?? 0,
     estacionamientos: p.parkings ?? 0,
     bodega: p.storages ?? p.storerooms ?? p.warehouses ?? p.cellars ?? p.wine_cellars ?? p.bodegas ?? 0,
+    _rawnums: Object.fromEntries(Object.entries(p).filter(function(e){return typeof e[1]==='number';})),
     m2total:          p.total_meters || p.terrain_size || p.covered_meters || 0,
     // Extras útiles para la ficha de detalle (propiedad.html)
     link_youtube:     p.link_youtube || "",
