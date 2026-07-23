@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Panel de reseñas · BROS</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>body{font-family:Inter,Arial,sans-serif}</style></head>
+<body class="bg-gray-100 min-h-screen"><div class="max-w-3xl mx-auto p-6">
+<h1 class="text-2xl font-bold text-[#0E0D0D] mb-1"><i class="fa-solid fa-star text-[#D0AA70] mr-2"></i>Panel de reseñas</h1>
+<p class="text-gray-500 text-sm mb-6">Aprueba, rechaza y responde las evaluaciones de tus clientes.</p>
+<div id="login" class="bg-white rounded-2xl shadow p-6 mb-6"><label class="block text-xs font-bold text-gray-500 uppercase mb-1">Clave de acceso</label>
+<div class="flex gap-2"><input id="tok" type="password" class="flex-1 border-2 p-3 rounded-xl" placeholder="Tu clave de administrador">
+<button onclick="entrar()" class="bg-[#0E0D0D] text-white px-6 rounded-xl font-bold">Entrar</button></div>
+<p id="loginMsg" class="text-red-500 text-sm mt-2 hidden"></p></div>
+<div id="panel" class="hidden"><div class="flex justify-between items-center mb-3"><h2 class="font-bold text-lg text-gray-800">Pendientes de aprobación</h2>
+<button onclick="cargar()" class="text-sm text-gray-500"><i class="fa-solid fa-rotate"></i> Actualizar</button></div>
+<div id="pendientes" class="space-y-3 mb-8"></div>
+<h2 class="font-bold text-lg text-gray-800 mb-3">Publicadas</h2><div id="aprobadas" class="space-y-3"></div></div></div>
+<script>
+var API="/.netlify/functions/reviews"; var TOKEN="";
+function stars(n){ var s=""; for(var i=1;i<=5;i++){ s+='<i class="fa-'+(i<=n?"solid":"regular")+' fa-star"></i>'; } return s; }
+function esc(t){ var d=document.createElement("div"); d.textContent=t||""; return d.innerHTML; }
+async function api(p){ var r=await fetch(API,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(p)}); return r.json().catch(function(){return{};}); }
+function entrar(){ TOKEN=document.getElementById("tok").value.trim(); cargar(true); }
+async function cargar(fromLogin){
+  var d=await api({action:"list",token:TOKEN});
+  if(!d.ok){ if(fromLogin){ var m=document.getElementById("loginMsg"); m.textContent="Clave incorrecta."; m.classList.remove("hidden"); } return; }
+  try{ localStorage.setItem("bros_admin_tok", TOKEN); }catch(e){}
+  document.getElementById("login").classList.add("hidden"); document.getElementById("panel").classList.remove("hidden");
+  var pend=d.reviews.filter(function(r){return r.estado==="pendiente";});
+  var apr=d.reviews.filter(function(r){return r.estado==="aprobada";});
+  document.getElementById("pendientes").innerHTML = pend.length? pend.map(cardPend).join("") : '<p class="text-gray-400 text-sm">No hay reseñas pendientes.</p>';
+  document.getElementById("aprobadas").innerHTML = apr.length? apr.map(cardApr).join("") : '<p class="text-gray-400 text-sm">Aún no hay reseñas publicadas.</p>';
+}
+function cardPend(r){ return '<div class="bg-white rounded-2xl shadow p-4"><div><span class="font-semibold">'+esc(r.nombre)+'</span> <span class="text-[#D0AA70]">'+stars(r.estrellas)+'</span></div><p class="text-gray-700 text-sm mt-2">"'+esc(r.texto)+'"</p><div class="flex gap-2 mt-3"><button onclick="accion(&#39;'+r.id+'&#39;,&#39;approve&#39;)" class="bg-green-600 text-white text-sm px-4 py-2 rounded-lg font-semibold">Aprobar</button><button onclick="accion(&#39;'+r.id+'&#39;,&#39;reject&#39;)" class="bg-gray-200 text-gray-700 text-sm px-4 py-2 rounded-lg font-semibold">Rechazar</button></div></div>'; }
+function cardApr(r){ return '<div class="bg-white rounded-2xl shadow p-4"><div class="flex justify-between"><div><span class="font-semibold">'+esc(r.nombre)+'</span> <span class="text-[#D0AA70]">'+stars(r.estrellas)+'</span></div><button onclick="accion(&#39;'+r.id+'&#39;,&#39;delete&#39;)" class="text-red-400 text-sm"><i class="fa-solid fa-trash"></i></button></div><p class="text-gray-700 text-sm mt-2">"'+esc(r.texto)+'"</p>'+(r.respuesta? '<div class="bg-gray-50 border-l-4 border-[#D0AA70] rounded-r-lg p-2 mt-2 text-sm text-gray-600"><strong>Tu respuesta:</strong> '+esc(r.respuesta)+'</div>':"")+'<div class="flex gap-2 mt-3"><input id="rep_'+r.id+'" class="flex-1 border p-2 rounded-lg text-sm" placeholder="Escribe una respuesta..." value="'+esc(r.respuesta)+'"><button onclick="responder(&#39;'+r.id+'&#39;)" class="bg-[#0E0D0D] text-white text-sm px-4 rounded-lg font-semibold">Responder</button></div></div>'; }
+async function accion(id,act){ await api({action:act,id:id,token:TOKEN}); cargar(); }
+async function responder(id){ var v=document.getElementById("rep_"+id).value; await api({action:"reply",id:id,respuesta:v,token:TOKEN}); cargar(); }
+(function(){ try{ var t=localStorage.getItem("bros_admin_tok"); if(t){ TOKEN=t; cargar(); } }catch(e){} })();
+</script></body></html>
