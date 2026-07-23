@@ -55,6 +55,8 @@
         .rol-tip { position: absolute; bottom: 150%; left: 0; width: 220px; background: #0E0D0D; color: #fff; font-size: 11px; line-height: 1.4; padding: 8px 10px; border-radius: 8px; opacity: 0; pointer-events: none; transition: opacity .15s; z-index: 30; box-shadow: 0 8px 20px rgba(0,0,0,.25); }
         .rol-help:hover .rol-tip, .rol-tip.show { opacity: 1; }
         @keyframes fadeInUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+            /* Responsive: modales con scroll interno en pantallas pequenas */
+        [id^="modal"] > div, [id*="Modal"] > div { max-height: 90vh; overflow-y: auto; }
     </style>
 </head>
 <body class="text-gray-900 antialiased selection:bg-[#D0AA70] selection:text-[#0E0D0D]">
@@ -77,6 +79,7 @@
                 <a href="#" onclick="openModalDejaPropiedad()" class="text-[#D0AA70] hover:text-white transition-colors">Deja tu propiedad aquí</a>
                 <a href="#equipo" class="hover:text-[#D0AA70] transition-colors">Equipo</a>
             </nav>
+            <button id="btnMenuMovil" onclick="toggleMenuMovil()" aria-label="Menu" class="lg:hidden text-[#EFEFEF] hover:text-[#D0AA70] text-2xl p-2 leading-none"><i class="fa-solid fa-bars"></i></button>
             <div class="relative group hidden lg:block">
                 <button onclick="openModalTasacion()" class="bg-[#D0AA70] hover:bg-[#956932] text-[#0E0D0D] hover:text-white px-7 py-3.5 rounded-full text-sm font-bold transition-all transform hover:scale-105 shadow-[0_0_20px_rgba(208,170,112,0.3)]">
                     Solicita tu tasación gratis
@@ -85,6 +88,16 @@
                     Tu tasación en menos de 24 horas ⚡
                 </span>
             </div>
+        </div>
+        <div id="menuMovil" class="hidden lg:hidden absolute top-28 left-0 w-full bg-[#0E0D0D] border-t border-[#D0AA70]/20 shadow-2xl">
+            <nav class="flex flex-col px-6 py-3 text-[#EFEFEF] font-medium">
+                <a href="#propiedades" onclick="cerrarMenuMovil()" class="py-3 border-b border-white/5 hover:text-[#D0AA70] transition-colors">Propiedades</a>
+                <a href="#experiencia" onclick="cerrarMenuMovil()" class="py-3 border-b border-white/5 hover:text-[#D0AA70] transition-colors">Experiencia</a>
+                <a href="#calculadora" onclick="cerrarMenuMovil()" class="py-3 border-b border-white/5 hover:text-[#D0AA70] transition-colors">Calculadora</a>
+                <a href="#equipo" onclick="cerrarMenuMovil()" class="py-3 border-b border-white/5 hover:text-[#D0AA70] transition-colors">Equipo</a>
+                <a href="#" onclick="cerrarMenuMovil();openModalDejaPropiedad();return false;" class="py-3 border-b border-white/5 text-[#D0AA70] hover:text-white transition-colors">Deja tu propiedad aquí</a>
+                <button onclick="cerrarMenuMovil();openModalTasacion();" class="mt-3 mb-1 bg-[#D0AA70] hover:bg-[#956932] text-[#0E0D0D] hover:text-white py-3 rounded-full text-sm font-bold transition-all">Solicita tu tasación gratis</button>
+            </nav>
         </div>
     </header>
 
@@ -947,6 +960,10 @@
       function toggleTip(el){ var t=el.querySelector(".rol-tip"); if(t) t.classList.toggle("show"); }
       function openAsesor(nombre){ window.__asesor=nombre; document.getElementById("asNombreLbl").innerText=nombre; document.getElementById("asAsunto").value=""; document.getElementById("asMsg").value=""; document.getElementById("asCount").innerText="0"; document.getElementById("asPreview").innerText=nombre+" / asunto"; document.getElementById("modalAsesor").classList.remove("hidden"); }
       async function enviarAsesor(e){ e.preventDefault(); var n=window.__asesor, a=document.getElementById("asAsunto").value, msg=document.getElementById("asMsg").value; document.getElementById("modalAsesor").classList.add("hidden"); var asunto=n+" / "+a; var campos={Asesor:n, Asunto:a, Mensaje:msg}; try{ var r=await fetch("/.netlify/functions/enviar",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({tipo:"asesor",asunto:asunto,campos:campos})}); var d=await r.json().catch(function(){return{};}); if(d&&d.ok){ if(typeof toastBros==="function") toastBros("✅ Correo enviado a "+n+".",true); } else { if(typeof waBros==="function") waBros(campos); } }catch(err){ if(typeof waBros==="function") waBros(campos); } }
+    </script>
+    <script>
+      function toggleMenuMovil(){ var m=document.getElementById("menuMovil"); if(!m) return; m.classList.toggle("hidden"); var i=document.querySelector("#btnMenuMovil i"); if(i) i.className = m.classList.contains("hidden") ? "fa-solid fa-bars" : "fa-solid fa-xmark"; }
+      function cerrarMenuMovil(){ var m=document.getElementById("menuMovil"); if(m) m.classList.add("hidden"); var i=document.querySelector("#btnMenuMovil i"); if(i) i.className="fa-solid fa-bars"; }
     </script>
     <script src="kiteprop-loader.js"></script>
 </body>
