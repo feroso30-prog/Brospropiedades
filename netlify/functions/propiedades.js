@@ -133,7 +133,7 @@ exports.handler = async () => {
     "Content-Type": "application/json; charset=utf-8",
     "Access-Control-Allow-Origin": "*",
     // Cache de red: sirve al instante y refresca en segundo plano (60s)
-    "Cache-Control": "public, max-age=60, stale-while-revalidate=300"
+    "Cache-Control": "public, max-age=0, must-revalidate"
   };
 
   // Si falta la llave, avisamos claro (para que sepas configurar Netlify)
