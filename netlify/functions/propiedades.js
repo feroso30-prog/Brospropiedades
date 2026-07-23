@@ -88,6 +88,7 @@ function normalizar(p) {
     recamaras:        p.bedrooms ?? p.rooms ?? 0,
     banos:            p.bathrooms ?? 0,
     estacionamientos: p.parkings ?? 0,
+    bodega: p.storages ?? p.storerooms ?? p.warehouses ?? p.cellars ?? p.wine_cellars ?? p.bodegas ?? 0,
     m2total:          p.total_meters || p.terrain_size || p.covered_meters || 0,
     // Extras útiles para la ficha de detalle (propiedad.html)
     link_youtube:     p.link_youtube || "",
