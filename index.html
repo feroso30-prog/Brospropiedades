@@ -196,41 +196,26 @@
         <div id="propertiesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10"></div>
     </section>
 
-    <!-- EXPERIENCIA / SOCIAL PROOF -->
+        <!-- EXPERIENCIA / SOCIAL PROOF -->
     <section id="experiencia" class="py-24 bg-[#0E0D0D] relative overflow-hidden">
         <div class="absolute top-0 right-0 w-[800px] h-[800px] bg-[#D0AA70]/5 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/3"></div>
-        <div class="max-w-7xl mx-auto px-6 relative z-10">
-            <div class="text-center mb-16 reveal">
+        <div class="max-w-6xl mx-auto px-6 relative z-10">
+            <div class="text-center mb-12 reveal">
                 <span class="text-[#D0AA70] text-xs font-bold uppercase tracking-widest mb-4 block">Experiencia Comprobada</span>
-                <h2 class="text-3xl md:text-5xl font-bold text-white tracking-tight">El estándar BROS en acción</h2>
+                <h2 class="text-3xl md:text-5xl font-bold text-white tracking-tight">Lo que dicen nuestros clientes</h2>
+                <div class="flex items-center justify-center gap-3 mt-5"><div class="text-[#D0AA70] text-xl" id="revPromStars"></div><span class="text-white font-bold text-lg" id="revProm"></span><span class="text-gray-400 text-sm" id="revCount"></span></div>
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div class="bg-white/5 border border-white/10 p-10 rounded-[32px] reveal">
-                    <i class="fa-solid fa-star text-[#D0AA70] text-xl mb-6 block"></i>
-                    <p class="text-gray-300 font-light italic mb-8 text-lg">"BROS vendió mi propiedad en Vitacura en menos de 30 días. Un nivel de servicio, fotografía y marketing que sencillamente no había visto en otras corredoras en Chile."</p>
-                    <div class="flex items-center gap-4"><div class="w-12 h-12 rounded-full bg-[#D0AA70] flex items-center justify-center font-bold text-[#0E0D0D]">RM</div><div><p class="text-white font-semibold">Roberto M.</p></div></div>
-                </div>
-                <div class="bg-white/5 border border-white/10 p-10 rounded-[32px] reveal">
-                    <i class="fa-solid fa-star text-[#D0AA70] text-xl mb-6 block"></i>
-                    <p class="text-gray-300 font-light italic mb-8 text-lg">"Como inversionista busco agilidad y rentabilidad. El equipo de BROS me presentó oportunidades off-market increíbles."</p>
-                    <div class="flex items-center gap-4"><div class="w-12 h-12 rounded-full bg-[#D0AA70] flex items-center justify-center font-bold text-[#0E0D0D]">CV</div><div><p class="text-white font-semibold">Carolina V.</p></div></div>
-                </div>
-                <div class="bg-white/5 border border-white/10 p-10 rounded-[32px] flex flex-col justify-center text-center reveal border-[#D0AA70]/30">
-                    <h3 class="text-2xl font-bold text-white mb-4">¿Cuánto vale tu propiedad hoy?</h3>
-                    <p class="text-gray-400 font-light mb-8 text-sm">Descubre el valor real de mercado.</p>
-                    
-                    <div class="relative group mt-2">
-                        <button onclick="openModalTasacion()" class="w-full bg-[#D0AA70] text-[#0E0D0D] py-4 rounded-xl font-bold">Solicita tu tasación gratis</button>
-                        <span class="absolute opacity-0 group-hover:opacity-100 transition-opacity bg-black text-[#D0AA70] text-[11px] py-1.5 px-3 rounded-lg -top-10 left-1/2 transform -translate-x-1/2 whitespace-nowrap border border-[#D0AA70]/30 shadow-xl pointer-events-none z-50 font-bold tracking-wide">
-                            Tu tasación en menos de 24 horas ⚡
-                        </span>
-                    </div>
-                </div>
+            <div id="revGrid" class="grid grid-cols-1 md:grid-cols-2 gap-6 min-h-[180px]"></div>
+            <div id="revNav" class="flex items-center justify-center gap-4 mt-8 hidden">
+                <button onclick="revPage(-1)" class="w-11 h-11 rounded-full border border-white/20 text-white hover:bg-[#D0AA70] hover:text-[#0E0D0D] hover:border-[#D0AA70] transition-colors"><i class="fa-solid fa-chevron-left"></i></button>
+                <span id="revPageInfo" class="text-gray-400 text-sm font-medium"></span>
+                <button onclick="revPage(1)" class="w-11 h-11 rounded-full border border-white/20 text-white hover:bg-[#D0AA70] hover:text-[#0E0D0D] hover:border-[#D0AA70] transition-colors"><i class="fa-solid fa-chevron-right"></i></button>
             </div>
+            <div class="text-center mt-10"><button onclick="openReviewForm()" class="bg-[#D0AA70] hover:bg-white text-[#0E0D0D] px-8 py-3.5 rounded-full font-bold transition-colors"><i class="fa-regular fa-star mr-2"></i>Deja tu evaluación</button></div>
         </div>
     </section>
 
-        <!-- CALCULADORA -->
+    <!-- CALCULADORA -->
     <section id="calculadora" class="bg-gray-50 py-24 px-6 relative">
         <div class="max-w-6xl mx-auto reveal">
             <div class="text-center mb-16"><span class="text-sm font-bold uppercase text-[#956932] block mb-3">Herramientas Inmobiliarias</span><h2 class="text-4xl md:text-5xl font-bold text-[#0E0D0D] tracking-tight">Calculadoras</h2></div>
@@ -905,6 +890,36 @@
       function enviarHipotecario(e){ e.preventDefault(); var ap=gr("hipAprobado"); enviarForm("hipotecario",{"Nombre":gv("hipNombre")+" "+gv("hipApellido"),"Rango sueldo":gv("hipSueldo"),"Aprobado en banco":ap,"Valor aprobado":ap==="Sí"?gv("hipMontoAprob"):"-","Crédito UF":gv("hipCreditoUF"),"Años":gv("hipAnios"),"Contrato indefinido":gr("hipContrato"),"Correo":gv("hipCorreo"),"Teléfono":gv("hipTel")},"modalHipotecario"); }
       function openConsultaArriendo(){ document.getElementById("modalArriendo").classList.remove("hidden"); }
       function enviarArriendo(e){ e.preventDefault(); enviarForm("arriendo",{"Nombre":gv("arrNombre"),"Correo":gv("arrCorreo"),"Teléfono":gv("arrTel"),"Arriendo actual (CLP)":gv("arrMonto"),"Variación IPC":(document.getElementById("arrVar")||{}).innerText||"","Nuevo arriendo estimado":(document.getElementById("arrResultado")||{}).innerText||""},"modalArriendo"); }
+    </script>
+        <div id="modalReview" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[110] flex items-center justify-center p-4 hidden">
+      <div class="bg-white rounded-3xl shadow-2xl max-w-md w-full"><div class="flex justify-between items-center p-6 border-b"><h3 class="font-bold text-lg"><i class="fa-solid fa-star text-[#D0AA70] mr-2"></i>Deja tu evaluación</h3><button onclick="document.getElementById('modalReview').classList.add('hidden')" class="text-gray-400 hover:text-gray-900"><i class="fa-solid fa-xmark text-lg"></i></button></div>
+      <form onsubmit="enviarReview(event)" class="p-6 space-y-4"><div><label class="block text-xs font-bold text-gray-500 mb-2 uppercase">Tu calificación</label><div id="rvStarInput" class="text-3xl text-[#D0AA70]"><i onclick="setRevStars(1)" class="fa-regular fa-star cursor-pointer"></i><i onclick="setRevStars(2)" class="fa-regular fa-star cursor-pointer"></i><i onclick="setRevStars(3)" class="fa-regular fa-star cursor-pointer"></i><i onclick="setRevStars(4)" class="fa-regular fa-star cursor-pointer"></i><i onclick="setRevStars(5)" class="fa-regular fa-star cursor-pointer"></i></div><p class="text-xs text-gray-400 mt-1">1 (peor) a 5 (mejor)</p></div>
+      <div><label class="block text-xs font-bold text-gray-500 mb-1 uppercase">Nombre</label><input id="rvNombre" required class="w-full border-2 p-3 rounded-xl bg-gray-50"></div><div><label class="block text-xs font-bold text-gray-500 mb-1 uppercase">Tu comentario</label><textarea id="rvTexto" required rows="3" class="w-full border-2 p-3 rounded-xl bg-gray-50"></textarea></div>
+      <p class="text-[11px] text-gray-400"><i class="fa-solid fa-shield-halved text-[#D0AA70] mr-1"></i> Tu reseña se revisa antes de publicarse.</p><button class="w-full bg-[#0E0D0D] text-white py-3.5 rounded-xl font-bold hover:bg-[#956932] transition-colors">Enviar evaluación</button></form></div></div>
+    <div id="modalReviewFull" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[110] flex items-center justify-center p-4 hidden">
+      <div class="bg-white rounded-3xl shadow-2xl max-w-lg w-full"><div class="flex justify-between items-center p-6 border-b"><div class="text-[#D0AA70]" id="rvfStars"></div><button onclick="document.getElementById('modalReviewFull').classList.add('hidden')" class="text-gray-400 hover:text-gray-900"><i class="fa-solid fa-xmark text-lg"></i></button></div>
+      <div class="p-6"><p class="text-gray-700 leading-relaxed mb-5" id="rvfTexto"></p><div class="flex items-center gap-3 mb-4"><div class="w-10 h-10 rounded-full bg-[#D0AA70] flex items-center justify-center font-bold text-[#0E0D0D]" id="rvfIni"></div><span class="font-semibold text-gray-900" id="rvfNombre"></span></div><div id="rvfReply" class="hidden bg-gray-50 border-l-4 border-[#D0AA70] rounded-r-xl p-4"><p class="text-xs font-bold text-[#956932] uppercase mb-1"><i class="fa-solid fa-reply mr-1"></i>Respuesta de BROS Propiedades</p><p class="text-gray-600 text-sm" id="rvfReplyT"></p></div></div></div></div>
+
+    <script>
+      var revData=[], revPageIdx=0, revStars=0, REV_PER=4;
+      function revStarsHTML(n){ var s=""; for(var i=1;i<=5;i++){ s+='<i class="fa-'+(i<=n?"solid":"regular")+' fa-star"></i>'; } return s; }
+      function revEsc(t){ var d=document.createElement("div"); d.textContent=t||""; return d.innerHTML; }
+      async function loadReviews(){ try{ var r=await fetch("/.netlify/functions/reviews"); var d=await r.json(); revData=(d&&d.reviews)?d.reviews:[]; }catch(e){ revData=[]; } renderReviews(); }
+      function renderReviews(){ var grid=document.getElementById("revGrid"); if(!grid) return;
+        if(!revData.length){ grid.innerHTML='<div class="md:col-span-2 text-center py-10 text-gray-400">Aún no hay evaluaciones. ¡Sé el primero en opinar!</div>'; document.getElementById("revNav").classList.add("hidden"); document.getElementById("revProm").innerText=""; document.getElementById("revPromStars").innerHTML=""; document.getElementById("revCount").innerText=""; return; }
+        var start=revPageIdx*REV_PER, slice=revData.slice(start,start+REV_PER);
+        grid.innerHTML=slice.map(function(rv,idx){ var gi=start+idx; return '<div onclick="verReviewFull('+gi+')" class="bg-white/5 border border-white/10 p-6 rounded-3xl cursor-pointer hover:border-[#D0AA70]/40 transition-colors"><div class="flex items-center justify-between mb-3"><div class="text-[#D0AA70] text-sm">'+revStarsHTML(rv.estrellas)+'</div>'+(rv.respuesta?'<span class="text-[10px] text-[#D0AA70] font-bold uppercase"><i class="fa-solid fa-reply"></i> respondido</span>':"")+'</div><p class="text-gray-300 font-light italic mb-4" style="display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">"'+revEsc(rv.texto)+'"</p><div class="flex items-center justify-between"><div class="flex items-center gap-3"><div class="w-9 h-9 rounded-full bg-[#D0AA70] flex items-center justify-center font-bold text-[#0E0D0D] text-sm">'+revEsc((rv.nombre||"?").slice(0,2).toUpperCase())+'</div><span class="text-white font-semibold text-sm">'+revEsc(rv.nombre)+'</span></div><span class="text-gray-500 text-xs">Leer más <i class="fa-solid fa-arrow-right"></i></span></div></div>'; }).join("");
+        var totalP=Math.ceil(revData.length/REV_PER), nav=document.getElementById("revNav");
+        if(totalP>1){ nav.classList.remove("hidden"); document.getElementById("revPageInfo").innerText=(revPageIdx+1)+" / "+totalP; } else { nav.classList.add("hidden"); }
+        var avg=revData.reduce(function(a,b){return a+b.estrellas;},0)/revData.length;
+        document.getElementById("revProm").innerText=avg.toFixed(1); document.getElementById("revPromStars").innerHTML=revStarsHTML(Math.round(avg)); document.getElementById("revCount").innerText="· "+revData.length+" evaluaciones"; }
+      function revPage(d){ var t=Math.ceil(revData.length/REV_PER); revPageIdx=(revPageIdx+d+t)%t; renderReviews(); }
+      function verReviewFull(i){ var rv=revData[i]; document.getElementById("rvfStars").innerHTML=revStarsHTML(rv.estrellas); document.getElementById("rvfTexto").innerText='"'+rv.texto+'"'; document.getElementById("rvfNombre").innerText=rv.nombre; document.getElementById("rvfIni").innerText=(rv.nombre||"?").slice(0,2).toUpperCase(); var rep=document.getElementById("rvfReply"); if(rv.respuesta){ rep.classList.remove("hidden"); document.getElementById("rvfReplyT").innerText=rv.respuesta; } else { rep.classList.add("hidden"); } document.getElementById("modalReviewFull").classList.remove("hidden"); }
+      function paintRevStars(n){ var els=document.querySelectorAll("#rvStarInput i"); for(var i=0;i<els.length;i++){ els[i].className="fa-"+((i+1)<=n?"solid":"regular")+" fa-star cursor-pointer"; } }
+      function setRevStars(n){ revStars=n; paintRevStars(n); }
+      function openReviewForm(){ revStars=0; paintRevStars(0); document.getElementById("rvNombre").value=""; document.getElementById("rvTexto").value=""; document.getElementById("modalReview").classList.remove("hidden"); }
+      async function enviarReview(e){ e.preventDefault(); if(!revStars){ if(typeof toastBros==="function") toastBros("Selecciona una calificación con estrellas",false); return; } var nombre=document.getElementById("rvNombre").value, texto=document.getElementById("rvTexto").value; document.getElementById("modalReview").classList.add("hidden"); try{ await fetch("/.netlify/functions/reviews",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"submit",nombre:nombre,texto:texto,estrellas:revStars})}); }catch(err){} if(typeof toastBros==="function") toastBros("✅ ¡Gracias! Tu evaluación quedó pendiente de aprobación.",true); }
+      loadReviews();
     </script>
     <script src="kiteprop-loader.js"></script>
 </body>
