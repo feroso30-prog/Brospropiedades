@@ -17,7 +17,7 @@ exports.handler = async (event) => {
   try { body = JSON.parse(event.body || "{}"); } catch(e){ return resp(400, { ok:false, error:"bad json" }); }
   const tipo = body.tipo || "otro";
   const campos = body.campos || {};
-  const asunto = ASUNTOS[tipo] || "Solicitud sitio web";
+  const asunto = body.asunto || ASUNTOS[tipo] || "Solicitud sitio web";
   if (!RESEND_API_KEY) return resp(200, { ok:false, motivo:"sin_api_key" });
   const filas = Object.keys(campos).map(function(k){ return "<tr><td style=\"padding:5px 16px 5px 0;color:#888;vertical-align:top\">"+esc(k)+"</td><td style=\"padding:5px 0\"><strong>"+esc(campos[k]||"-")+"</strong></td></tr>"; }).join("");
   const html = "<div style=\"font-family:Arial,Helvetica,sans-serif;max-width:580px;margin:auto\"><h2 style=\"color:#0E0D0D;border-bottom:3px solid #D0AA70;padding-bottom:8px\">"+asunto+"</h2><table style=\"font-size:14px;width:100%\">"+filas+"</table><p style=\"color:#aaa;font-size:12px;margin-top:22px\">Enviado automáticamente desde brospropiedades.cl</p></div>";
