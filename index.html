@@ -230,41 +230,38 @@
         </div>
     </section>
 
-    <!-- CALCULADORA -->
+        <!-- CALCULADORA -->
     <section id="calculadora" class="bg-gray-50 py-24 px-6 relative">
         <div class="max-w-6xl mx-auto reveal">
-            <div class="text-center mb-16"><span class="text-sm font-bold uppercase text-[#956932] block mb-3">Herramientas Inmobiliarias</span><h2 class="text-4xl md:text-5xl font-bold text-[#0E0D0D] tracking-tight">Simulador de Crédito</h2></div>
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-0 bg-white rounded-[40px] shadow-2xl overflow-hidden">
-                <div class="lg:col-span-7 p-10 space-y-8">
-                    <div>
-                        <div class="flex justify-between items-end mb-4"><label class="text-sm font-semibold text-gray-500 uppercase">Valor propiedad</label><span class="text-3xl font-bold" id="labelValorPropiedad">10.000 UF</span></div>
-                        <input type="range" id="inputValorPropiedad" min="1500" max="40000" step="100" value="10000" class="w-full accent-[#0E0D0D]" oninput="calcularSimulacion()">
-                    </div>
-                    <div>
-                        <div class="flex justify-between items-end mb-4"><label class="text-sm font-semibold text-gray-500 uppercase">Pie inicial</label><span class="text-2xl font-bold" id="labelPie">20% <span class="text-gray-400 text-lg ml-2">(~ 2.000 UF)</span></span></div>
-                        <input type="range" id="inputPie" min="10" max="50" step="5" value="20" class="w-full accent-[#0E0D0D]" oninput="calcularSimulacion()">
-                    </div>
-                    <div class="grid grid-cols-2 gap-8 pt-4">
-                        <div>
-                            <label class="block text-xs font-semibold text-gray-500 mb-2 uppercase">Plazo</label>
-                            <select id="inputPlazo" class="w-full border-2 p-4 rounded-2xl bg-gray-50 font-semibold" onchange="calcularSimulacion()"><option value="20" selected>20 años</option><option value="30">30 años</option></select>
+            <div class="text-center mb-16"><span class="text-sm font-bold uppercase text-[#956932] block mb-3">Herramientas Inmobiliarias</span><h2 class="text-4xl md:text-5xl font-bold text-[#0E0D0D] tracking-tight">Calculadoras</h2></div>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
+                <div class="bg-white rounded-[32px] shadow-2xl overflow-hidden flex flex-col">
+                    <div class="bg-[#0E0D0D] px-8 py-5"><h3 class="text-white font-bold text-lg"><i class="fa-solid fa-percent text-[#D0AA70] mr-2"></i>Simulador de Crédito</h3></div>
+                    <div class="p-8 space-y-7 flex-1">
+                        <div><div class="flex justify-between items-end mb-3"><label class="text-xs font-semibold text-gray-500 uppercase">Valor propiedad</label><span class="text-2xl font-bold" id="labelValorPropiedad">10.000 UF</span></div><input type="range" id="inputValorPropiedad" min="1000" max="40000" step="100" value="10000" class="w-full accent-[#0E0D0D]" oninput="calcularSimulacion()"></div>
+                        <div><div class="flex justify-between items-end mb-3"><label class="text-xs font-semibold text-gray-500 uppercase">Pie inicial</label><span class="text-xl font-bold" id="labelPie">20% <span class="text-gray-400 text-base ml-1">(~ 2.000 UF)</span></span></div><input type="range" id="inputPie" min="10" max="50" step="5" value="20" class="w-full accent-[#0E0D0D]" oninput="calcularSimulacion()"></div>
+                        <div class="grid grid-cols-2 gap-5">
+                            <div><label class="block text-xs font-semibold text-gray-500 mb-2 uppercase">Plazo</label><select id="inputPlazo" class="w-full border-2 p-3.5 rounded-2xl bg-gray-50 font-semibold" onchange="calcularSimulacion()"><option value="20" selected>20 años</option><option value="30">30 años</option></select></div>
+                            <div><label class="block text-xs font-semibold text-gray-500 mb-2 uppercase">Tasa (Anual)</label><input type="number" id="inputTasa" step="0.1" value="4.5" class="w-full border-2 p-3.5 rounded-2xl bg-gray-50 font-semibold" oninput="calcularSimulacion()"></div>
                         </div>
-                        <div>
-                            <label class="block text-xs font-semibold text-gray-500 mb-2 uppercase">Tasa (Anual)</label>
-                            <input type="number" id="inputTasa" step="0.1" value="4.5" class="w-full border-2 p-4 rounded-2xl bg-gray-50 font-semibold" oninput="calcularSimulacion()">
-                        </div>
+                    </div>
+                    <div class="bg-[#0E0D0D] p-8 text-[#EFEFEF]">
+                        <div class="space-y-4 mb-6 text-sm"><div class="flex justify-between"><span>Monto a financiar:</span><strong id="resMontoFinanciar">8.000 UF</strong></div><div class="flex justify-between"><span>Pie aportado:</span><strong id="resPieAportado" class="text-[#D0AA70]">2.000 UF</strong></div></div>
+                        <div class="bg-white/5 border border-white/10 p-6 rounded-3xl mb-6"><span class="text-xs font-bold uppercase text-[#D0AA70] block mb-1">Dividendo Mensual</span><div class="text-4xl font-extrabold text-white" id="resDividendoUF">46,20 UF</div></div>
+                        <button onclick="openHipotecario()" class="w-full bg-[#D0AA70] hover:bg-white text-[#0E0D0D] py-4 rounded-2xl font-bold transition-colors">Solicitud de Evaluación Hipotecaria</button>
                     </div>
                 </div>
-                <div class="lg:col-span-5 bg-[#0E0D0D] p-10 text-[#EFEFEF] flex flex-col justify-center">
-                    <h3 class="text-xl font-semibold border-b border-white/10 pb-6 mb-8">Resumen de Inversión</h3>
-                    <div class="space-y-6 mb-10"><div class="flex justify-between"><span>Monto a financiar:</span><strong id="resMontoFinanciar">8.000 UF</strong></div><div class="flex justify-between"><span>Pie aportado:</span><strong id="resPieAportado">2.000 UF</strong></div></div>
-                    <div class="bg-white/5 border border-white/10 p-8 rounded-3xl"><span class="text-xs font-bold uppercase text-[#D0AA70] block mb-2">Dividendo Mensual</span><div class="text-5xl font-extrabold text-white mb-2" id="resDividendoUF">46,20 UF</div></div>
-                    
-                    <div class="relative group mt-8">
-                        <button onclick="openModalTasacion()" class="w-full bg-[#D0AA70] hover:bg-white text-[#0E0D0D] py-4 rounded-2xl font-bold transition-colors">Solicita tu tasación gratis</button>
-                        <span class="absolute opacity-0 group-hover:opacity-100 transition-opacity bg-black text-[#D0AA70] text-[11px] py-1.5 px-3 rounded-lg -bottom-10 left-1/2 transform -translate-x-1/2 whitespace-nowrap border border-[#D0AA70]/30 shadow-xl pointer-events-none z-50 font-bold tracking-wide">
-                            Tu tasación en menos de 24 horas ⚡
-                        </span>
+                <div class="bg-white rounded-[32px] shadow-2xl overflow-hidden flex flex-col">
+                    <div class="bg-[#0E0D0D] px-8 py-5"><h3 class="text-white font-bold text-lg"><i class="fa-solid fa-house-chimney text-[#D0AA70] mr-2"></i>Calculadora de Arriendo (Reajuste IPC)</h3></div>
+                    <div class="p-8 space-y-6 flex-1">
+                        <div><label class="block text-xs font-semibold text-gray-500 mb-2 uppercase">Monto de arriendo actual (CLP)</label><input type="number" id="arrMonto" value="450000" class="w-full border-2 p-3.5 rounded-2xl bg-gray-50 font-semibold" oninput="calcularArriendo()"></div>
+                        <div class="grid grid-cols-2 gap-5"><div><label class="block text-xs font-semibold text-gray-500 mb-2 uppercase">Mes desde</label><select id="arrDesde" class="w-full border-2 p-3.5 rounded-2xl bg-gray-50 font-semibold" onchange="calcularArriendo()"></select></div><div><label class="block text-xs font-semibold text-gray-500 mb-2 uppercase">Mes hasta</label><select id="arrHasta" class="w-full border-2 p-3.5 rounded-2xl bg-gray-50 font-semibold" onchange="calcularArriendo()"></select></div></div>
+                        <p class="text-[11px] text-gray-400 leading-snug"><i class="fa-solid fa-circle-info text-[#D0AA70] mr-1"></i> IPC de ejemplo. En la versión final se conecta a datos oficiales del INE.</p>
+                    </div>
+                    <div class="bg-[#0E0D0D] p-8 text-[#EFEFEF]">
+                        <div class="space-y-4 mb-6 text-sm"><div class="flex justify-between"><span>Variación IPC acumulada:</span><strong id="arrVar" class="text-[#D0AA70]">0,0%</strong></div><div class="flex justify-between"><span>Meses del período:</span><strong id="arrMeses">0</strong></div></div>
+                        <div class="bg-white/5 border border-white/10 p-6 rounded-3xl mb-6"><span class="text-xs font-bold uppercase text-[#D0AA70] block mb-1">Nuevo arriendo reajustado</span><div class="text-4xl font-extrabold text-white" id="arrResultado">$450.000</div></div>
+                        <button onclick="openModalTasacion()" class="w-full bg-[#D0AA70] hover:bg-white text-[#0E0D0D] py-4 rounded-2xl font-bold transition-colors">Consultar con un asesor</button>
                     </div>
                 </div>
             </div>
@@ -319,7 +316,7 @@
             <div class="md:col-span-4">
                 <h4 class="font-bold text-[#D0AA70] uppercase tracking-widest mb-6">Contacto Directo</h4>
                 <ul class="space-y-4 text-gray-300 font-light text-sm">
-                    <li><i class="fa-solid fa-location-dot text-[#D0AA70] mr-2"></i> Antonio Poupin 841, of. 1801, Antofagasta</li>
+                    <li><i class="fa-solid fa-location-dot text-[#D0AA70] mr-2"></i> Antonio Poupin 841, Antofagasta</li>
                     <li><i class="fa-brands fa-whatsapp text-green-400 mr-2"></i> <a href="https://wa.me/56952046918" class="hover:text-[#D0AA70]">+56 9 5204 6918</a></li>
                     <li><i class="fa-regular fa-envelope text-[#D0AA70] mr-2"></i> <a href="mailto:conversemos@brospropiedades.cl" class="hover:text-[#D0AA70]">conversemos@brospropiedades.cl</a></li>
                 </ul>
@@ -673,6 +670,7 @@
         function calcularSimulacion() {
             const v=parseFloat(document.getElementById('inputValorPropiedad').value), p=parseFloat(document.getElementById('inputPie').value), t=parseFloat(document.getElementById('inputTasa').value), pl=parseInt(document.getElementById('inputPlazo').value);
             const mPie=v*(p/100), mFin=v-mPie, tm=(t/100)/12, nm=pl*12, divUF=tm>0?mFin*((tm*Math.pow(1+tm,nm))/(Math.pow(1+tm,nm)-1)):mFin/nm;
+            document.getElementById('resPieAportado').innerText = mPie.toLocaleString('es-CL') + ' UF';
             document.getElementById('labelValorPropiedad').innerText = `${v.toLocaleString('es-CL')} UF`; document.getElementById('labelPie').innerHTML = `${p}% <span class="text-gray-400 text-lg ml-2">(~ ${mPie.toLocaleString('es-CL')} UF)</span>`;
             document.getElementById('resMontoFinanciar').innerText = `${mFin.toLocaleString('es-CL')} UF`; document.getElementById('resDividendoUF').innerText = `${divUF.toFixed(2).replace('.', ',')} UF`;
         }
@@ -790,7 +788,7 @@
 
             const cuerpo = `Hola equipo BROS Propiedades,%0D%0A%0D%0AQuiero dejar mi propiedad con ustedes. Aquí están mis datos:%0D%0A%0D%0A- Nombre: ${nombre} ${apellido}%0D%0A- Correo: ${correo}%0D%0A- Teléfono: ${tel}%0D%0A- Tipo de Inmueble: ${tipo}%0D%0A- ROL: ${rol}%0D%0A%0D%0AQuedo atento a su contacto.`;
             
-            window.location.href = `mailto:conversemos@brospropiedades.cl?subject=Captación de Propiedad&body=${cuerpo}`;
+            window.location.href = `mailto:conversemos@brospropiedades.cl?subject=Solicitud de Captación&body=${cuerpo}`;
             document.getElementById('modalDejaPropiedad').classList.add('hidden');
         }
 
@@ -811,7 +809,7 @@
 
             const cuerpo = `Hola equipo BROS Propiedades,%0D%0A%0D%0ASolicito una tasación para mi propiedad:%0D%0A%0D%0A- Ubicación: ${region}%0D%0A- Tipo: ${tipo}%0D%0A- ROL: ${rol}%0D%0A- Habitaciones: ${hab}%0D%0A- Baños: ${banos}%0D%0A- Bodega: ${bodega}%0D%0A- M2 Útiles: ${util}%0D%0A- M2 Totales: ${total}%0D%0A%0D%0AMis datos de contacto:%0D%0A- Nombre: ${nombre}%0D%0A- Correo: ${correo}%0D%0A- Teléfono: ${tel}%0D%0A%0D%0AQuedo atento a su evaluación en menos de 24 horas.`;
 
-            window.location.href = `mailto:conversemos@brospropiedades.cl?subject=Solicitud Tasación cliente&body=${cuerpo}`;
+            window.location.href = `mailto:conversemos@brospropiedades.cl?subject=Solicitud tasación&body=${cuerpo}`;
             document.getElementById('modalTasacion').classList.add('hidden');
         }
 
@@ -824,6 +822,60 @@
     </script>
 
     <!-- 🟢 INTEGRACIÓN KITEPROP · Puente con respaldo A/B/C (no toca el diseño) -->
+        <!-- MODAL: SOLICITUD DE EVALUACION HIPOTECARIA -->
+    <div id="modalHipotecario" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[110] flex items-center justify-center p-4 hidden overflow-y-auto">
+      <div class="bg-white rounded-3xl shadow-2xl max-w-lg w-full my-6 max-h-[92vh] overflow-y-auto">
+        <div class="flex justify-between items-center p-6 border-b sticky top-0 bg-white rounded-t-3xl"><h3 class="font-bold text-lg"><i class="fa-solid fa-building-columns text-[#D0AA70] mr-2"></i>Solicitud de Evaluación Hipotecaria</h3><button onclick="document.getElementById('modalHipotecario').classList.add('hidden')" class="text-gray-400 hover:text-gray-900"><i class="fa-solid fa-xmark text-lg"></i></button></div>
+        <form onsubmit="enviarHipotecario(event)" class="p-6 space-y-4">
+          <div class="grid grid-cols-2 gap-4"><div><label class="block text-xs font-bold text-gray-500 mb-1 uppercase">Nombre</label><input id="hipNombre" required class="w-full border-2 p-3 rounded-xl bg-gray-50"></div><div><label class="block text-xs font-bold text-gray-500 mb-1 uppercase">Apellido</label><input id="hipApellido" required class="w-full border-2 p-3 rounded-xl bg-gray-50"></div></div>
+          <div><label class="block text-xs font-bold text-gray-500 mb-1 uppercase">Rango de sueldo</label><select id="hipSueldo" required class="w-full border-2 p-3 rounded-xl bg-gray-50"><option value="">Selecciona…</option><option>Menos de $1.000.000</option><option>$1.000.000 – $2.000.000</option><option>$2.000.000 – $3.500.000</option><option>$3.500.000 – $5.000.000</option><option>Más de $5.000.000</option></select></div>
+          <div><label class="block text-xs font-bold text-gray-500 mb-1 uppercase">¿Tienes una solicitud aprobada en algún banco?</label><div class="flex gap-4 mt-1"><label class="flex items-center gap-2"><input type="radio" name="hipAprobado" value="Sí" onchange="document.getElementById('hipMontoWrap').classList.remove('hidden')"> Sí</label><label class="flex items-center gap-2"><input type="radio" name="hipAprobado" value="No" checked onchange="document.getElementById('hipMontoWrap').classList.add('hidden')"> No</label></div><div id="hipMontoWrap" class="hidden mt-3"><label class="block text-xs font-bold text-gray-500 mb-1 uppercase">Valor aproximado aprobado</label><input id="hipMontoAprob" class="w-full border-2 p-3 rounded-xl bg-gray-50" placeholder="Ej: 4.000 UF o $120.000.000"></div></div>
+          <div class="grid grid-cols-2 gap-4"><div><label class="block text-xs font-bold text-gray-500 mb-1 uppercase">Crédito a solicitar (UF)</label><input id="hipCreditoUF" type="number" required class="w-full border-2 p-3 rounded-xl bg-gray-50" placeholder="Ej: 4000"></div><div><label class="block text-xs font-bold text-gray-500 mb-1 uppercase">Años del hipotecario</label><select id="hipAnios" required class="w-full border-2 p-3 rounded-xl bg-gray-50"><option>15</option><option>20</option><option>25</option><option>30</option></select></div></div>
+          <div><label class="block text-xs font-bold text-gray-500 mb-1 uppercase">¿Contrato indefinido?</label><div class="flex gap-4 mt-1"><label class="flex items-center gap-2"><input type="radio" name="hipContrato" value="Sí" checked> Sí</label><label class="flex items-center gap-2"><input type="radio" name="hipContrato" value="No"> No</label></div></div>
+          <div class="grid grid-cols-2 gap-4"><div><label class="block text-xs font-bold text-gray-500 mb-1 uppercase">Correo</label><input id="hipCorreo" type="email" required class="w-full border-2 p-3 rounded-xl bg-gray-50"></div><div><label class="block text-xs font-bold text-gray-500 mb-1 uppercase">Teléfono</label><input id="hipTel" required class="w-full border-2 p-3 rounded-xl bg-gray-50"></div></div>
+          <div class="bg-[#D0AA70]/10 border border-[#D0AA70]/30 rounded-xl p-3 text-center text-sm font-semibold text-[#956932]"><i class="fa-regular fa-clock mr-1"></i> Te contactamos en 24 horas</div>
+          <button class="w-full bg-[#0E0D0D] text-white py-3.5 rounded-xl font-bold hover:bg-[#956932] transition-colors">Enviar solicitud</button>
+        </form>
+      </div>
+    </div>
+
+    <script>
+      function openHipotecario(){ document.getElementById("modalHipotecario").classList.remove("hidden"); }
+      function val(id){ var e=document.getElementById(id); return e?e.value:""; }
+      function radio(n){ var e=document.querySelector("input[name="+n+"]:checked"); return e?e.value:""; }
+      function enviarHipotecario(e){
+        e.preventDefault();
+        var apro=radio("hipAprobado"); var montoAp = apro==="Sí" ? val("hipMontoAprob") : "-";
+        var b="Hola equipo BROS Propiedades,%0D%0A%0D%0ASolicito una evaluación hipotecaria. Mis datos:%0D%0A%0D%0A"+
+          "- Nombre: "+val("hipNombre")+" "+val("hipApellido")+"%0D%0A"+
+          "- Rango de sueldo: "+val("hipSueldo")+"%0D%0A"+
+          "- Aprobado en banco: "+apro+"%0D%0A"+
+          "- Valor aprobado: "+montoAp+"%0D%0A"+
+          "- Crédito a solicitar (UF): "+val("hipCreditoUF")+"%0D%0A"+
+          "- Años: "+val("hipAnios")+"%0D%0A"+
+          "- Contrato indefinido: "+radio("hipContrato")+"%0D%0A"+
+          "- Correo: "+val("hipCorreo")+"%0D%0A"+
+          "- Teléfono: "+val("hipTel")+"%0D%0A%0D%0AQuedo atento, me contactan en 24 horas.";
+        window.location.href="mailto:conversemos@brospropiedades.cl?subject=Solicitud Crédito Hipotecario&body="+b;
+        document.getElementById("modalHipotecario").classList.add("hidden");
+      }
+      var IPC=[["2024-01",0.6],["2024-02",0.4],["2024-03",0.4],["2024-04",0.5],["2024-05",0.3],["2024-06",0.1],["2024-07",0.7],["2024-08",0.3],["2024-09",0.1],["2024-10",1.0],["2024-11",0.2],["2024-12",0.2],["2025-01",0.4],["2025-02",0.4],["2025-03",0.5],["2025-04",0.2],["2025-05",0.3],["2025-06",0.4]];
+      var MESES=["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"];
+      function initArriendo(){
+        var d=document.getElementById("arrDesde"), h=document.getElementById("arrHasta"); if(!d||!h) return;
+        var opts=""; for(var i=0;i<IPC.length;i++){ var p=IPC[i][0].split("-"); opts+="<option value=\""+i+"\">"+MESES[parseInt(p[1])-1]+" "+p[0]+"</option>"; }
+        d.innerHTML=opts; h.innerHTML=opts; d.value=0; h.value=IPC.length-1; calcularArriendo();
+      }
+      function calcularArriendo(){
+        var d=parseInt(val("arrDesde")), h=parseInt(val("arrHasta")); if(h<d){ var t=d; d=h; h=t; }
+        var f=1, c=0; for(var i=d+1;i<=h;i++){ f*=(1+IPC[i][1]/100); c++; }
+        var m=parseFloat(val("arrMonto"))||0; var nuevo=Math.round(m*f);
+        document.getElementById("arrVar").innerText=((f-1)*100).toFixed(1).replace(".",",")+"%";
+        document.getElementById("arrMeses").innerText=c;
+        document.getElementById("arrResultado").innerText="$"+nuevo.toLocaleString("es-CL");
+      }
+      initArriendo();
+    </script>
     <script src="kiteprop-loader.js"></script>
 </body>
 </html>
