@@ -261,7 +261,7 @@
                     <div class="bg-[#0E0D0D] p-8 text-[#EFEFEF]">
                         <div class="space-y-4 mb-6 text-sm"><div class="flex justify-between"><span>Variación IPC acumulada:</span><strong id="arrVar" class="text-[#D0AA70]">0,0%</strong></div><div class="flex justify-between"><span>Meses del período:</span><strong id="arrMeses">0</strong></div></div>
                         <div class="bg-white/5 border border-white/10 p-6 rounded-3xl mb-6"><span class="text-xs font-bold uppercase text-[#D0AA70] block mb-1">Nuevo arriendo reajustado</span><div class="text-4xl font-extrabold text-white" id="arrResultado">$450.000</div></div>
-                        <button onclick="openModalTasacion()" class="w-full bg-[#D0AA70] hover:bg-white text-[#0E0D0D] py-4 rounded-2xl font-bold transition-colors">Consultar con un asesor</button>
+                        <button onclick="openConsultaArriendo()" class="w-full bg-[#D0AA70] hover:bg-white text-[#0E0D0D] py-4 rounded-2xl font-bold transition-colors">Consultar con un asesor</button>
                     </div>
                 </div>
             </div>
@@ -875,6 +875,36 @@
         document.getElementById("arrResultado").innerText="$"+nuevo.toLocaleString("es-CL");
       }
       initArriendo();
+    </script>
+        <!-- MODAL: CONSULTA VALOR ARRIENDO -->
+    <div id="modalArriendo" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[110] flex items-center justify-center p-4 hidden">
+      <div class="bg-white rounded-3xl shadow-2xl max-w-md w-full">
+        <div class="flex justify-between items-center p-6 border-b"><h3 class="font-bold text-lg"><i class="fa-solid fa-house-chimney text-[#D0AA70] mr-2"></i>Consulta de valor arriendo</h3><button onclick="document.getElementById('modalArriendo').classList.add('hidden')" class="text-gray-400 hover:text-gray-900"><i class="fa-solid fa-xmark text-lg"></i></button></div>
+        <form onsubmit="enviarArriendo(event)" class="p-6 space-y-4">
+          <div><label class="block text-xs font-bold text-gray-500 mb-1 uppercase">Nombre</label><input id="arrNombre" required class="w-full border-2 p-3 rounded-xl bg-gray-50"></div>
+          <div class="grid grid-cols-2 gap-4"><div><label class="block text-xs font-bold text-gray-500 mb-1 uppercase">Correo</label><input id="arrCorreo" type="email" required class="w-full border-2 p-3 rounded-xl bg-gray-50"></div><div><label class="block text-xs font-bold text-gray-500 mb-1 uppercase">Teléfono</label><input id="arrTel" required class="w-full border-2 p-3 rounded-xl bg-gray-50"></div></div>
+          <p class="text-xs text-gray-400">Enviamos tu consulta junto con el cálculo actual de reajuste.</p>
+          <button class="w-full bg-[#0E0D0D] text-white py-3.5 rounded-xl font-bold hover:bg-[#956932] transition-colors">Enviar consulta</button>
+        </form>
+      </div>
+    </div>
+
+    <script>
+      function toastBros(m,ok){ var t=document.getElementById("brosToast"); if(!t){ t=document.createElement("div"); t.id="brosToast"; t.style.cssText="position:fixed;bottom:24px;left:50%;transform:translateX(-50%);color:#fff;padding:14px 22px;border-radius:9999px;font-weight:600;z-index:9999;box-shadow:0 10px 30px rgba(0,0,0,.3);max-width:90%;text-align:center"; document.body.appendChild(t);} t.style.background=ok?"#0E0D0D":"#a32d2d"; t.innerText=m; t.style.display="block"; clearTimeout(window.__bt); window.__bt=setTimeout(function(){t.style.display="none";},4500); }
+      function waBros(c){ var l=Object.keys(c).map(function(k){return k+": "+(c[k]||"-");}).join("%0A"); window.open("https://wa.me/56952046918?text="+encodeURIComponent("Hola, quiero enviar esta solicitud:")+"%0A"+encodeURIComponent(l),"_blank"); }
+      async function enviarForm(tipo,campos,cerrarId){
+        try{ var r=await fetch("/.netlify/functions/enviar",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({tipo:tipo,campos:campos})}); var d=await r.json().catch(function(){return{};});
+          if(cerrarId){var m=document.getElementById(cerrarId); if(m) m.classList.add("hidden");}
+          if(d&&d.ok){ toastBros("✅ ¡Solicitud enviada! Te contactamos pronto.",true); } else { toastBros("Te llevamos a WhatsApp para completar el envío.",false); waBros(campos); }
+        }catch(e){ if(cerrarId){var m2=document.getElementById(cerrarId); if(m2) m2.classList.add("hidden");} waBros(campos); }
+      }
+      function gv(id){ var e=document.getElementById(id); return e?e.value:""; }
+      function gr(n){ var e=document.querySelector("input[name="+n+"]:checked"); return e?e.value:""; }
+      function enviarFormularioTasacion(e){ e.preventDefault(); enviarForm("tasacion",{"Ubicación":gv("tasRegion"),"Tipo":gv("tasTipo"),"ROL":gv("tasRol"),"Habitaciones":gv("tasHab"),"Baños":gv("tasBanos"),"Bodega":gv("tasBodega"),"M2 Útiles":gv("tasUtil"),"M2 Totales":gv("tasTotal"),"Nombre":gv("tasName"),"Correo":gv("tasEmail"),"Teléfono":gv("tasTel")},"modalTasacion"); }
+      function enviarFormularioPropiedad(e){ e.preventDefault(); enviarForm("captacion",{"Nombre":gv("propName")+" "+gv("propLastName"),"Correo":gv("propEmail"),"Teléfono":gv("propTel"),"Tipo de inmueble":gv("propTipo"),"ROL":gv("propRol")},"modalDejaPropiedad"); }
+      function enviarHipotecario(e){ e.preventDefault(); var ap=gr("hipAprobado"); enviarForm("hipotecario",{"Nombre":gv("hipNombre")+" "+gv("hipApellido"),"Rango sueldo":gv("hipSueldo"),"Aprobado en banco":ap,"Valor aprobado":ap==="Sí"?gv("hipMontoAprob"):"-","Crédito UF":gv("hipCreditoUF"),"Años":gv("hipAnios"),"Contrato indefinido":gr("hipContrato"),"Correo":gv("hipCorreo"),"Teléfono":gv("hipTel")},"modalHipotecario"); }
+      function openConsultaArriendo(){ document.getElementById("modalArriendo").classList.remove("hidden"); }
+      function enviarArriendo(e){ e.preventDefault(); enviarForm("arriendo",{"Nombre":gv("arrNombre"),"Correo":gv("arrCorreo"),"Teléfono":gv("arrTel"),"Arriendo actual (CLP)":gv("arrMonto"),"Variación IPC":(document.getElementById("arrVar")||{}).innerText||"","Nuevo arriendo estimado":(document.getElementById("arrResultado")||{}).innerText||""},"modalArriendo"); }
     </script>
     <script src="kiteprop-loader.js"></script>
 </body>
