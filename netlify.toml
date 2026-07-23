@@ -12,3 +12,7 @@
   from = "/api/propiedades"
   to   = "/.netlify/functions/propiedades"
   status = 200
+
+[functions]
+  node_bundler = "esbuild"
+  external_node_modules = ["@netlify/blobs"]
