@@ -1,4 +1,4 @@
-const { getStore } = require("@netlify/blobs");
+const { getStore , connectLambda } = require("@netlify/blobs");
 const RESEND_API_KEY = process.env.RESEND_API_KEY;
 const ADMIN_TOKEN = process.env.ADMIN_TOKEN;
 const DESTINO = "conversemos@brospropiedades.cl";
@@ -21,6 +21,7 @@ async function notify(r){
 }
 
 exports.handler = async (event) => {
+  connectLambda(event);
   const store = getStore("resenas");
   const method = event.httpMethod;
   if(method === "GET"){
