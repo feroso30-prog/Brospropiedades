@@ -499,6 +499,10 @@
                     <div class="min-w-0">
                         <h2 id="detTitulo" class="font-bold text-2xl md:text-3xl text-gray-900"></h2>
                         <p id="detUbi" class="text-gray-500 font-medium mt-1"><i class="fa-solid fa-location-dot mr-1.5 text-gray-300"></i></p>
+                        <div class="flex gap-2 mt-3">
+                          <button type="button" onclick="copiarLink()" class="inline-flex items-center gap-1.5 text-sm font-semibold border border-gray-200 hover:border-[#D0AA70] text-gray-700 px-3 py-1.5 rounded-lg transition-colors"><i class="fa-solid fa-link text-[#D0AA70]"></i> Copiar link</button>
+                          <button type="button" onclick="compartirWA()" class="inline-flex items-center gap-1.5 text-sm font-semibold bg-[#25D366] text-white px-3 py-1.5 rounded-lg hover:opacity-90 transition"><i class="fa-brands fa-whatsapp"></i> Compartir</button>
+                        </div>
                     </div>
                     <div class="text-right shrink-0">
                         <span class="block text-xs font-bold text-gray-400 uppercase tracking-widest">Valor <span id="detMoneda">UF</span></span>
@@ -947,7 +951,7 @@
       function paintRevStars(n){ var els=document.querySelectorAll("#rvStarInput i"); for(var i=0;i<els.length;i++){ els[i].className="fa-"+((i+1)<=n?"solid":"regular")+" fa-star cursor-pointer"; } }
       function setRevStars(n){ revStars=n; paintRevStars(n); }
       function openReviewForm(){ revStars=0; paintRevStars(0); document.getElementById("rvNombre").value=""; document.getElementById("rvTexto").value=""; document.getElementById("modalReview").classList.remove("hidden"); }
-      async function enviarReview(e){ e.preventDefault(); if(!revStars){ if(typeof toastBros==="function") toastBros("Selecciona una calificación con estrellas",false); return; } var nombre=document.getElementById("rvNombre").value, texto=document.getElementById("rvTexto").value; document.getElementById("modalReview").classList.add("hidden"); try{ await fetch("/.netlify/functions/reviews",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"submit",nombre:nombre,texto:texto,estrellas:revStars})}); }catch(err){} if(typeof toastBros==="function") toastBros("✅ ¡Gracias! Tu evaluación quedó pendiente de aprobación.",true); }
+      async function enviarReview(e){ e.preventDefault(); if(!revStars){ if(typeof toastBros==="function") toastBros("Selecciona una calificación con estrellas",false); return; } var nombre=document.getElementById("rvNombre").value, texto=document.getElementById("rvTexto").value; document.getElementById("modalReview").classList.add("hidden"); try{ await fetch("/.netlify/functions/reviews",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"submit",nombre:nombre,texto:texto,estrellas:revStars})}); }catch(err){} if(typeof toastBros==="function") toastBros("Gracias por tu evaluación",true); }
       loadReviews();
     </script>
         <div id="modalAsesor" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[110] flex items-center justify-center p-4 hidden">
@@ -968,6 +972,11 @@
     </script>
     <script>
 (function(){ var pid=new URLSearchParams(location.search).get("prop"); if(!pid) return; var n=0; function attempt(){ n++; try{ abrirDetalle(pid); }catch(e){} var m=document.getElementById("modalDetalle"); var ok=m && !m.classList.contains("hidden"); if(!ok && n<40) setTimeout(attempt,500); } window.addEventListener("load", function(){ setTimeout(attempt,700); }); })();
+</script>
+    <script>
+  function propURL(){ try{ var h=document.getElementById("detWhats").getAttribute("href")||""; var d=decodeURIComponent(h); var m=d.match(/[?&]prop=(\d+)/); if(m) return "https://www.brospropiedades.cl/?prop="+m[1]; }catch(e){} return location.href; }
+  function copiarLink(){ var u=propURL(); if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(u).then(function(){ if(typeof toastBros==="function") toastBros("✅ Link copiado",true); }).catch(function(){ window.prompt("Copia el link:",u); }); } else { window.prompt("Copia el link:",u); } }
+  function compartirWA(){ var u=propURL(); window.open("https://wa.me/?text="+encodeURIComponent("Mira esta propiedad de BROS Propiedades: "+u),"_blank"); }
 </script>
     <script src="kiteprop-loader.js"></script>
     <script src="track-client.js"></script>
