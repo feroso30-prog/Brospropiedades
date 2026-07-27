@@ -65,4 +65,3 @@ exports.handler = async (event) => {
   try { await store.setJSON(key, d); } catch (e) {}
   return { statusCode: 200, headers: CORS, body: JSON.stringify({ ok: true }) };
 };
-placeholder
