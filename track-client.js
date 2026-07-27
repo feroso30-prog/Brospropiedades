@@ -90,4 +90,3 @@
   document.addEventListener("visibilitychange", function () { if (document.visibilityState === "hidden") endSession(); });
   window.addEventListener("pagehide", endSession);
 })();
-placeholder
