@@ -20,3 +20,7 @@
 # Monitor de salud: se ejecuta cada hora en punto
 [functions."monitor"]
   schedule = "0 * * * *"
+
+# Reportes de metricas: revisa a diario y envia el semanal (lunes) y mensual (dia 1)
+[functions."reportes"]
+  schedule = "0 13 * * *"
