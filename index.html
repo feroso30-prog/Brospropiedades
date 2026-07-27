@@ -258,7 +258,7 @@
                     <div class="p-8 space-y-6 flex-1">
                         <div><label class="block text-xs font-semibold text-gray-500 mb-2 uppercase">Monto de arriendo actual (CLP)</label><input type="number" id="arrMonto" value="450000" class="w-full border-2 p-3.5 rounded-2xl bg-gray-50 font-semibold" oninput="calcularArriendo()"></div>
                         <div class="grid grid-cols-2 gap-5"><div><label class="block text-xs font-semibold text-gray-500 mb-2 uppercase">Mes desde</label><select id="arrDesde" class="w-full border-2 p-3.5 rounded-2xl bg-gray-50 font-semibold" onchange="calcularArriendo()"></select></div><div><label class="block text-xs font-semibold text-gray-500 mb-2 uppercase">Mes hasta</label><select id="arrHasta" class="w-full border-2 p-3.5 rounded-2xl bg-gray-50 font-semibold" onchange="calcularArriendo()"></select></div></div>
-                        <p class="text-[11px] text-gray-400 leading-snug"><i class="fa-solid fa-circle-info text-[#D0AA70] mr-1"></i> IPC de ejemplo. En la versión final se conecta a datos oficiales del INE.</p>
+                        <p class="text-[11px] text-gray-400 leading-snug"><i class="fa-solid fa-circle-info text-[#D0AA70] mr-1"></i> IPC oficial del INE (variación mensual). Estimación referencial; para el valor exacto de reajuste usa la <a href="https://calculadoraipc.ine.cl" target="_blank" rel="noopener" class="underline text-[#D0AA70] hover:text-white">Calculadora oficial del INE</a>.</p>
                     </div>
                     <div class="bg-[#0E0D0D] p-8 text-[#EFEFEF]">
                         <div class="space-y-4 mb-6 text-sm"><div class="flex justify-between"><span>Variación IPC acumulada:</span><strong id="arrVar" class="text-[#D0AA70]">0,0%</strong></div><div class="flex justify-between"><span>Meses del período:</span><strong id="arrMeses">0</strong></div></div>
@@ -873,7 +873,7 @@
         window.location.href="mailto:conversemos@brospropiedades.cl?subject=Solicitud Crédito Hipotecario&body="+b;
         document.getElementById("modalHipotecario").classList.add("hidden");
       }
-      var IPC=[["2024-01",0.6],["2024-02",0.4],["2024-03",0.4],["2024-04",0.5],["2024-05",0.3],["2024-06",0.1],["2024-07",0.7],["2024-08",0.3],["2024-09",0.1],["2024-10",1.0],["2024-11",0.2],["2024-12",0.2],["2025-01",0.4],["2025-02",0.4],["2025-03",0.5],["2025-04",0.2],["2025-05",0.3],["2025-06",0.4],["2025-07",0.9],["2025-08",0.0],["2025-09",0.4],["2025-10",0.0],["2025-11",0.3],["2025-12",-0.2],["2026-01",0.4],["2026-02",0.0],["2026-03",1.0],["2026-04",1.3],["2026-05",0.2],["2026-06",0.0]];
+      var IPC=[["2024-01",0.7],["2024-02",0.6],["2024-03",0.4],["2024-04",0.5],["2024-05",0.3],["2024-06",-0.1],["2024-07",0.7],["2024-08",0.3],["2024-09",0.1],["2024-10",1.0],["2024-11",0.2],["2024-12",-0.2],["2025-01",1.1],["2025-02",-0.1],["2025-03",0.5],["2025-04",0.2],["2025-05",0.2],["2025-06",-0.4],["2025-07",0.9],["2025-08",0.0],["2025-09",0.4],["2025-10",0.0],["2025-11",0.3],["2025-12",-0.2],["2026-01",0.4],["2026-02",0.0],["2026-03",1.0],["2026-04",1.3],["2026-05",0.2],["2026-06",0.0]];
       var MESES=["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"];
       function initArriendo(){
         var d=document.getElementById("arrDesde"), h=document.getElementById("arrHasta"); if(!d||!h) return;
