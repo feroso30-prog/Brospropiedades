@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BROS · Panel de Métricas</title>
+<meta name="robots" content="noindex,nofollow">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  :root{ --oro:#D0AA70; --oro2:#8a6a2f; --neg:#0E0D0D; --panel:#141313; --line:#241f16; --txt:#EFEFEF; --mut:#8f8778; }
+  *{ box-sizing:border-box; }
+  body{ font-family:'Inter',system-ui,Arial,sans-serif; background:#0b0a0a; color:var(--txt); margin:0; padding:20px; }
+  .wrap{ max-width:960px; margin:0 auto; }
+  .hd{ display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid var(--line); padding-bottom:14px; margin-bottom:18px; flex-wrap:wrap; gap:10px; }
+  .brand{ display:flex; align-items:center; gap:10px; }
+  .emb{ width:34px; height:34px; border-radius:9px; background:var(--neg); border:1px solid var(--oro); color:var(--oro); display:flex; align-items:center; justify-content:center; font-weight:800; }
+  .brand b{ letter-spacing:.5px; } .brand small{ display:block; color:var(--mut); font-size:11px; }
+  select,button{ font-family:inherit; }
+  .sel{ background:var(--panel); color:var(--txt); border:1px solid var(--line); border-radius:999px; padding:7px 12px; font-size:13px; }
+  .btn{ background:var(--oro); color:var(--neg); border:none; border-radius:999px; padding:7px 14px; font-weight:700; cursor:pointer; font-size:13px; }
+  .kpis{ display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-bottom:16px; }
+  .kpi{ background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:12px; }
+  .kpi .l{ font-size:11px; color:var(--mut); text-transform:uppercase; letter-spacing:.5px; }
+  .kpi .v{ font-size:22px; font-weight:800; color:#fff; margin-top:2px; }
+  .grid2{ display:grid; grid-template-columns:1.3fr 1fr; gap:12px; margin-bottom:14px; }
+  .grid2b{ display:grid; grid-template-columns:1fr 1.3fr; gap:12px; }
+  .card{ background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:12px; }
+  .card h3{ font-size:12px; font-weight:700; color:var(--oro); margin:0 0 8px; }
+  .ch{ height:190px; }
+  .foot{ font-size:10.5px; color:#6f695d; margin-top:16px; text-align:center; }
+  #login{ max-width:360px; margin:12vh auto 0; text-align:center; }
+  #login input{ width:100%; background:var(--panel); border:1px solid var(--line); color:var(--txt); border-radius:10px; padding:12px; margin:12px 0; text-align:center; letter-spacing:2px; }
+  .err{ color:#e06a6a; font-size:12px; min-height:16px; }
+  .muted{ color:var(--mut); font-size:12px; }
+  @media(max-width:640px){ .kpis{grid-template-columns:repeat(2,1fr);} .grid2,.grid2b{grid-template-columns:1fr;} }
+</style>
+</head>
+<body>
+  <div id="login">
+    <div class="emb" style="margin:0 auto 10px;">B</div>
+    <h2 style="margin:0 0 4px;">Panel de Métricas</h2>
+    <p class="muted">Acceso privado · ingresa tu clave de administrador</p>
+    <input id="tok" type="password" placeholder="Clave" autocomplete="off">
+    <button class="btn" style="width:100%;padding:12px;" onclick="entrar()">Entrar</button>
+    <p class="err" id="loginErr"></p>
+  </div>
+
+  <div id="app" class="wrap" style="display:none;">
+    <div class="hd">
+      <div class="brand">
+        <div class="emb">B</div>
+        <div><b>BROS · Panel de Métricas</b><small id="rangoLbl">Cargando…</small></div>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <select class="sel" id="rango" onchange="cargar()">
+          <option value="7">Últimos 7 días</option>
+          <option value="30" selected>Últimos 30 días</option>
+          <option value="90">Últimos 90 días</option>
+        </select>
+        <button class="btn" onclick="cargar()"><i class="fa-solid fa-rotate"></i></button>
+        <button class="sel" onclick="salir()" title="Salir"><i class="fa-solid fa-arrow-right-from-bracket"></i></button>
+      </div>
+    </div>
+
+    <div class="kpis">
+      <div class="kpi"><div class="l">Visitantes únicos</div><div class="v" id="kUniq">–</div></div>
+      <div class="kpi"><div class="l">Visitas</div><div class="v" id="kVis">–</div></div>
+      <div class="kpi"><div class="l">Fichas vistas</div><div class="v" id="kFic">–</div></div>
+      <div class="kpi"><div class="l">Tiempo prom.</div><div class="v" id="kTime">–</div></div>
+    </div>
+
+    <div class="grid2">
+      <div class="card"><h3>Top propiedades por clics</h3><div class="ch"><canvas id="cBar"></canvas></div></div>
+      <div class="card"><h3>Visitas por día</h3><div class="ch"><canvas id="cLine"></canvas></div></div>
+    </div>
+    <div class="grid2b">
+      <div class="card"><h3>Origen del tráfico</h3><div class="ch" style="height:170px;"><canvas id="cDon"></canvas></div></div>
+      <div class="card"><h3>Clics en fotos (por ficha)</h3><div id="fotos"></div><div class="muted" id="fotosEmpty" style="display:none;">Sin datos aún.</div></div>
+    </div>
+
+    <div class="foot">Datos anónimos de tu sitio · scroll promedio: <span id="kScroll">–</span> · se actualiza en cada visita</div>
+  </div>
+
+<script>
+var CHARTS = {};
+function $(id){ return document.getElementById(id); }
+function getTok(){ try{ return localStorage.getItem('bp_admin')||''; }catch(e){ return ''; } }
+function entrar(){
+  var v=$('tok').value.trim(); if(!v){ return; }
+  try{ localStorage.setItem('bp_admin', v); }catch(e){}
+  cargar(true);
+}
+function salir(){ try{ localStorage.removeItem('bp_admin'); }catch(e){} location.reload(); }
+function fmtTime(s){ s=s||0; var m=Math.floor(s/60), r=s%60; return m+':'+(r<10?'0':'')+r; }
+
+async function cargar(fromLogin){
+  var tok=getTok();
+  if(!tok){ $('login').style.display='block'; $('app').style.display='none'; return; }
+  var days = $('rango') ? $('rango').value : '30';
+  try{
+    var r = await fetch('/.netlify/functions/track?token='+encodeURIComponent(tok)+'&days='+days+'&t='+Date.now(), {cache:'no-store'});
+    if(r.status===401){ throw new Error('clave'); }
+    var j = await r.json();
+    if(!j.ok){ throw new Error('data'); }
+    $('login').style.display='none'; $('app').style.display='block';
+    pintar(j.agg, days);
+  }catch(e){
+    $('login').style.display='block'; $('app').style.display='none';
+    $('loginErr').innerText = (e.message==='clave') ? 'Clave incorrecta.' : 'No se pudieron cargar los datos.';
+    if(e.message==='clave'){ try{ localStorage.removeItem('bp_admin'); }catch(x){} }
+  }
+}
+
+function pintar(a, days){
+  $('rangoLbl').innerText = 'Últimos '+days+' días';
+  var fic = 0, props = [];
+  for(var id in (a.props||{})){ var p=a.props[id]; fic += p.views||0; props.push({name:p.name||id, views:p.views||0, photo:p.photoClicks||0}); }
+  $('kUniq').innerText = (a.uniques||0).toLocaleString('es-CL');
+  $('kVis').innerText = (a.visits||0).toLocaleString('es-CL');
+  $('kFic').innerText = fic.toLocaleString('es-CL');
+  $('kTime').innerText = fmtTime(a.timeAvg);
+  $('kScroll').innerText = (a.scrollAvg||0)+'%';
+
+  var gold='#D0AA70', grid='rgba(255,255,255,.06)', tick='#8f8778';
+  Chart.defaults.color=tick; Chart.defaults.font.family='Inter,system-ui,Arial';
+  function kill(k){ if(CHARTS[k]){ CHARTS[k].destroy(); } }
+
+  var topV = props.slice().sort(function(x,y){return y.views-x.views;}).slice(0,6);
+  kill('bar');
+  CHARTS.bar = new Chart($('cBar'),{type:'bar',
+    data:{labels:topV.map(function(p){return p.name.slice(0,26);}), datasets:[{data:topV.map(function(p){return p.views;}),backgroundColor:gold,borderRadius:5,barThickness:15}]},
+    options:{indexAxis:'y',plugins:{legend:{display:false}},scales:{x:{grid:{color:grid},ticks:{color:tick,precision:0}},y:{grid:{display:false},ticks:{color:'#cfc7b6',font:{size:10}}}},maintainAspectRatio:false}});
+
+  var ser=(a.series||[]);
+  kill('line');
+  CHARTS.line = new Chart($('cLine'),{type:'line',
+    data:{labels:ser.map(function(s){return s.day.slice(5);}), datasets:[{data:ser.map(function(s){return s.visits;}),borderColor:gold,backgroundColor:'rgba(208,170,112,.12)',fill:true,tension:.35,pointRadius:0,borderWidth:2}]},
+    options:{plugins:{legend:{display:false}},scales:{x:{grid:{display:false},ticks:{color:tick,maxTicksLimit:8}},y:{grid:{color:grid},ticks:{color:tick,precision:0}}},maintainAspectRatio:false}});
+
+  var oNames={instagram:'Instagram',facebook:'Facebook',buscador:'Buscador',directo:'Directo',otros:'Otros'};
+  var ol=[], od=[]; for(var o in (a.origins||{})){ ol.push(oNames[o]||o); od.push(a.origins[o]); }
+  if(ol.length===0){ ol=['Sin datos']; od=[1]; }
+  kill('don');
+  CHARTS.don = new Chart($('cDon'),{type:'doughnut',
+    data:{labels:ol, datasets:[{data:od, backgroundColor:['#D0AA70','#b98f45','#8a6a2f','#5c4a28','#3a3222','#26211a'], borderColor:'#141313', borderWidth:2}]},
+    options:{cutout:'62%',plugins:{legend:{position:'right',labels:{color:'#cfc7b6',font:{size:10},boxWidth:10,padding:8}}},maintainAspectRatio:false}});
+
+  var topF = props.slice().filter(function(p){return p.photo>0;}).sort(function(x,y){return y.photo-x.photo;}).slice(0,6);
+  var max = topF.length ? topF[0].photo : 1;
+  $('fotos').innerHTML = topF.map(function(p){
+    var w=Math.round(p.photo/max*100);
+    return '<div style="margin-bottom:9px;"><div style="display:flex;justify-content:space-between;font-size:11px;color:#cfc7b6;margin-bottom:3px;"><span>'+p.name.slice(0,28)+'</span><span style="color:#D0AA70;font-weight:700;">'+p.photo+'</span></div><div style="height:6px;background:#241f16;border-radius:99px;overflow:hidden;"><div style="height:100%;width:'+w+'%;background:#D0AA70;"></div></div></div>';
+  }).join('');
+  $('fotosEmpty').style.display = topF.length ? 'none' : 'block';
+}
+
+document.addEventListener('DOMContentLoaded', function(){
+  $('tok').addEventListener('keydown', function(e){ if(e.key==='Enter') entrar(); });
+  if(getTok()) cargar(); else { $('login').style.display='block'; }
+});
+</script>
+</body>
+</html>
+x
