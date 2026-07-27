@@ -970,5 +970,6 @@
 (function(){ var pid=new URLSearchParams(location.search).get("prop"); if(!pid) return; var n=0; function attempt(){ n++; try{ abrirDetalle(pid); }catch(e){} var m=document.getElementById("modalDetalle"); var ok=m && !m.classList.contains("hidden"); if(!ok && n<40) setTimeout(attempt,500); } window.addEventListener("load", function(){ setTimeout(attempt,700); }); })();
 </script>
     <script src="kiteprop-loader.js"></script>
+    <script src="track-client.js"></script>
 </body>
 </html>
