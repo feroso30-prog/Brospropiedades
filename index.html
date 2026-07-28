@@ -254,14 +254,16 @@
                     </div>
                 </div>
                 <div class="bg-white rounded-[32px] shadow-2xl overflow-hidden flex flex-col">
-                    <div class="bg-[#0E0D0D] px-6 py-5"><h3 class="text-white font-bold text-lg"><i class="fa-solid fa-house-chimney text-[#D0AA70] mr-2"></i>Calculadora de Arriendo (Reajuste IPC)</h3></div>
-                    <div class="p-6 flex flex-col items-center text-center gap-4">
-                      <i class="fa-solid fa-building-columns text-[#D0AA70] text-4xl"></i>
-                      <p class="text-gray-600 leading-relaxed">El reajuste de arriendo se calcula con el <strong>IPC oficial del INE</strong>. Usa la calculadora oficial del Instituto Nacional de Estad&iacute;sticas para obtener el valor exacto del reajuste.</p>
-                      <a href="https://calculadoraipc.ine.cl" target="_blank" rel="noopener" class="w-full inline-flex items-center justify-center gap-2 bg-[#D0AA70] hover:bg-[#956932] text-[#0E0D0D] hover:text-white py-4 rounded-2xl font-bold transition-colors"><i class="fa-solid fa-arrow-up-right-from-square"></i> Abrir Calculadora oficial del INE</a>
-                      <button onclick="openConsultaArriendo()" class="w-full bg-[#0E0D0D] hover:bg-[#956932] text-white py-3.5 rounded-2xl font-bold transition-colors">Consultar con un asesor</button>
+                    <div class="bg-[#0E0D0D] px-8 py-5"><h3 class="text-white font-bold text-lg"><i class="fa-solid fa-house-chimney text-[#D0AA70] mr-2"></i>Calculadora de Arriendo (Reajuste IPC)</h3></div>
+                    <div class="p-8 space-y-6 flex-1">
+                        <div><label class="block text-xs font-semibold text-gray-500 mb-2 uppercase">Monto de arriendo actual (CLP)</label><input type="number" id="arrMonto" value="450000" class="w-full border-2 p-3.5 rounded-2xl bg-gray-50 font-semibold" oninput="calcularArriendo()"></div>
+                        <div class="grid grid-cols-2 gap-5"><div><label class="block text-xs font-semibold text-gray-500 mb-2 uppercase">Mes desde</label><select id="arrDesde" class="w-full border-2 p-3.5 rounded-2xl bg-gray-50 font-semibold" onchange="calcularArriendo()"></select></div><div><label class="block text-xs font-semibold text-gray-500 mb-2 uppercase">Mes hasta</label><select id="arrHasta" class="w-full border-2 p-3.5 rounded-2xl bg-gray-50 font-semibold" onchange="calcularArriendo()"></select></div></div>
+                        <p class="text-[11px] text-gray-400 leading-snug"><i class="fa-solid fa-circle-info text-[#D0AA70] mr-1"></i> IPC oficial del INE (variación mensual). Estimación referencial; para el valor exacto de reajuste usa la <a href="https://calculadoraipc.ine.cl" target="_blank" rel="noopener" class="underline text-[#D0AA70] hover:text-white">Calculadora oficial del INE</a>.</p>
                     </div>
-                </div>
+                    <div class="bg-[#0E0D0D] p-8 text-[#EFEFEF]">
+                        <div class="space-y-4 mb-6 text-sm"><div class="flex justify-between"><span>Variación IPC acumulada:</span><strong id="arrVar" class="text-[#D0AA70]">0,0%</strong></div><div class="flex justify-between"><span>Meses del período:</span><strong id="arrMeses">0</strong></div></div>
+                        <div class="bg-white/5 border border-white/10 p-6 rounded-3xl mb-6"><span class="text-xs font-bold uppercase text-[#D0AA70] block mb-1">Nuevo arriendo reajustado</span><div class="text-4xl font-extrabold text-white" id="arrResultado">$450.000</div></div>
+                        <button onclick="openConsultaArriendo()" class="w-full bg-[#D0AA70] hover:bg-white text-[#0E0D0D] py-4 rounded-2xl font-bold transition-colors">Consultar con un asesor</button>
                     </div>
                 </div>
             </div>
@@ -880,7 +882,7 @@
       function initArriendo(){
         var d=document.getElementById("arrDesde"), h=document.getElementById("arrHasta"); if(!d||!h) return;
         var opts=""; for(var i=0;i<IPC.length;i++){ var p=IPC[i][0].split("-"); opts+="<option value=\""+i+"\">"+MESES[parseInt(p[1])-1]+" "+p[0]+"</option>"; }
-        d.innerHTML=opts; h.innerHTML=opts; d.value=0; h.value=IPC.length-1; 
+        d.innerHTML=opts; h.innerHTML=opts; d.value=0; h.value=IPC.length-1; calcularArriendo();
       }
       function calcularArriendo(){
         var d=parseInt(val("arrDesde")), h=parseInt(val("arrHasta")); if(h<d){ var t=d; d=h; h=t; }
@@ -890,7 +892,7 @@
         document.getElementById("arrMeses").innerText=c;
         document.getElementById("arrResultado").innerText="$"+nuevo.toLocaleString("es-CL");
       }
-      
+      initArriendo();
     </script>
         <!-- MODAL: CONSULTA VALOR ARRIENDO -->
     <div id="modalArriendo" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[110] flex items-center justify-center p-4 hidden">
@@ -949,7 +951,7 @@
       function paintRevStars(n){ var els=document.querySelectorAll("#rvStarInput i"); for(var i=0;i<els.length;i++){ els[i].className="fa-"+((i+1)<=n?"solid":"regular")+" fa-star cursor-pointer"; } }
       function setRevStars(n){ revStars=n; paintRevStars(n); }
       function openReviewForm(){ revStars=0; paintRevStars(0); document.getElementById("rvNombre").value=""; document.getElementById("rvTexto").value=""; document.getElementById("modalReview").classList.remove("hidden"); }
-      async function enviarReview(e){ e.preventDefault(); if(!revStars){ if(typeof toastBros==="function") toastBros("Selecciona una calificación con estrellas",false); return; } var nombre=document.getElementById("rvNombre").value, texto=document.getElementById("rvTexto").value; document.getElementById("modalReview").classList.add("hidden"); try{ await fetch("/.netlify/functions/reviews",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"submit",nombre:nombre,texto:texto,estrellas:revStars})}); }catch(err){} if(typeof toastBros==="function") toastBros("Gracias por tu evaluación",true); }
+      async function enviarReview(e){ e.preventDefault(); if(!revStars){ if(typeof toastBros==="function") toastBros("Selecciona una calificación con estrellas",false); return; } var nombre=document.getElementById("rvNombre").value, texto=document.getElementById("rvTexto").value; document.getElementById("modalReview").classList.add("hidden"); try{ await fetch("/.netlify/functions/reviews",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"submit",nombre:nombre,texto:texto,estrellas:revStars})}); }catch(err){} if(typeof toastBros==="function") toastBros("✅ Gracias por tu evaluación",true); }
       loadReviews();
     </script>
         <div id="modalAsesor" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[110] flex items-center justify-center p-4 hidden">
