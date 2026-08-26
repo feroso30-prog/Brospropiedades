@@ -37,3 +37,14 @@ schedule = "0 * * * *"
 # Reportes de metricas: revisa a diario y envia el semanal (lunes) y mensual (dia 1)
 [functions."reportes"]
 schedule = "0 13 * * *"
+
+[[redirects]]
+  from = "/propiedad/*"
+  to = "/.netlify/functions/propiedad/:splat"
+  status = 200
+
+[[redirects]]
+  from = "/sitemap.xml"
+  to = "/.netlify/functions/sitemap"
+  status = 200
+  force = true
