@@ -4,4 +4,3 @@ Disallow: /admin-metricas.html
 Disallow: /admin-resenas.html
 
 Sitemap: https://www.brospropiedades.cl/sitemap.xml
-x
